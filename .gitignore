@@ -17,3 +17,12 @@ build/
 
 # ignore tilde files
 *~
+
+# Cargo
+target/
+Cargo.lock
+
+# Output files
+*.dll
+*.so
+*.lib

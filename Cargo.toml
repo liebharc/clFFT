@@ -1,0 +1,11 @@
+[package]
+name = "clfft"
+version = "0.1.0"
+authors = ["Christian Liebhardt"]
+build = "build.rs"
+
+[lib]
+crate-type = ["dylib", "rlib"]
+
+[build-dependencies]
+cmake = "0.1"
