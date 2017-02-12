@@ -12,4 +12,3 @@ ocl = "^0.12.0"
 
 [build-dependencies]
 cmake = "0.1"
-bindgen = "^0.21"
