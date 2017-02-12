@@ -140,6 +140,7 @@ pub struct clfftSetupData {
     /*  	Bitwise flags that control the behavior of library debug logic. */
     pub debugFlags: cl_ulong,
 }
+
 #[test]
 fn bindgen_test_layout_clfftSetupData_() {
     assert_eq!(::std::mem::size_of::<clfftSetupData>() , 24usize);
@@ -155,6 +156,7 @@ impl Clone for clfftSetupData {
 pub enum clfftCallbackType { PRECALLBACK = 0, POSTCALLBACK = 1, }
 /*   @brief An abstract handle to the object that represents the state of the FFT(s) */
 pub type clfftPlanHandle = usize;
+#[link(name = "clFFT")]
 extern "C" {
     /*  @brief Initialize the internal FFT resources.
 	 *  @details The internal resources include FFT implementation caches kernels, programs, and buffers.
@@ -163,15 +165,13 @@ extern "C" {
 	 *  @return Enum describing error condition; superset of OpenCL error codes
 	 */
     pub fn clfftSetup(setupData: *const clfftSetupData) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Release all internal resources.
 	 *  @details Called when client is done with the FFT library, allowing the library to destroy all resources it has cached
 	 *  @return Enum describing error condition; superset of OpenCL error codes
 	 */
     pub fn clfftTeardown() -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Query the FFT library for version information
 	 *  @details Returns the major, minor and patch version numbers associated with the FFT library
 	 *  @param[out] major Major functionality change
@@ -181,8 +181,6 @@ extern "C" {
 	 */
     pub fn clfftGetVersion(major: *mut cl_uint, minor: *mut cl_uint,
                            patch: *mut cl_uint) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Create a plan object initialized entirely with default values.
 	 *  @details A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs
 	 * 	and buffers and associate them with buffers of specified dimensions.
@@ -195,8 +193,6 @@ extern "C" {
     pub fn clfftCreateDefaultPlan(plHandle: *mut clfftPlanHandle,
                                   context: cl_context, dim: clfftDim,
                                   clLengths: *const usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Create a copy of an existing plan.
 	 *  @details This API allows a client to create a new plan based upon an existing plan.  This function can be used to
 	 *  quickly create plans that are similar, but may differ slightly.
@@ -208,8 +204,7 @@ extern "C" {
     pub fn clfftCopyPlan(out_plHandle: *mut clfftPlanHandle,
                          new_context: cl_context,
                          in_plHandle: clfftPlanHandle) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Prepare the plan for execution.
 	 *  @details After all plan parameters are set, the client has the option of 'baking' the plan, which informs the runtime that
 	 *  no more change to the parameters of the plan is expected, and the OpenCL kernels can be compiled.  This optional function
@@ -243,17 +238,15 @@ extern "C" {
                                                                             *mut ::std::os::raw::c_void)>,
                          user_data: *mut ::std::os::raw::c_void)
      -> clfftStatus;
-}
-extern "C" {
-    /*  @brief Release the resources of a plan.
+
+     /*  @brief Release the resources of a plan.
 	 *  @details A plan may include resources, such as kernels, programs, and buffers that consume memory.  When a plan
 	 *  is no more needed, the client must release the plan.
 	 *  @param[in,out] plHandle Handle to a previously created plan
 	 *  @return Enum describing error condition; superset of OpenCL error codes
 	 */
     pub fn clfftDestroyPlan(plHandle: *mut clfftPlanHandle) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Retrieve the OpenCL context of a previously created plan.
 	 *  @details The user must pass a reference to a cl_context variable, which is modified to point to a
 	 *  context set in the specified plan.
@@ -263,8 +256,7 @@ extern "C" {
 	 */
     pub fn clfftGetPlanContext(plHandle: clfftPlanHandle,
                                context: *mut cl_context) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Retrieve the floating point precision of the FFT data
 	 *  @details The user must pass a reference to a clfftPrecision variable, which is set to the
 	 *  precision of the FFT complex data in the plan.
@@ -275,9 +267,8 @@ extern "C" {
     pub fn clfftGetPlanPrecision(plHandle: clfftPlanHandle,
                                  precision: *mut clfftPrecision)
      -> clfftStatus;
-}
-extern "C" {
-    /*  @brief Set the floating point precision of the FFT data
+
+     /*  @brief Set the floating point precision of the FFT data
 	 *  @details Sets the floating point precision of the FFT complex data in the plan.
 	 *  @param[in] plHandle Handle to a previously created plan
 	 *  @param[in] precision Reference to the user clfftPrecision enum
@@ -285,8 +276,7 @@ extern "C" {
 	 */
     pub fn clfftSetPlanPrecision(plHandle: clfftPlanHandle,
                                  precision: clfftPrecision) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Retrieve the scaling factor that is applied to the FFT data
 	 *  @details The user must pass a reference to a cl_float variable, which is set to the
 	 *  floating point scaling factor that is multiplied across the FFT data.
@@ -297,8 +287,7 @@ extern "C" {
 	 */
     pub fn clfftGetPlanScale(plHandle: clfftPlanHandle, dir: clfftDirection,
                              scale: *mut cl_float) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Set the scaling factor that is applied to the FFT data
 	 *  @details Sets the floating point scaling factor that is
 	 *  multiplied across the FFT data.
@@ -309,8 +298,7 @@ extern "C" {
 	 */
     pub fn clfftSetPlanScale(plHandle: clfftPlanHandle, dir: clfftDirection,
                              scale: cl_float) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Retrieve the number of discrete arrays that the plan can concurrently handle
 	 *  @details The user must pass a reference to a cl_uint variable, which is set to the
 	 *  number of discrete arrays (1D or 2D) that is batched together for the plan
@@ -320,8 +308,7 @@ extern "C" {
 	 */
     pub fn clfftGetPlanBatchSize(plHandle: clfftPlanHandle,
                                  batchSize: *mut usize) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Set the number of discrete arrays that the plan can concurrently handle
 	 *  @details Sets the plan property which sets the number of discrete arrays (1D or 2D)
 	 *  that is batched together for the plan
@@ -331,8 +318,7 @@ extern "C" {
 	 */
     pub fn clfftSetPlanBatchSize(plHandle: clfftPlanHandle, batchSize: usize)
      -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Retrieve the dimensionality of the data that is transformed
 	 *  @details Queries a plan object and retrieves the value of the dimensionality that the plan is set for.  A size is returned to
 	 *  help the client allocate sufficient storage to hold the dimensions in a further call to clfftGetPlanLength
@@ -343,8 +329,7 @@ extern "C" {
 	 */
     pub fn clfftGetPlanDim(plHandle: clfftPlanHandle, dim: *mut clfftDim,
                            size: *mut cl_uint) -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Set the dimensionality of the data that is transformed
 	 *  @details Set the dimensionality of the data that is transformed by the plan
 	 *  @param[in] plHandle Handle to a previously created plan
@@ -353,8 +338,7 @@ extern "C" {
 	 */
     pub fn clfftSetPlanDim(plHandle: clfftPlanHandle, dim: clfftDim)
      -> clfftStatus;
-}
-extern "C" {
+
     /*  @brief Retrieve the length of each dimension of the FFT
 	 *  @details The user must pass a reference to a size_t array, which is set to the
 	 *  length of each discrete dimension of the FFT
@@ -365,8 +349,6 @@ extern "C" {
 	 */
     pub fn clfftGetPlanLength(plHandle: clfftPlanHandle, dim: clfftDim,
                               clLengths: *mut usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Set the length of each dimension of the FFT
 	 *  @details Sets the plan property which is the length of each discrete dimension of the FFT
 	 *  @param[in] plHandle Handle to a previously created plan
@@ -376,8 +358,6 @@ extern "C" {
 	 */
     pub fn clfftSetPlanLength(plHandle: clfftPlanHandle, dim: clfftDim,
                               clLengths: *const usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Retrieve the distance between consecutive elements of input buffers in each dimension.
 	 *  @details Depending on how the dimension is set in the plan (for 2D or 3D FFT), strideY or strideZ can be safely
 	 *  ignored
@@ -387,8 +367,6 @@ extern "C" {
 	 */
     pub fn clfftGetPlanInStride(plHandle: clfftPlanHandle, dim: clfftDim,
                                 clStrides: *mut usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Set the distance between consecutive elements of input buffers in each dimension.
 	 *  @details Set the plan properties which is the distance between elements in all dimensions of the input buffer
 	 *  (units are in terms of clfftPrecision)
@@ -400,8 +378,6 @@ extern "C" {
 	 */
     pub fn clfftSetPlanInStride(plHandle: clfftPlanHandle, dim: clfftDim,
                                 clStrides: *mut usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Retrieve the distance between consecutive elements of output buffers in each dimension.
 	 *  @details Depending on how the dimension is set in the plan (for 2D or 3D FFT), strideY or strideZ can be safely
 	 *  ignored
@@ -411,8 +387,6 @@ extern "C" {
 	 */
     pub fn clfftGetPlanOutStride(plHandle: clfftPlanHandle, dim: clfftDim,
                                  clStrides: *mut usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Set the distance between consecutive elements of output buffers in a dimension.
 	 *  @details Sets the plan properties which is the distance between elements in all dimensions of the output buffer
 	 *  (units are in terms of clfftPrecision)
@@ -424,8 +398,6 @@ extern "C" {
 	 */
     pub fn clfftSetPlanOutStride(plHandle: clfftPlanHandle, dim: clfftDim,
                                  clStrides: *mut usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Retrieve the distance between array objects
 	 *  @details Pitch is the distance between each discrete array object in an FFT array. This is only used
 	 *  for 'array' dimensions in clfftDim; see clfftSetPlanDimension (units are in terms of clfftPrecision)
@@ -437,8 +409,6 @@ extern "C" {
 	 */
     pub fn clfftGetPlanDistance(plHandle: clfftPlanHandle, iDist: *mut usize,
                                 oDist: *mut usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Set the distance between array objects
 	 *  @details Pitch is the distance between each discrete array object in an FFT array. This is only used
 	 *  for 'array' dimensions in clfftDim; see clfftSetPlanDimension (units are in terms of clfftPrecision)
@@ -450,8 +420,6 @@ extern "C" {
 	 */
     pub fn clfftSetPlanDistance(plHandle: clfftPlanHandle, iDist: usize,
                                 oDist: usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Retrieve the expected layout of the input and output buffers
 	 *  @details Input and output buffers can be filled with either Hermitian, complex, or real numbers.  Complex numbers are stored
 	 *  in various layouts; this function retrieves the layouts used by input and output
@@ -462,8 +430,6 @@ extern "C" {
     pub fn clfftGetLayout(plHandle: clfftPlanHandle,
                           iLayout: *mut clfftLayout,
                           oLayout: *mut clfftLayout) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Set the expected layout of the input and output buffers
 	 *  @details Input and output buffers can be filled with either Hermitian, complex, or real numbers.  Complex numbers can be stored
 	 *  in various layouts; this function informs the library what layouts to use for input and output
@@ -473,8 +439,6 @@ extern "C" {
 	 */
     pub fn clfftSetLayout(plHandle: clfftPlanHandle, iLayout: clfftLayout,
                           oLayout: clfftLayout) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Retrieve whether the input buffers are to be overwritten with results
 	 *  @details If the setting performs an in-place transform, the input buffers are overwritten with the results of the
 	 *  transform.  If the setting performs an out-of-place transforms, the library looks for separate output buffers
@@ -485,8 +449,6 @@ extern "C" {
     pub fn clfftGetResultLocation(plHandle: clfftPlanHandle,
                                   placeness: *mut clfftResultLocation)
      -> clfftStatus;
-}
-extern "C" {
     /*  @brief Set whether the input buffers are to be overwritten with results
 	 *  @details If the setting performs an in-place transform, the input buffers are overwritten with the results of the
 	 *  transform.  If the setting performs an out-of-place transforms, the library looks for separate output buffers
@@ -497,8 +459,6 @@ extern "C" {
     pub fn clfftSetResultLocation(plHandle: clfftPlanHandle,
                                   placeness: clfftResultLocation)
      -> clfftStatus;
-}
-extern "C" {
     /*  @brief Retrieve the final transpose setting of a multi-dimensional FFT
 	 *  @details A multi-dimensional FFT transposes the data several times during calculation. If the client
 	 *  does not care about the final transpose, to put data back in proper dimension, the final transpose can be skipped
@@ -509,8 +469,6 @@ extern "C" {
     pub fn clfftGetPlanTransposeResult(plHandle: clfftPlanHandle,
                                        transposed: *mut clfftResultTransposed)
      -> clfftStatus;
-}
-extern "C" {
     /*  @brief Set the final transpose setting of a multi-dimensional FFT
 	 *  @details A multi-dimensional FFT transposes the data several times during calculation.  If the client
 	 *  does not care about the final transpose, to put data back in proper dimension, the final transpose can be skipped
@@ -521,8 +479,6 @@ extern "C" {
     pub fn clfftSetPlanTransposeResult(plHandle: clfftPlanHandle,
                                        transposed: clfftResultTransposed)
      -> clfftStatus;
-}
-extern "C" {
     /*  @brief Get buffer size (in bytes), which may be needed internally for an intermediate buffer
 	 *  @details Very large FFT transforms may need multiple passes, and the operation needs a temporary buffer to hold
 	 *  intermediate results. This function is only valid after the plan is baked, otherwise, an invalid operation error
@@ -532,8 +488,6 @@ extern "C" {
 	 */
     pub fn clfftGetTmpBufSize(plHandle: clfftPlanHandle,
                               buffersize: *mut usize) -> clfftStatus;
-}
-extern "C" {
     /*  @brief Register the callback parameters
 	 *  @details Client can provide a callback function to do custom processing while reading input data and/or
 	 *  writing output data. The callback function is provided as a string.
@@ -555,8 +509,6 @@ extern "C" {
                                 userdata: *mut cl_mem,
                                 numUserdataBuffers: ::std::os::raw::c_int)
      -> clfftStatus;
-}
-extern "C" {
     /*  @brief Enqueue an FFT transform operation, and return immediately (non-blocking)
 	 *  @details This transform API function computes the FFT transform. It is non-blocking as it
 	 *  only enqueues the OpenCL kernels for execution. The synchronization step must be managed by the user.
