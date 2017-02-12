@@ -8,7 +8,7 @@ use ocl::ffi::*;
  *   error codes is extended to add extra values specific to the clfft package.
  */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftStatus_ {
+pub enum clfftStatus {
     CLFFT_INVALID_GLOBAL_WORK_SIZE = -63,
     CLFFT_INVALID_MIP_LEVEL = -62,
     CLFFT_INVALID_BUFFER_SIZE = -61,
@@ -67,21 +67,19 @@ pub enum clfftStatus_ {
     CLFFT_DEVICE_MISMATCH = 4104,
     CLFFT_ENDSTATUS = 4105,
 }
-pub use self::clfftStatus_ as clfftStatus;
 #[repr(i32)]
 /*   @brief The dimension of the input and output buffers that is fed into all FFT transforms */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftDim_ {
+pub enum clfftDim {
     CLFFT_1D = 1,
     CLFFT_2D = 2,
     CLFFT_3D = 3,
     ENDDIMENSION = 4,
 }
-pub use self::clfftDim_ as clfftDim;
 #[repr(i32)]
 /*   @brief Specify the expected layouts of the buffers */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftLayout_ {
+pub enum clfftLayout {
     CLFFT_COMPLEX_INTERLEAVED = 1,
     CLFFT_COMPLEX_PLANAR = 2,
     CLFFT_HERMITIAN_INTERLEAVED = 3,
@@ -89,51 +87,42 @@ pub enum clfftLayout_ {
     CLFFT_REAL = 5,
     ENDLAYOUT = 6,
 }
-pub use self::clfftLayout_ as clfftLayout;
 #[repr(i32)]
 /*   @brief Specify the expected precision of each FFT.
  */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftPrecision_ {
+pub enum clfftPrecision {
     CLFFT_SINGLE = 1,
     CLFFT_DOUBLE = 2,
     CLFFT_SINGLE_FAST = 3,
     CLFFT_DOUBLE_FAST = 4,
     ENDPRECISION = 5,
 }
-pub use self::clfftPrecision_ as clfftPrecision;
-pub const clfftDirection__CLFFT_MINUS: clfftDirection_ =
-    clfftDirection_::CLFFT_FORWARD;
-pub const clfftDirection__CLFFT_PLUS: clfftDirection_ =
-    clfftDirection_::CLFFT_BACKWARD;
 #[repr(i32)]
 /*   @brief Specify the expected direction of each FFT, time or the frequency domains */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftDirection_ {
+pub enum clfftDirection {
     CLFFT_FORWARD = -1,
     CLFFT_BACKWARD = 1,
     ENDDIRECTION = 2,
 }
-pub use self::clfftDirection_ as clfftDirection;
 #[repr(i32)]
 /*   @brief Specify wheter the input buffers are overwritten with results */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftResultLocation_ {
+pub enum clfftResultLocation {
     CLFFT_INPLACE = 1,
     CLFFT_OUTOFPLACE = 2,
     ENDPLACE = 3,
 }
-pub use self::clfftResultLocation_ as clfftResultLocation;
 #[repr(i32)]
 /*  @brief Determines whether the result is returned in original order. It is valid only for
 dimensions greater than 1. */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftResultTransposed_ {
+pub enum clfftResultTransposed {
     CLFFT_NOTRANSPOSE = 1,
     CLFFT_TRANSPOSED = 2,
     ENDTRANSPOSED = 3,
 }
-pub use self::clfftResultTransposed_ as clfftResultTransposed;
 /*  @brief Data structure that can be passed to clfftSetup() to control the behavior of the FFT runtime
  *  @details This structure contains values that can be initialized before instantiation of the FFT runtime
  *  with ::clfftSetup().  To initialize this structure, pass a pointer to a user struct to ::clfftInitSetupData( ),
@@ -141,7 +130,7 @@ pub use self::clfftResultTransposed_ as clfftResultTransposed;
  */
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct clfftSetupData_ {
+pub struct clfftSetupData {
     /* < Major version number of the project; signifies possible major API changes. */
     pub major: cl_uint,
     /* < Minor version number of the project; minor API changes that can break backward compatibility. */
@@ -156,16 +145,14 @@ fn bindgen_test_layout_clfftSetupData_() {
     assert_eq!(::std::mem::size_of::<clfftSetupData_>() , 24usize);
     assert_eq!(::std::mem::align_of::<clfftSetupData_>() , 8usize);
 }
-impl Clone for clfftSetupData_ {
+impl Clone for clfftSetupData {
     fn clone(&self) -> Self { *self }
 }
-pub type clfftSetupData = clfftSetupData_;
 #[repr(i32)]
 /*  @brief Type of Callback function.
 */
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum clfftCallbackType_ { PRECALLBACK = 0, POSTCALLBACK = 1, }
-pub use self::clfftCallbackType_ as clfftCallbackType;
+pub enum clfftCallbackType { PRECALLBACK = 0, POSTCALLBACK = 1, }
 /*   @brief An abstract handle to the object that represents the state of the FFT(s) */
 pub type clfftPlanHandle = usize;
 extern "C" {
