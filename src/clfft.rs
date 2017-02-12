@@ -15,18 +15,31 @@ macro_rules! clfft_try {
     }
 }
 
+macro_rules! clfft_panic {
+    ( $result_expr: expr) => {
+        let result = $result_expr;
+        if result != ffi::clfftStatus::CLFFT_SUCCESS {
+            panic!("Unexpeced error in foreign library: {:?}", result);
+        }
+    }
+}
+
 impl ffi::clfftSetupData {
     pub fn new() -> ffi::clfftSetupData {
+        let mut major: ocl::ffi::cl_uint = 0;
+        let mut minor: ocl::ffi::cl_uint = 0;
+        let mut patch: ocl::ffi::cl_uint = 0;
+        clfft_panic!( unsafe { ffi::clfftGetVersion(&mut major, &mut minor, &mut patch) } );
         ffi::clfftSetupData {
-            major: 2,
-            minor: 12,
-            patch: 8,
+            major: major,
+            minor: minor,
+            patch: patch,
             debugFlags: 0,
         }
     }
     
     pub fn setup(&self) -> ocl::Result<()> {
-        clfft_try!(unsafe { ffi::clfftSetup(self) });
+        clfft_try!(unsafe { ffi::clfftSetup(self as *const clfftSetupData) });
         Ok(())
     }
 }
@@ -37,7 +50,7 @@ mod tests {
     
     #[test]
     pub fn fft_test() {
-        let setup = clfftSetupData::new();
-        // setup.setup().unwrap();
+        let fft = clfftSetupData::new();
+        fft.setup().unwrap();
     }
 }

@@ -165,7 +165,7 @@ extern "C" {
 	 *  @return Enum describing error condition; superset of OpenCL error codes
 	 */
     pub fn clfftSetup(setupData: *const clfftSetupData) -> clfftStatus;
-
+    
     /*  @brief Release all internal resources.
 	 *  @details Called when client is done with the FFT library, allowing the library to destroy all resources it has cached
 	 *  @return Enum describing error condition; superset of OpenCL error codes
