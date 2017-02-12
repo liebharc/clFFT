@@ -5,7 +5,11 @@ authors = ["Christian Liebhardt"]
 build = "build.rs"
 
 [lib]
-crate-type = ["dylib", "rlib"]
+crate-type = ["rlib"]
+
+[dependencies]
+ocl = "^0.12.0"
 
 [build-dependencies]
 cmake = "0.1"
+bindgen = "^0.21"

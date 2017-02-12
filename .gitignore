@@ -26,3 +26,6 @@ Cargo.lock
 *.dll
 *.so
 *.lib
+
+# cmake files
+/src/CMakeFiles/
