@@ -142,8 +142,8 @@ pub struct clfftSetupData {
 }
 #[test]
 fn bindgen_test_layout_clfftSetupData_() {
-    assert_eq!(::std::mem::size_of::<clfftSetupData_>() , 24usize);
-    assert_eq!(::std::mem::align_of::<clfftSetupData_>() , 8usize);
+    assert_eq!(::std::mem::size_of::<clfftSetupData>() , 24usize);
+    assert_eq!(::std::mem::align_of::<clfftSetupData>() , 8usize);
 }
 impl Clone for clfftSetupData {
     fn clone(&self) -> Self { *self }
