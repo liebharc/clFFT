@@ -56,12 +56,14 @@ fn translate_to_fft_dim(dims: ocl::SpatialDims) -> ffi::clfftDim {
     }
 }
 
-pub struct FftPlanBuilder<T> {
+pub struct FftPlanBuilder<T: ocl::traits::OclPrm> {
     handle: ffi::clfftPlanHandle,
-    data_type: std::marker::PhantomData<T>
+    data_type: std::marker::PhantomData<T>,
+    dims: ocl::SpatialDims
 }
 
 /// Specify the expected precision of each FFT.
+#[derive(PartialEq)]
 pub enum Precision {
     Precise,
     Fast
@@ -90,6 +92,7 @@ fn translate_precision_back(precision: ffi::clfftPrecision) -> Precision {
 }
 
 /// Specify the expected layouts of the buffers.
+#[derive(PartialEq)]
 pub enum Layout {
     ComplexInterleaved,
     ComplexPlanar,
@@ -120,6 +123,7 @@ fn translate_layout_back(layout: ffi::clfftLayout) -> Layout {
 }
 
 /// Specify the expected direction of each FFT, time or the frequency domains
+#[derive(PartialEq)]
 pub enum Direction {
     Forward,
     Backward
@@ -133,6 +137,7 @@ fn translate_direction(direction: Direction) -> ffi::clfftDirection {
 }
 
 /// pecify wheter the input buffers are overwritten with results
+#[derive(PartialEq)]
 pub enum Location {
     Inplace,
     OutOfPlace
@@ -153,7 +158,7 @@ fn translate_location_back(location: ffi::clfftResultLocation) -> Location {
     }
 }
 
-impl<T> FftPlanBuilder<T> {
+impl<T: ocl::traits::OclPrm> FftPlanBuilder<T> {
     /// Create a plan object initialized entirely with default values.
     ///
     /// A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs 
@@ -166,7 +171,13 @@ impl<T> FftPlanBuilder<T> {
         let lengths = try!(dims.to_lens());
         let mut plan: ffi::clfftPlanHandle = 0;
         clfft_try!( unsafe { ffi::clfftCreateDefaultPlan(&mut plan, context, dim, &lengths as *const usize) } );
-        let mut builder = FftPlanBuilder {  handle: plan, data_type: std::marker::PhantomData };
+        let mut builder = 
+            FftPlanBuilder 
+            {  
+                handle: plan, 
+                data_type: std::marker::PhantomData,
+                dims: dims
+            };
         try!(builder.set_precision(Precision::Precise));
         Ok(builder)
     }
@@ -217,31 +228,69 @@ impl<T> FftPlanBuilder<T> {
         Ok(translate_location_back(location))
     }
     
-    pub fn build(mut self, pro_que: &mut ocl::ProQue) -> ocl::Result<FftPlan> {
+    pub fn build(mut self, pro_que: &mut ocl::ProQue) -> ocl::Result<FftPlan<T>> {
         let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
         clfft_try!(unsafe {ffi::clfftBakePlan(self.handle, 1, &mut queue, None, 0 as *mut ::std::os::raw::c_void)});
-        let plan = FftPlan { handle: self.handle };
+        let (layout_in, layout_out) = try!(self.get_layout());
+        let in_complex = if layout_in == Layout::Real { 1 } else { 2 };
+        let out_complex = if layout_out == Layout::Real { 1 } else { 2 };
+        let fft_len_in = self.dims.to_len() * in_complex;
+        let fft_len_out = self.dims.to_len() * out_complex;
+        let location = try!{ self.get_result_location() };
+        let plan = 
+            FftPlan 
+            { 
+                fft_input_len: fft_len_in,
+                fft_output_len: fft_len_out,
+                inplace: location == Location::Inplace,
+                handle: self.handle,
+                data_type: std::marker::PhantomData
+            };
         self.handle = 0;
         Ok(plan)
     }
 }
 
-pub struct FftPlan {
-    handle: ffi::clfftPlanHandle
+pub struct FftPlan<T: ocl::traits::OclPrm> {
+    fft_input_len: usize,
+    fft_output_len: usize,
+    inplace: bool,
+    handle: ffi::clfftPlanHandle,
+    data_type: std::marker::PhantomData<T>
 }
 
-impl FftPlan {
-    pub fn enqueue<T: ocl::traits::OclPrm>(
+impl<T: ocl::traits::OclPrm> FftPlan<T> {
+    pub fn enqueue(
             &self, 
             direction: Direction, 
             pro_que: &mut ocl::ProQue,
             buffer: &mut ocl::Buffer<T>,
             result: Option<&mut ocl::Buffer<T>>) -> ocl::Result<()> {
+        if self.fft_input_len != buffer.dims().to_len() {
+            return ocl::Error::err(format!("FFT plan requires that input buffer must have a size of {}", self.fft_input_len));
+        }
+        
+        if self.inplace {
+            if result.is_some() {
+                return ocl::Error::err("Dubious call, FFT is planned to happen inplace but a result buffer was provided. Either change the FFT to operate out of place or don't pass a result buffer into the `enqueue` method.")
+            }
+        }
+        else {
+            if !result.is_some() {
+                return ocl::Error::err("FFT is planned to be performed out of place but no result buffer was proided. Either change the FFT to operate inplace or provie a result buffer.");
+            }
+        }
+        
         let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
         let mut buffer = unsafe { buffer.core_as_ref().as_ptr() };
         let mut result = match result {
             None => 0 as ocl::ffi::cl_mem,
-            Some(res) => unsafe { res.core_as_ref().as_ptr() }
+            Some(res) => {
+                if self.fft_output_len != res.dims().to_len() {
+                    return ocl::Error::err(format!("FFT plan requires that result buffer must have a size of {}", self.fft_input_len));
+                }
+                unsafe { res.core_as_ref().as_ptr() }
+            }
         };
         let direction = translate_direction(direction);
         clfft_try!(
@@ -267,7 +316,7 @@ impl FftPlan {
     }
 }
 
-impl<T> std::ops::Drop for FftPlanBuilder<T> {
+impl<T: ocl::traits::OclPrm> std::ops::Drop for FftPlanBuilder<T> {
     fn drop(&mut self) {
         if self.handle != 0 {
             // TODO: let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
@@ -276,7 +325,7 @@ impl<T> std::ops::Drop for FftPlanBuilder<T> {
     }
 }
 
-impl std::ops::Drop for FftPlan {
+impl<T: ocl::traits::OclPrm> std::ops::Drop for FftPlan<T> {
     fn drop(&mut self) {
         if self.handle != 0 {
             // TODO: let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
@@ -395,10 +444,7 @@ mod tests {
                 Some(flags::MEM_WRITE_ONLY),
                 ocl_pq.dims().clone(),
                 None)
-                .expect("Failed to create GPU result buffer");;
-            
-        // TODO: Add a check that the dimension passed to the builder
-        // and the buffer dimensions later on match.
+                .expect("Failed to create GPU result buffer");
         
         let mut builder = FftPlanBuilder::<f64>::default(&ocl_pq, [source.len() / 2]).unwrap();
         builder.set_precision(Precision::Precise).unwrap();
