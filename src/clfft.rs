@@ -313,7 +313,7 @@ mod tests {
                 Some(&source))
                 .expect("Failed to create GPU input buffer");
             
-        let mut builder = FftPlanBuilder::default(&ocl_pq, [1000]).unwrap();
+        let mut builder = FftPlanBuilder::default(&ocl_pq, [source.len()]).unwrap();
         builder.set_precision(Precision::Single).unwrap();
         builder.set_layout(Layout::ComplexInterleaved, Layout::ComplexInterleaved).unwrap();
         builder.set_result_location(Location::Inplace).unwrap();
