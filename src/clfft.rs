@@ -56,33 +56,35 @@ fn translate_to_fft_dim(dims: ocl::SpatialDims) -> ffi::clfftDim {
     }
 }
 
-pub struct FftPlanBuilder {
-    handle: ffi::clfftPlanHandle
+pub struct FftPlanBuilder<T> {
+    handle: ffi::clfftPlanHandle,
+    data_type: std::marker::PhantomData<T>
 }
 
 /// Specify the expected precision of each FFT.
 pub enum Precision {
-    Single,
-    Double,
-    SingleFast,
-    DoubleFast
+    Precise,
+    Fast
 }
 
-fn translate_precision(precision: Precision) -> ffi::clfftPrecision {
+fn translate_precision<T>(precision: Precision) -> ffi::clfftPrecision {
+    let is_f64 = std::mem::size_of::<T>() == 8;
     match precision {
-        Precision::Single => ffi::clfftPrecision::CLFFT_SINGLE,
-        Precision::Double => ffi::clfftPrecision::CLFFT_DOUBLE,
-        Precision::SingleFast => ffi::clfftPrecision::CLFFT_SINGLE_FAST,
-        Precision::DoubleFast => ffi::clfftPrecision::CLFFT_DOUBLE_FAST
+        Precision::Precise => 
+            if is_f64 { ffi::clfftPrecision::CLFFT_DOUBLE }
+            else { ffi::clfftPrecision::CLFFT_SINGLE },
+        Precision::Fast => 
+            if is_f64 { ffi::clfftPrecision::CLFFT_DOUBLE_FAST }
+            else { ffi::clfftPrecision::CLFFT_SINGLE_FAST }
     }
 }
 
 fn translate_precision_back(precision: ffi::clfftPrecision) -> Precision {
     match precision {
-        ffi::clfftPrecision::CLFFT_SINGLE => Precision::Single,
-        ffi::clfftPrecision::CLFFT_DOUBLE => Precision::Double,
-        ffi::clfftPrecision::CLFFT_SINGLE_FAST => Precision::SingleFast,
-        ffi::clfftPrecision::CLFFT_DOUBLE_FAST => Precision::DoubleFast,
+        ffi::clfftPrecision::CLFFT_SINGLE => Precision::Precise,
+        ffi::clfftPrecision::CLFFT_DOUBLE => Precision::Precise,
+        ffi::clfftPrecision::CLFFT_SINGLE_FAST => Precision::Fast,
+        ffi::clfftPrecision::CLFFT_DOUBLE_FAST => Precision::Fast,
         ffi::clfftPrecision::ENDPRECISION => panic!("ENDPRECISION should never be returned")
     }
 }
@@ -151,20 +153,22 @@ fn translate_location_back(location: ffi::clfftResultLocation) -> Location {
     }
 }
 
-impl FftPlanBuilder {
+impl<T> FftPlanBuilder<T> {
     /// Create a plan object initialized entirely with default values.
     ///
     /// A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs 
     /// and buffers and associate them with buffers of specified dimensions.
     pub fn default<D: Into<ocl::SpatialDims>>(pro_que: &ocl::ProQue, dims: D) 
-        -> ocl::Result<FftPlanBuilder> {
+        -> ocl::Result<FftPlanBuilder<T>> {
         let context = unsafe { pro_que.context().core_as_ref().as_ptr() };
         let dims = dims.into();
         let dim = translate_to_fft_dim(dims);
         let lengths = try!(dims.to_lens());
         let mut plan: ffi::clfftPlanHandle = 0;
         clfft_try!( unsafe { ffi::clfftCreateDefaultPlan(&mut plan, context, dim, &lengths as *const usize) } );
-        Ok(FftPlanBuilder {  handle: plan })
+        let mut builder = FftPlanBuilder {  handle: plan, data_type: std::marker::PhantomData };
+        try!(builder.set_precision(Precision::Precise));
+        Ok(builder)
     }
     
     /// Returns the native clFFT plan handle.
@@ -174,7 +178,7 @@ impl FftPlanBuilder {
     
     /// Set the floating point precision of the FFT data
     pub fn set_precision(&mut self, precision: Precision) -> ocl::Result<()> {
-        let precision = translate_precision(precision);
+        let precision = translate_precision::<T>(precision);
         clfft_try!(unsafe { ffi::clfftSetPlanPrecision(self.handle, precision) });
         Ok(())
     }
@@ -263,7 +267,7 @@ impl FftPlan {
     }
 }
 
-impl std::ops::Drop for FftPlanBuilder {
+impl<T> std::ops::Drop for FftPlanBuilder<T> {
     fn drop(&mut self) {
         if self.handle != 0 {
             // TODO: let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
@@ -393,8 +397,11 @@ mod tests {
                 None)
                 .expect("Failed to create GPU result buffer");;
             
-        let mut builder = FftPlanBuilder::default(&ocl_pq, [source.len() / 2]).unwrap();
-        builder.set_precision(Precision::Double).unwrap();
+        // TODO: Add a check that the dimension passed to the builder
+        // and the buffer dimensions later on match.
+        
+        let mut builder = FftPlanBuilder::<f64>::default(&ocl_pq, [source.len() / 2]).unwrap();
+        builder.set_precision(Precision::Precise).unwrap();
         builder.set_layout(Layout::ComplexInterleaved, Layout::ComplexInterleaved).unwrap();
         builder.set_result_location(Location::OutOfPlace).unwrap();
         let plan = builder.build(&mut ocl_pq).unwrap();
