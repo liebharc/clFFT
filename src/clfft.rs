@@ -24,24 +24,26 @@ macro_rules! clfft_panic {
     }
 }
 
-impl ffi::clfftSetupData {
-    pub fn new() -> ffi::clfftSetupData {
-        let mut major: ocl::ffi::cl_uint = 0;
-        let mut minor: ocl::ffi::cl_uint = 0;
-        let mut patch: ocl::ffi::cl_uint = 0;
-        clfft_panic!( unsafe { ffi::clfftGetVersion(&mut major, &mut minor, &mut patch) } );
-        ffi::clfftSetupData {
-            major: major,
-            minor: minor,
-            patch: patch,
-            debugFlags: 0,
-        }
-    }
+/// Initialize the internal FFT resources such as FFT implementation caches kernels, programs, and buffers.
+pub fn init_lib() -> ffi::clfftSetupData {
+    let mut major: ocl::ffi::cl_uint = 0;
+    let mut minor: ocl::ffi::cl_uint = 0;
+    let mut patch: ocl::ffi::cl_uint = 0;
+    clfft_panic!( unsafe { ffi::clfftGetVersion(&mut major, &mut minor, &mut patch) } );
+    let data = ffi::clfftSetupData {
+        major: major,
+        minor: minor,
+        patch: patch,
+        debugFlags: 0,
+    };
     
-    pub fn setup(&self) -> ocl::Result<()> {
-        clfft_try!(unsafe { ffi::clfftSetup(self as *const clfftSetupData) });
-        Ok(())
-    }
+    clfft_panic!(unsafe { ffi::clfftSetup(&data) });
+    data        
+}
+
+/// Release all internal resources acquired during `init_lib`.
+pub fn drop_lib() {
+    unsafe { ffi::clfftTeardown() };
 }
 
 #[cfg(test)]
@@ -50,7 +52,8 @@ mod tests {
     
     #[test]
     pub fn fft_test() {
-        let fft = clfftSetupData::new();
-        fft.setup().unwrap();
+        init_lib();
+        
+        drop_lib();
     }
 }

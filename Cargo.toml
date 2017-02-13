@@ -3,6 +3,12 @@ name = "clfft"
 version = "0.1.0"
 authors = ["Christian Liebhardt"]
 build = "build.rs"
+license = "Apache-2.0"
+homepage = "https://github.com/liebharc/clfft"
+repository = "https://github.com/liebharc/clfft"
+documentation = "http://clmathlibraries.github.io/clFFT/"
+keywords = ["fft", "opencl"]
+description = "Bindings for clFFT, a FFT library for OpenCL."
 
 [lib]
 crate-type = ["rlib"]
