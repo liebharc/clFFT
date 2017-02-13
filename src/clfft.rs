@@ -266,7 +266,7 @@ impl FftPlan {
 impl std::ops::Drop for FftPlanBuilder {
     fn drop(&mut self) {
         if self.handle != 0 {
-            // unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
+            // TODO: let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
             self.handle = 0;
         }
     }
@@ -275,7 +275,7 @@ impl std::ops::Drop for FftPlanBuilder {
 impl std::ops::Drop for FftPlan {
     fn drop(&mut self) {
         if self.handle != 0 {
-            // unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
+            // TODO: let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
             self.handle = 0;
         }
     }
@@ -283,20 +283,92 @@ impl std::ops::Drop for FftPlan {
 
 #[cfg(test)]
 mod tests {
+    extern crate rustfft;
+    extern crate num;
+
     use super::*;
     use ocl::{ProQue, Buffer};
     use ocl::builders::ProgramBuilder;
     use ocl::flags;
     use std;
     
+    fn to_complex(source: &[f64]) -> Vec<num::Complex<f64>> {
+        let mut dest = vec![num::Complex{re: 0.0, im: 0.0}; source.len() / 2];
+        for i in 0..source.len()/2 {
+            dest[i] = num::Complex::new(source[2 * i], source[2 * i + 1]);
+        }
+        dest
+    }
+    
+    fn to_real(source: &[num::Complex<f64>]) -> Vec<f64> {
+        let mut dest = vec![0.0; source.len() * 2];
+        for i in 0..source.len() {
+            dest[2 * i] = source[i].re;
+            dest[2 * i + 1] = source[i].im;
+        }
+        dest
+    }
+
+    pub fn assert_vector_eq(left: &[f64],
+                             right: &[f64],
+                             tolerance: f64)
+    {
+        let mut errors = Vec::new();
+
+        let size_assert_failed = left.len() != right.len();
+        if size_assert_failed {
+            errors.push(format!("Size difference {} != {}", left.len(), right.len()));
+        }
+
+        let len = if left.len() < right.len() {
+            left.len()
+        } else {
+            right.len()
+        };
+        let mut differences = 0;
+        for i in 0..len {
+            if (left[i] - right[i]).abs() > tolerance {
+                differences += 1;
+                if differences <= 10 {
+                    errors.push(format!("Difference {} at index {}, left: {} != right: {}",
+                                        differences,
+                                        i,
+                                        left[i],
+                                        right[i]));
+                }
+            }
+        }
+
+        if differences > 0 {
+            errors.push(format!("Total number of differences: {}/{}={}%",
+                                differences,
+                                len,
+                                differences * 100 / len));
+        }
+
+        if differences > 0 || size_assert_failed {
+            let all_errors = errors.join("\n");
+            let header = "-----------------------".to_owned();
+            let full_text = format!("\n{}\n{}\n{}\n", header, all_errors, header);
+            panic!(full_text);
+        }
+    }
+    
     #[test]
     pub fn fft_test() {
         init_lib();
         let mut source = vec![0.0; 100];
-        for i in 0..source.len() {
-            let x = 10.0 * i as f64 / source.len() as f64;
-            source[i] = (std::f64::consts::PI * x).sin();
+        for i in 0..source.len()/2 {
+            let x = std::f64::consts::PI * 4.0 * (i as f64 / 2.0 / source.len() as f64);
+            source[2 * i] = x.sin();
+            source[2 * i + 1] = x.sin();
         }
+        
+        let mut fft = rustfft::FFT::new(source.len() / 2, false);
+        let signal = to_complex(&source);
+        let mut spectrum = signal.clone();
+        fft.process(&signal, &mut spectrum);
+        
         let prog_bldr = ProgramBuilder::new();
         let mut ocl_pq = ProQue::builder()
             .prog_bldr(prog_bldr)
@@ -312,14 +384,28 @@ mod tests {
                 ocl_pq.dims().clone(),
                 Some(&source))
                 .expect("Failed to create GPU input buffer");
+                
+        let mut res_buffer =
+            Buffer::<f64>::new(
+                ocl_pq.queue().clone(),
+                Some(flags::MEM_WRITE_ONLY),
+                ocl_pq.dims().clone(),
+                None)
+                .expect("Failed to create GPU result buffer");;
             
-        let mut builder = FftPlanBuilder::default(&ocl_pq, [source.len()]).unwrap();
-        builder.set_precision(Precision::Single).unwrap();
+        let mut builder = FftPlanBuilder::default(&ocl_pq, [source.len() / 2]).unwrap();
+        builder.set_precision(Precision::Double).unwrap();
         builder.set_layout(Layout::ComplexInterleaved, Layout::ComplexInterleaved).unwrap();
-        builder.set_result_location(Location::Inplace).unwrap();
+        builder.set_result_location(Location::OutOfPlace).unwrap();
         let plan = builder.build(&mut ocl_pq).unwrap();
-        plan.enqueue(Direction::Forward, &mut ocl_pq, &mut in_buffer, None).unwrap();
+        plan.enqueue(Direction::Forward, &mut ocl_pq, &mut in_buffer, Some(&mut res_buffer)).unwrap();
         ocl_pq.queue().finish();
+        
+        res_buffer.cmd()
+            .read(&mut source)
+            .enq()
+            .expect("Transferring result vector from the GPU back to memory failed");
         drop_lib();
+        assert_vector_eq(&source, &to_real(&spectrum), 1e-4);
     }
 }
