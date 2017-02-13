@@ -60,6 +60,33 @@ pub struct FftPlan {
     handle: ffi::clfftPlanHandle
 }
 
+/// Specify the expected precision of each FFT.
+pub enum Precision {
+    Single,
+    Double,
+    SingleFast,
+    DoubleFast
+}
+
+fn translate_precision(precision: Precision) -> ffi::clfftPrecision {
+    match precision {
+        Precision::Single => ffi::clfftPrecision::CLFFT_SINGLE,
+        Precision::Double => ffi::clfftPrecision::CLFFT_DOUBLE,
+        Precision::SingleFast => ffi::clfftPrecision::CLFFT_SINGLE_FAST,
+        Precision::DoubleFast => ffi::clfftPrecision::CLFFT_DOUBLE_FAST
+    }
+}
+
+fn translate_precision_back(precision: ffi::clfftPrecision) -> Precision {
+    match precision {
+        ffi::clfftPrecision::CLFFT_SINGLE => Precision::Single,
+        ffi::clfftPrecision::CLFFT_DOUBLE => Precision::Double,
+        ffi::clfftPrecision::CLFFT_SINGLE_FAST => Precision::SingleFast,
+        ffi::clfftPrecision::CLFFT_DOUBLE_FAST => Precision::DoubleFast,
+        ffi::clfftPrecision::ENDPRECISION => panic!("ENDPRECISION should never be returned")
+    }
+}
+
 impl FftPlan {
     /// Create a plan object initialized entirely with default values.
     ///
@@ -79,6 +106,19 @@ impl FftPlan {
     /// Returns the native clFFT plan handle.
     pub fn plan_handle(&self) -> ffi::clfftPlanHandle {
         self.handle
+    }
+    
+    /// Set the floating point precision of the FFT data
+    pub fn set_precision(&mut self, precision: Precision) -> ocl::Result<()> {
+        let precision = translate_precision(precision);
+        clfft_try!(unsafe { ffi::clfftSetPlanPrecision(self.handle, precision) });
+        Ok(())
+    }
+    
+    pub fn get_precision(&self) -> ocl::Result<Precision> {
+        let mut precision = ffi::clfftPrecision::CLFFT_SINGLE;
+        clfft_try!(unsafe { ffi::clfftGetPlanPrecision(self.handle, &mut precision) });
+        Ok(translate_precision_back(precision))
     }
 }
 
