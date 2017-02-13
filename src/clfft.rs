@@ -256,6 +256,11 @@ impl FftPlan {
             });
         Ok(())
     }
+    
+    /// Returns the native clFFT plan handle.
+    pub fn plan_handle(&self) -> ffi::clfftPlanHandle {
+        self.handle
+    }
 }
 
 impl std::ops::Drop for FftPlanBuilder {
