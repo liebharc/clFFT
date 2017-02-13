@@ -2,8 +2,9 @@
 Rust bindings for clFFT, a FFT library running on OpenCL devices. By default this library only compiles the bindings itself and therefore [prebuild binaries](https://github.com/clMathLibraries/clFFT/releases) are required in addition to the Rust bindings so that the library works. As an alternative the `build_all` feature flag can be used to build the clFFT library itself from the source using `cargo` and `cmake`.
 
 ## Related resources
-[Original README](CLFFT.md)
-[Original Documentation](http://clmathlibraries.github.io/clFFT/)
+
+- [Original README](CLFFT.md)
+- [Original Documentation](http://clmathlibraries.github.io/clFFT/)
 
 ## Usage
 
