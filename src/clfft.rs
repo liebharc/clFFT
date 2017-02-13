@@ -25,6 +25,28 @@ macro_rules! clfft_panic {
     }
 }
 
+/// Initialize the internal FFT resources such as FFT implementation caches kernels, programs, and buffers.
+pub fn init_lib() -> ffi::clfftSetupData {
+    let mut major: ocl::ffi::cl_uint = 0;
+    let mut minor: ocl::ffi::cl_uint = 0;
+    let mut patch: ocl::ffi::cl_uint = 0;
+    clfft_panic!( unsafe { ffi::clfftGetVersion(&mut major, &mut minor, &mut patch) } );
+    let data = ffi::clfftSetupData {
+        major: major,
+        minor: minor,
+        patch: patch,
+        debugFlags: 0,
+    };
+    
+    clfft_panic!(unsafe { ffi::clfftSetup(&data) });
+    data        
+}
+
+/// Release all internal resources acquired during `init_lib`.
+pub fn drop_lib() {
+    unsafe { ffi::clfftTeardown() };
+}
+
 fn translate_to_fft_dim(dims: ocl::SpatialDims) -> ffi::clfftDim {
     match dims.dim_count() {
         1 => ffi::clfftDim::CLFFT_1D,
@@ -58,28 +80,6 @@ impl FftPlan {
     pub fn plan_handle(&self) -> ffi::clfftPlanHandle {
         self.handle
     }
-}
-
-/// Initialize the internal FFT resources such as FFT implementation caches kernels, programs, and buffers.
-pub fn init_lib() -> ffi::clfftSetupData {
-    let mut major: ocl::ffi::cl_uint = 0;
-    let mut minor: ocl::ffi::cl_uint = 0;
-    let mut patch: ocl::ffi::cl_uint = 0;
-    clfft_panic!( unsafe { ffi::clfftGetVersion(&mut major, &mut minor, &mut patch) } );
-    let data = ffi::clfftSetupData {
-        major: major,
-        minor: minor,
-        patch: patch,
-        debugFlags: 0,
-    };
-    
-    clfft_panic!(unsafe { ffi::clfftSetup(&data) });
-    data        
-}
-
-/// Release all internal resources acquired during `init_lib`.
-pub fn drop_lib() {
-    unsafe { ffi::clfftTeardown() };
 }
 
 #[cfg(test)]
