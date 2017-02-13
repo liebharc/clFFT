@@ -87,6 +87,78 @@ fn translate_precision_back(precision: ffi::clfftPrecision) -> Precision {
     }
 }
 
+/// Specify the expected layouts of the buffers.
+pub enum Layout {
+    ComplexInterleaved,
+    ComplexPlanar,
+    HermitianInterleaved,
+    HermitianPlanar,
+    Real
+}
+
+fn translate_layout(layout: Layout) -> ffi::clfftLayout {
+    match layout {
+        Layout::ComplexInterleaved => ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED,
+        Layout::ComplexPlanar => ffi::clfftLayout::CLFFT_COMPLEX_PLANAR,
+        Layout::HermitianInterleaved => ffi::clfftLayout::CLFFT_HERMITIAN_INTERLEAVED,
+        Layout::HermitianPlanar => ffi::clfftLayout::CLFFT_HERMITIAN_PLANAR,
+        Layout::Real => ffi::clfftLayout::CLFFT_REAL
+    }
+}
+
+fn translate_layout_back(layout: ffi::clfftLayout) -> Layout {
+    match layout {
+        ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED => Layout::ComplexInterleaved,
+        ffi::clfftLayout::CLFFT_COMPLEX_PLANAR => Layout::ComplexPlanar,
+        ffi::clfftLayout::CLFFT_HERMITIAN_INTERLEAVED => Layout::HermitianInterleaved,
+        ffi::clfftLayout::CLFFT_HERMITIAN_PLANAR => Layout::HermitianPlanar,
+        ffi::clfftLayout::CLFFT_REAL => Layout::Real,
+        ffi::clfftLayout::ENDLAYOUT => panic!("ENDLAYOUT should never be returned")
+    }
+}
+
+/// Specify the expected direction of each FFT, time or the frequency domains
+pub enum Direction {
+    Forward,
+    Backward
+}
+
+fn translate_direction(direction: Direction) -> ffi::clfftDirection {
+    match direction {
+        Direction::Forward => ffi::clfftDirection::CLFFT_FORWARD,
+        Direction::Backward => ffi::clfftDirection::CLFFT_BACKWARD
+    }
+}
+
+fn translate_direction_back(direction: ffi::clfftDirection) -> Direction {
+    match direction {
+        ffi::clfftDirection::CLFFT_FORWARD => Direction::Forward,
+        ffi::clfftDirection::CLFFT_BACKWARD => Direction::Backward,
+        ffi::clfftDirection::ENDDIRECTION => panic!("ENDDIRECTION should never be returned")
+    }
+}
+
+/// pecify wheter the input buffers are overwritten with results
+pub enum Location {
+    Inplace,
+    OutOfPlace
+}
+
+fn translate_location(location: Location) -> ffi::clfftResultLocation {
+    match location {
+        Location::Inplace => ffi::clfftResultLocation::CLFFT_INPLACE,
+        Location::OutOfPlace => ffi::clfftResultLocation::CLFFT_OUTOFPLACE
+    }
+}
+
+fn translate_location_back(location: ffi::clfftResultLocation) -> Location {
+    match location {
+        ffi::clfftResultLocation::CLFFT_INPLACE => Location::Inplace,
+        ffi::clfftResultLocation::CLFFT_OUTOFPLACE => Location::OutOfPlace,
+        ffi::clfftResultLocation::ENDPLACE => panic!("ENDPLACE should never be returned")
+    }
+}
+
 impl FftPlan {
     /// Create a plan object initialized entirely with default values.
     ///
@@ -119,6 +191,34 @@ impl FftPlan {
         let mut precision = ffi::clfftPrecision::CLFFT_SINGLE;
         clfft_try!(unsafe { ffi::clfftGetPlanPrecision(self.handle, &mut precision) });
         Ok(translate_precision_back(precision))
+    }
+    
+    /// Set the expected layout of the input and output buffers
+    pub fn set_layout(&mut self, input_layout: Layout, output_layout: Layout) -> ocl::Result<()> {
+        let input_layout = translate_layout(input_layout);
+        let output_layout = translate_layout(output_layout);
+        clfft_try!(unsafe { ffi::clfftSetLayout(self.handle, input_layout, output_layout) });
+        Ok(())
+    }
+    
+    pub fn get_layout(&self) -> ocl::Result<(Layout, Layout)> {
+        let mut input_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
+        let mut output_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
+        clfft_try!(unsafe { ffi::clfftGetLayout(self.handle, &mut input_layout, &mut output_layout) });
+        Ok((translate_layout_back(input_layout), translate_layout_back(output_layout)))
+    }
+    
+    /// Set whether the input buffers are to be overwritten with results
+    pub fn set_result_location(&mut self, location: Location) -> ocl::Result<()> {
+        let location = translate_location(location);
+        clfft_try!(unsafe { ffi::clfftSetResultLocation(self.handle, location) });
+        Ok(())
+    }
+    
+    pub fn get_result_location(&self) -> ocl::Result<Location> {
+        let mut location = ffi::clfftResultLocation::CLFFT_INPLACE;
+        clfft_try!(unsafe { ffi::clfftGetResultLocation(self.handle, &mut location) });
+        Ok(translate_location_back(location))
     }
 }
 
