@@ -56,7 +56,7 @@ fn translate_to_fft_dim(dims: ocl::SpatialDims) -> ffi::clfftDim {
     }
 }
 
-pub struct FftPlan {
+pub struct FftPlanBuilder {
     handle: ffi::clfftPlanHandle
 }
 
@@ -159,20 +159,20 @@ fn translate_location_back(location: ffi::clfftResultLocation) -> Location {
     }
 }
 
-impl FftPlan {
+impl FftPlanBuilder {
     /// Create a plan object initialized entirely with default values.
     ///
     /// A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs 
     /// and buffers and associate them with buffers of specified dimensions.
     pub fn default<D: Into<ocl::SpatialDims>>(pro_que: &ocl::ProQue, dims: D) 
-        -> ocl::Result<FftPlan> {
+        -> ocl::Result<FftPlanBuilder> {
         let context = unsafe { pro_que.context().core_as_ref().as_ptr() };
         let dims = dims.into();
         let dim = translate_to_fft_dim(dims);
         let lengths = try!(dims.to_lens());
         let mut plan: ffi::clfftPlanHandle = 0;
         clfft_try!( unsafe { ffi::clfftCreateDefaultPlan(&mut plan, context, dim, &lengths as *const usize) } );
-        Ok(FftPlan {  handle: plan })
+        Ok(FftPlanBuilder {  handle: plan })
     }
     
     /// Returns the native clFFT plan handle.
@@ -219,6 +219,15 @@ impl FftPlan {
         let mut location = ffi::clfftResultLocation::CLFFT_INPLACE;
         clfft_try!(unsafe { ffi::clfftGetResultLocation(self.handle, &mut location) });
         Ok(translate_location_back(location))
+    }
+}
+
+impl std::ops::Drop for FftPlanBuilder {
+    fn drop(&mut self) {
+        if self.handle != 0 {
+            unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
+            self.handle = 0;
+        }
     }
 }
 
