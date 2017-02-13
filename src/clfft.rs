@@ -130,14 +130,6 @@ fn translate_direction(direction: Direction) -> ffi::clfftDirection {
     }
 }
 
-fn translate_direction_back(direction: ffi::clfftDirection) -> Direction {
-    match direction {
-        ffi::clfftDirection::CLFFT_FORWARD => Direction::Forward,
-        ffi::clfftDirection::CLFFT_BACKWARD => Direction::Backward,
-        ffi::clfftDirection::ENDDIRECTION => panic!("ENDDIRECTION should never be returned")
-    }
-}
-
 /// pecify wheter the input buffers are overwritten with results
 pub enum Location {
     Inplace,
@@ -220,12 +212,65 @@ impl FftPlanBuilder {
         clfft_try!(unsafe { ffi::clfftGetResultLocation(self.handle, &mut location) });
         Ok(translate_location_back(location))
     }
+    
+    pub fn build(mut self, pro_que: &mut ocl::ProQue) -> ocl::Result<FftPlan> {
+        let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
+        clfft_try!(unsafe {ffi::clfftBakePlan(self.handle, 1, &mut queue, None, 0 as *mut ::std::os::raw::c_void)});
+        let plan = FftPlan { handle: self.handle };
+        self.handle = 0;
+        Ok(plan)
+    }
+}
+
+pub struct FftPlan {
+    handle: ffi::clfftPlanHandle
+}
+
+impl FftPlan {
+    pub fn enqueue<T: ocl::traits::OclPrm>(
+            &self, 
+            direction: Direction, 
+            pro_que: &mut ocl::ProQue,
+            buffer: &mut ocl::Buffer<T>,
+            result: Option<&mut ocl::Buffer<T>>) -> ocl::Result<()> {
+        let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
+        let mut buffer = unsafe { buffer.core_as_ref().as_ptr() };
+        let mut result = match result {
+            None => 0 as ocl::ffi::cl_mem,
+            Some(res) => unsafe { res.core_as_ref().as_ptr() }
+        };
+        let direction = translate_direction(direction);
+        clfft_try!(
+            unsafe { 
+                ffi::clfftEnqueueTransform(
+                    self.handle,
+                    direction,
+                    1,
+                    &mut queue,
+                    0,
+                    0 as *const ocl::ffi::cl_event,
+                    0 as *mut ocl::ffi::cl_event,
+                    &mut buffer,
+                    &mut result,
+                    0 as ocl::ffi::cl_mem)
+            });
+        Ok(())
+    }
 }
 
 impl std::ops::Drop for FftPlanBuilder {
     fn drop(&mut self) {
         if self.handle != 0 {
-            unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
+            // unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
+            self.handle = 0;
+        }
+    }
+}
+
+impl std::ops::Drop for FftPlan {
+    fn drop(&mut self) {
+        if self.handle != 0 {
+            // unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
             self.handle = 0;
         }
     }
@@ -234,18 +279,42 @@ impl std::ops::Drop for FftPlanBuilder {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ocl::{ProQue};
+    use ocl::{ProQue, Buffer};
     use ocl::builders::ProgramBuilder;
+    use ocl::flags;
+    use std;
     
     #[test]
     pub fn fft_test() {
         init_lib();
+        let mut source = vec![0.0; 100];
+        for i in 0..source.len() {
+            let x = 10.0 * i as f64 / source.len() as f64;
+            source[i] = (std::f64::consts::PI * x).sin();
+        }
         let prog_bldr = ProgramBuilder::new();
-        let ocl_pq = ProQue::builder()
+        let mut ocl_pq = ProQue::builder()
             .prog_bldr(prog_bldr)
+            .dims([source.len()])
             .build()
             .expect("Building ProQue");
-        FftPlan::default(&ocl_pq, [1000]);
+            
+        let mut in_buffer =
+            Buffer::new(
+                ocl_pq.queue().clone(),
+                Some(flags::MEM_READ_WRITE |
+                     flags::MEM_COPY_HOST_PTR),
+                ocl_pq.dims().clone(),
+                Some(&source))
+                .expect("Failed to create GPU input buffer");
+            
+        let mut builder = FftPlanBuilder::default(&ocl_pq, [1000]).unwrap();
+        builder.set_precision(Precision::Single).unwrap();
+        builder.set_layout(Layout::ComplexInterleaved, Layout::ComplexInterleaved).unwrap();
+        builder.set_result_location(Location::Inplace).unwrap();
+        let plan = builder.build(&mut ocl_pq).unwrap();
+        plan.enqueue(Direction::Forward, &mut ocl_pq, &mut in_buffer, None).unwrap();
+        ocl_pq.queue().finish();
         drop_lib();
     }
 }
