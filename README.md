@@ -4,7 +4,7 @@ Rust bindings for clFFT, a FFT library running on OpenCL devices. By default thi
 ## Related resources
 
 - [Example](examples/example.rs)
-- [Binding Documentation](docs/bindings/clfft/index.html)
+- [Binding Documentation](https://liebharc.github.io/clFFT/bindings/clfft/)
 - [Original README](CLFFT.md)
 - [Original Documentation](http://clmathlibraries.github.io/clFFT/)
 
