@@ -1,3 +1,5 @@
+//! Bindings to `clFFT`. See http://clmathlibraries.github.io/clFFT/ for more information.
+
 use ocl::ffi::*;
 
 #[repr(i32)]

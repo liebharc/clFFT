@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error","An enum containing either a `String` or one of several other error types."]],"type":[["Result","`ocl::Error` result type."]]});

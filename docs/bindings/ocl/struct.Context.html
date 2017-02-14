@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Context` struct in crate `ocl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Context">
+
+    <title>ocl::Context - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>ocl</a></p><script>window.sidebarCurrent = {name: 'Context', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>ocl</a>::<wbr><a class='struct' href=''>Context</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-1865' class='srclink' href='../src/ocl/standard/context.rs.html#121-125' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Context { /* fields omitted */ }</pre><div class='docblock'><p>A context for a particular platform and set of device types.</p>
+
+<p>Thread safety and destruction for any enclosed pointers are all handled automatically.
+Clone, store, and share between threads to your heart&#39;s content.</p>
+
+<p>[TODO]: Consider removing contained copies of the device id list and
+platform id. Can be easily ascertained via the API.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-243' class='srclink' href='../src/ocl/standard/context.rs.html#127-269' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.builder' class='method'><span id='builder.v' class='invisible'><code>fn <a href='#method.builder' class='fnname'>builder</a>() -&gt; <a class='struct' href='../ocl/builders/struct.ContextBuilder.html' title='ocl::builders::ContextBuilder'>ContextBuilder</a></code></span></h4>
+<div class='docblock'><p>Returns a <a href="/ocl/ocl/struct.ContextBuilder.html"><code>ContextBuilder</code></a>.</p>
+
+<p>This is the preferred way to create a Context.</p>
+</div><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(properties: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../ocl/builders/struct.ContextProperties.html' title='ocl::builders::ContextProperties'>ContextProperties</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; device_spec: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../ocl/builders/enum.DeviceSpecifier.html' title='ocl::builders::DeviceSpecifier'>DeviceSpecifier</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pfn_notify: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../ocl_core/type.CreateContextCallbackFn.html' title='ocl_core::CreateContextCallbackFn'>CreateContextCallbackFn</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; user_data: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../ocl_core/type.UserDataPtr.html' title='ocl_core::UserDataPtr'>UserDataPtr</a>&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns a newly created context.</p>
+
+<p>Prefer <code>Context::builder()...</code> instead of this method unless you know
+what you&#39;re doing. Please also immediately contact us if you do, in
+fact, know what you&#39;re doing so that you can be added to the
+development team as the one who does.</p>
+
+<h2 id='defaults' class='section-header'><a href='#defaults'>Defaults</a></h2>
+<ul>
+<li>The &#39;NULL&#39; platform (which is not to be relied on but is generally
+the first avaliable).</li>
+<li>All devices associated with the &#39;NULL&#39; platform</li>
+<li>No notify callback function or user data.</li>
+</ul>
+
+<p>Don&#39;t rely on these defaults, instead rely on the <code>ContextBuilder</code>
+defaults. In other words, use: <code>Context::builder().build().unwrap()</code>
+rather than <code>Context::new(None, None, None, None).unwrap()</code>.</p>
+
+<h2 id='panics' class='section-header'><a href='#panics'>Panics</a></h2>
+<p>[TEMPORARY] Passing a <code>Some</code> variant for <code>pfn_notify</code> or <code>user_data</code> is
+not yet supported.</p>
+</div><h4 id='method.resolve_wrapping_device_idxs' class='method'><span id='resolve_wrapping_device_idxs.v' class='invisible'><code>fn <a href='#method.resolve_wrapping_device_idxs' class='fnname'>resolve_wrapping_device_idxs</a>(&amp;self, idxs: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../ocl/struct.Device.html' title='ocl::Device'>Device</a>&gt;</code></span></h4>
+<div class='docblock'><p>Resolves a list of zero-based device indices into a list of Devices.</p>
+
+<p>If any index is out of bounds it will wrap around zero (%) to the next
+valid device index.</p>
+</div><h4 id='method.get_device_by_wrapping_index' class='method'><span id='get_device_by_wrapping_index.v' class='invisible'><code>fn <a href='#method.get_device_by_wrapping_index' class='fnname'>get_device_by_wrapping_index</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../ocl/struct.Device.html' title='ocl::Device'>Device</a></code></span></h4>
+<div class='docblock'><p>Returns a device by its ordinal count within this context.</p>
+
+<p>Round-robins (%) to the next valid device.</p>
+</div><h4 id='method.platform_info' class='method'><span id='platform_info.v' class='invisible'><code>fn <a href='#method.platform_info' class='fnname'>platform_info</a>(&amp;self, info_kind: <a class='enum' href='../ocl/enums/enum.PlatformInfo.html' title='ocl::enums::PlatformInfo'>PlatformInfo</a>) -&gt; <a class='enum' href='../ocl/enums/enum.PlatformInfoResult.html' title='ocl::enums::PlatformInfoResult'>PlatformInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns info about the platform associated with the context.</p>
+</div><h4 id='method.device_info' class='method'><span id='device_info.v' class='invisible'><code>fn <a href='#method.device_info' class='fnname'>device_info</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, info_kind: <a class='enum' href='../ocl/enums/enum.DeviceInfo.html' title='ocl::enums::DeviceInfo'>DeviceInfo</a>) -&gt; <a class='enum' href='../ocl/enums/enum.DeviceInfoResult.html' title='ocl::enums::DeviceInfoResult'>DeviceInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns info about the device indexed by <code>index</code> associated with this
+context.</p>
+</div><h4 id='method.info' class='method'><span id='info.v' class='invisible'><code>fn <a href='#method.info' class='fnname'>info</a>(&amp;self, info_kind: <a class='enum' href='../ocl/enums/enum.ContextInfo.html' title='ocl::enums::ContextInfo'>ContextInfo</a>) -&gt; <a class='enum' href='../ocl/enums/enum.ContextInfoResult.html' title='ocl::enums::ContextInfoResult'>ContextInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns info about the context.</p>
+</div><h4 id='method.core_as_ref' class='method'><span id='core_as_ref.v' class='invisible'><code>fn <a href='#method.core_as_ref' class='fnname'>core_as_ref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl_core/types/abs/struct.Context.html' title='ocl_core::types::abs::Context'>ContextCore</a></code></span></h4>
+<div class='docblock'><p>Returns a reference to the core pointer wrapper, usable by functions in
+the <code>core</code> module.</p>
+</div><h4 id='method.devices' class='method'><span id='devices.v' class='invisible'><code>fn <a href='#method.devices' class='fnname'>devices</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../ocl/struct.Device.html' title='ocl::Device'>Device</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></h4>
+<div class='docblock'><p>Returns the list of devices associated with this context.</p>
+</div><h4 id='method.platform' class='method'><span id='platform.v' class='invisible'><code>fn <a href='#method.platform' class='fnname'>platform</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../ocl/struct.Platform.html' title='ocl::Platform'>Platform</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the platform this context is associated with.</p>
+</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../ocl_core/types/abs/struct.Context.html' title='ocl_core::types::abs::Context'>ContextCore</a>&gt;</h2><div class='impl-items'><h4 id='method.as_ptr' class='method'><span id='as_ptr.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='../libc/enum.c_void.html' title='libc::c_void'>c_void</a></code></span></h4>
+<div class='docblock'><p>Returns a pointer, do not store it.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1869' class='srclink' href='../src/ocl/standard/context.rs.html#120' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1877' class='srclink' href='../src/ocl/standard/context.rs.html#120' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-289' class='srclink' href='../src/ocl/standard/context.rs.html#271-275' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt-1' class='method'><span id='fmt.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-293' class='srclink' href='../src/ocl/standard/context.rs.html#277-283' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class='type'><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = <a class='struct' href='../ocl_core/types/abs/struct.Context.html' title='ocl_core::types::abs::Context'>ContextCore</a></code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing</p>
+</div><h4 id='method.deref' class='method'><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl_core/types/abs/struct.Context.html' title='ocl_core::types::abs::Context'>ContextCore</a></code></span></h4>
+<div class='docblock'><p>The method called to dereference a value</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-297' class='srclink' href='../src/ocl/standard/context.rs.html#285-289' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.deref_mut' class='method'><span id='deref_mut.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#tymethod.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../ocl_core/types/abs/struct.Context.html' title='ocl_core::types::abs::Context'>ContextCore</a></code></span></h4>
+<div class='docblock'><p>The method called to mutably dereference a value</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ocl";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script src="../extra.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

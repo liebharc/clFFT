@@ -1,10 +1,21 @@
+//! This module provides access to the `clFFT` lib in a fashion which is more consistent with the `ocl` crate.
+//! Users can always use the `ffi` module to directly access `clFFT`.
+//!
+//! Keep in mind that this crate just provides the bindings to `clFFT`. In order to build it the linker needs to 
+//! have `clFFT.lib` available and in order to run it the `clFFT` library needs to be there. See the build section in the
+//! README for further details.
+
 extern crate ocl;
+
+#[macro_use]
+extern crate lazy_static;
+
 #[allow(non_camel_case_types)]
 #[allow(non_upper_case_globals)]
 #[allow(non_snake_case)]
 pub mod ffi;
 use std::mem;
-pub use ffi::clfftSetupData;
+use std::sync::Mutex;
 
 macro_rules! clfft_try {
     ( $result_expr: expr) => {
@@ -25,8 +36,31 @@ macro_rules! clfft_panic {
     }
 }
 
+/// A trait for all paremeters supported by `clFFT`.
+pub trait ClFftPrm : ocl::traits::OclPrm { 
+    /// Is the type a double precision type.
+    fn is_dbl_precision() -> bool;
+}
+
+impl ClFftPrm for f32 {
+    fn is_dbl_precision() -> bool { false }
+}
+
+impl ClFftPrm for f64 {
+    fn is_dbl_precision() -> bool { true }
+}
+
+struct SetupDataBox {
+    #[allow(dead_code)]
+    data: ffi::clfftSetupData
+}
+
+lazy_static! {
+    static ref INIT: Mutex<SetupDataBox> = Mutex::new(init_lib());
+}
+
 /// Initialize the internal FFT resources such as FFT implementation caches kernels, programs, and buffers.
-pub fn init_lib() -> ffi::clfftSetupData {
+fn init_lib() -> SetupDataBox {
     let mut major: ocl::ffi::cl_uint = 0;
     let mut minor: ocl::ffi::cl_uint = 0;
     let mut patch: ocl::ffi::cl_uint = 0;
@@ -39,12 +73,21 @@ pub fn init_lib() -> ffi::clfftSetupData {
     };
     
     clfft_panic!(unsafe { ffi::clfftSetup(&data) });
-    data        
+    SetupDataBox { data: data }
 }
 
-/// Release all internal resources acquired during `init_lib`.
-pub fn drop_lib() {
-    unsafe { ffi::clfftTeardown() };
+/* Drop in static is unstable. `clFFT` will call teardown itself and write a warning. That seems to be okay for now
+until Rust progresses to stabilize this feature.
+impl Drop for SetupDataBox {
+    fn drop(&mut self) {
+        let _ = unsafe { ffi::clfftTeardown() };
+    }
+}*/
+
+/// Frees all `clFFT` library resources. After calling this function
+/// no further methods must be called on this lib!
+pub unsafe fn teatdown() {
+    let _ = ffi::clfftTeardown();
 }
 
 fn translate_to_fft_dim(dims: ocl::SpatialDims) -> ffi::clfftDim {
@@ -56,21 +99,18 @@ fn translate_to_fft_dim(dims: ocl::SpatialDims) -> ffi::clfftDim {
     }
 }
 
-pub struct FftPlanBuilder<T: ocl::traits::OclPrm> {
-    handle: ffi::clfftPlanHandle,
-    data_type: std::marker::PhantomData<T>,
-    dims: ocl::SpatialDims
-}
-
 /// Specify the expected precision of each FFT.
 #[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
 pub enum Precision {
     Precise,
     Fast
 }
 
-fn translate_precision<T>(precision: Precision) -> ffi::clfftPrecision {
-    let is_f64 = std::mem::size_of::<T>() == 8;
+fn translate_precision<T: ClFftPrm>(precision: Precision) -> ffi::clfftPrecision {
+    let is_f64 =  T::is_dbl_precision();
     match precision {
         Precision::Precise => 
             if is_f64 { ffi::clfftPrecision::CLFFT_DOUBLE }
@@ -93,6 +133,9 @@ fn translate_precision_back(precision: ffi::clfftPrecision) -> Precision {
 
 /// Specify the expected layouts of the buffers.
 #[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
 pub enum Layout {
     ComplexInterleaved,
     ComplexPlanar,
@@ -124,6 +167,9 @@ fn translate_layout_back(layout: ffi::clfftLayout) -> Layout {
 
 /// Specify the expected direction of each FFT, time or the frequency domains
 #[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
 pub enum Direction {
     Forward,
     Backward
@@ -138,6 +184,9 @@ fn translate_direction(direction: Direction) -> ffi::clfftDirection {
 
 /// pecify wheter the input buffers are overwritten with results
 #[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
+#[derive(Debug)]
 pub enum Location {
     Inplace,
     OutOfPlace
@@ -158,177 +207,336 @@ fn translate_location_back(location: ffi::clfftResultLocation) -> Location {
     }
 }
 
-impl<T: ocl::traits::OclPrm> FftPlanBuilder<T> {
-    /// Create a plan object initialized entirely with default values.
-    ///
-    /// A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs 
-    /// and buffers and associate them with buffers of specified dimensions.
-    pub fn default<D: Into<ocl::SpatialDims>>(pro_que: &ocl::ProQue, dims: D) 
-        -> ocl::Result<FftPlanBuilder<T>> {
-        let context = unsafe { pro_que.context().core_as_ref().as_ptr() };
-        let dims = dims.into();
-        let dim = translate_to_fft_dim(dims);
-        let lengths = try!(dims.to_lens());
-        let mut plan: ffi::clfftPlanHandle = 0;
-        clfft_try!( unsafe { ffi::clfftCreateDefaultPlan(&mut plan, context, dim, &lengths as *const usize) } );
-        let mut builder = 
-            FftPlanBuilder 
-            {  
-                handle: plan, 
-                data_type: std::marker::PhantomData,
-                dims: dims
-            };
-        try!(builder.set_precision(Precision::Precise));
-        Ok(builder)
-    }
-    
-    /// Returns the native clFFT plan handle.
-    pub fn plan_handle(&self) -> ffi::clfftPlanHandle {
-        self.handle
-    }
-    
-    /// Set the floating point precision of the FFT data
-    pub fn set_precision(&mut self, precision: Precision) -> ocl::Result<()> {
-        let precision = translate_precision::<T>(precision);
-        clfft_try!(unsafe { ffi::clfftSetPlanPrecision(self.handle, precision) });
-        Ok(())
-    }
-    
-    pub fn get_precision(&self) -> ocl::Result<Precision> {
-        let mut precision = ffi::clfftPrecision::CLFFT_SINGLE;
-        clfft_try!(unsafe { ffi::clfftGetPlanPrecision(self.handle, &mut precision) });
-        Ok(translate_precision_back(precision))
-    }
-    
-    /// Set the expected layout of the input and output buffers
-    pub fn set_layout(&mut self, input_layout: Layout, output_layout: Layout) -> ocl::Result<()> {
-        let input_layout = translate_layout(input_layout);
-        let output_layout = translate_layout(output_layout);
-        clfft_try!(unsafe { ffi::clfftSetLayout(self.handle, input_layout, output_layout) });
-        Ok(())
-    }
-    
-    pub fn get_layout(&self) -> ocl::Result<(Layout, Layout)> {
-        let mut input_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
-        let mut output_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
-        clfft_try!(unsafe { ffi::clfftGetLayout(self.handle, &mut input_layout, &mut output_layout) });
-        Ok((translate_layout_back(input_layout), translate_layout_back(output_layout)))
-    }
-    
-    /// Set whether the input buffers are to be overwritten with results
-    pub fn set_result_location(&mut self, location: Location) -> ocl::Result<()> {
-        let location = translate_location(location);
-        clfft_try!(unsafe { ffi::clfftSetResultLocation(self.handle, location) });
-        Ok(())
-    }
-    
-    pub fn get_result_location(&self) -> ocl::Result<Location> {
-        let mut location = ffi::clfftResultLocation::CLFFT_INPLACE;
-        clfft_try!(unsafe { ffi::clfftGetResultLocation(self.handle, &mut location) });
-        Ok(translate_location_back(location))
-    }
-    
-    pub fn build(mut self, pro_que: &mut ocl::ProQue) -> ocl::Result<FftPlan<T>> {
-        let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
-        clfft_try!(unsafe {ffi::clfftBakePlan(self.handle, 1, &mut queue, None, 0 as *mut ::std::os::raw::c_void)});
-        let (layout_in, layout_out) = try!(self.get_layout());
-        let in_complex = if layout_in == Layout::Real { 1 } else { 2 };
-        let out_complex = if layout_out == Layout::Real { 1 } else { 2 };
-        let fft_len_in = self.dims.to_len() * in_complex;
-        let fft_len_out = self.dims.to_len() * out_complex;
-        let location = try!{ self.get_result_location() };
-        let plan = 
-            FftPlan 
-            { 
-                fft_input_len: fft_len_in,
-                fft_output_len: fft_len_out,
-                inplace: location == Location::Inplace,
-                handle: self.handle,
-                data_type: std::marker::PhantomData
-            };
-        self.handle = 0;
-        Ok(plan)
+/// Builder for a FFT plan. 
+pub struct FftPlanBuilder<T: ClFftPrm> {
+    data_type: std::marker::PhantomData<T>,
+    precision: Precision,
+    dims: Option<ocl::SpatialDims>,
+    input_layout: Layout,
+    output_layout: Layout,
+    forward_scale: f32,
+    backward_scale: f32,
+    batch_size: Option<usize>,
+}
+
+/// Creates a builder for baking a new FFT plan.
+pub fn builder<T: ClFftPrm>() -> FftPlanBuilder<T> {
+    let _ = INIT.lock().unwrap();
+
+    FftPlanBuilder {
+        data_type: std::marker::PhantomData,
+        precision: Precision::Precise,
+        dims: None,
+        input_layout: Layout::ComplexInterleaved,
+        output_layout: Layout::ComplexInterleaved,
+        forward_scale: 1.0,
+        backward_scale: 1.0,
+        batch_size: None,
     }
 }
 
-pub struct FftPlan<T: ocl::traits::OclPrm> {
-    fft_input_len: usize,
-    fft_output_len: usize,
-    inplace: bool,
+impl<T: ClFftPrm> FftPlanBuilder<T> {
+    /// Set the floating point precision of the FFT data.
+    pub fn precision(mut self, precision: Precision) -> Self {
+        self.precision = precision;
+        self
+    }
+    
+    /// Set the expected layout of the input buffer.
+    pub fn input_layout(mut self, input_layout: Layout) -> Self {
+        self.input_layout = input_layout;
+        self
+    }
+    
+    /// Set the expected layout of the output buffer.
+    pub fn output_layout(mut self, output_layout: Layout) -> Self {
+        self.output_layout = output_layout;
+        self
+    }
+    
+    /// Set the dimensionality of the FFT transform; describes how many elements are in the array.
+    ///
+    /// If the data is complex then the dimesions are specified are per complex number. In practice that
+    /// means that the dimensions should be half the size of the buffers.
+    pub fn dims<D: Into<ocl::SpatialDims>>(mut self, dims: D) -> Self {
+        self.dims = Some(dims.into());
+        self
+    }
+    
+    /// Set the scaling factor that is applied to the FFT data.
+    pub fn forward_scale(mut self, scale: f32) -> Self {
+        self.forward_scale = scale;
+        self
+    }
+    
+    /// Set the scaling factor that is applied to the FFT data.
+    pub fn backward_scale(mut self, scale: f32) -> Self {
+        self.backward_scale = scale;
+        self
+    }
+        
+    /// Set the number of discrete arrays that the plan can concurrently handle.
+    pub fn batch_size(mut self, scale: usize) -> Self {
+        self.batch_size = Some(scale);
+        self
+    }
+    
+    /// Creates a plan for an inplace FFT.
+    pub fn bake_inplace_plan<'a>(&mut self, pro_que: &'a ocl::ProQue) -> ocl::Result<FftInplacePlan<'a, T>> {
+        let handle = try!(bake_plan::<T>(self, pro_que, Location::Inplace));
+        Ok(FftInplacePlan { handle: handle, pro_que: pro_que, data_type: std::marker::PhantomData })
+    }
+    
+    /// Creates a plan for an out of place FFT.
+    pub fn bake_out_of_place_plan<'a>(&mut self, pro_que: &'a ocl::ProQue) -> ocl::Result<FftOutOfPlacePlan<'a, T>> {
+        let handle = try!(bake_plan::<T>(self, pro_que, Location::OutOfPlace));
+        Ok(FftOutOfPlacePlan { handle: handle, pro_que: pro_que, data_type: std::marker::PhantomData })
+    }
+}
+
+fn bake_plan<T: ClFftPrm>(builder: &mut FftPlanBuilder<T>, pro_que: &ocl::ProQue, location: Location) -> ocl::Result<ffi::clfftPlanHandle> {
+    let context = unsafe { pro_que.context().core_as_ref().as_ptr() };
+    let dims = match builder.dims {
+        Some(d) => d,
+        None => pro_que.dims().clone()
+    };
+    let dim = translate_to_fft_dim(dims);
+    let lengths = try!(dims.to_lens());
+    let mut plan: ffi::clfftPlanHandle = 0;
+    clfft_try!( unsafe { ffi::clfftCreateDefaultPlan(&mut plan, context, dim, &lengths as *const usize) } );
+    let precision = translate_precision::<T>(builder.precision);
+    clfft_try!( unsafe { ffi::clfftSetPlanPrecision(plan, precision) } );
+    let input_layout = translate_layout(builder.input_layout);
+    let output_layout = translate_layout(builder.output_layout);
+    clfft_try!( unsafe { ffi::clfftSetLayout(plan, input_layout, output_layout) } );
+    clfft_try!( unsafe { ffi::clfftSetPlanScale(plan, ffi::clfftDirection::CLFFT_FORWARD, builder.forward_scale) } );
+    clfft_try!( unsafe { ffi::clfftSetPlanScale(plan, ffi::clfftDirection::CLFFT_BACKWARD, builder.backward_scale) } );
+    let location = translate_location(location);
+    clfft_try!( unsafe { ffi::clfftSetResultLocation(plan, location) } );
+    match builder.batch_size {
+        None => (), // Use default
+        Some(s) => {
+            clfft_try!( unsafe { ffi::clfftSetPlanBatchSize(plan, s) } );
+        }
+    }
+    
+    let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
+    clfft_try!(unsafe {ffi::clfftBakePlan(plan, 1, &mut queue, None, 0 as *mut ::std::os::raw::c_void)});
+    Ok(plan)
+}
+
+/// A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs
+/// and buffers and associate them with buffers of specified dimensions.
+pub struct FftInplacePlan<'a, T: ClFftPrm> {
     handle: ffi::clfftPlanHandle,
+    pro_que: &'a ocl::ProQue,
     data_type: std::marker::PhantomData<T>
 }
 
-impl<T: ocl::traits::OclPrm> FftPlan<T> {
+/// A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs
+/// and buffers and associate them with buffers of specified dimensions.
+pub struct FftOutOfPlacePlan<'a, T: ClFftPrm> {
+    handle: ffi::clfftPlanHandle,
+    pro_que: &'a ocl::ProQue,
+    data_type: std::marker::PhantomData<T>
+}
+
+impl<'a, T: ClFftPrm> FftInplacePlan<'a, T> {
+    /// Enqueues the FFT so that it gets performed on the device.
     pub fn enqueue(
-            &self, 
-            direction: Direction, 
-            pro_que: &mut ocl::ProQue,
-            buffer: &mut ocl::Buffer<T>,
-            result: Option<&mut ocl::Buffer<T>>) -> ocl::Result<()> {
-        if self.fft_input_len != buffer.dims().to_len() {
-            return ocl::Error::err(format!("FFT plan requires that input buffer must have a size of {}", self.fft_input_len));
+        &self,
+        direction: Direction, 
+        buffer: &mut ocl::Buffer<T>) -> ocl::Result<()> {
+        let input_len = self.dims().to_len() * if self.input_layout() == Layout::Real { 1 } else { 2 };
+        if input_len != buffer.dims().to_len() {
+            return ocl::Error::err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len));
         }
         
-        if self.inplace {
-            if result.is_some() {
-                return ocl::Error::err("Dubious call, FFT is planned to happen inplace but a result buffer was provided. Either change the FFT to operate out of place or don't pass a result buffer into the `enqueue` method.")
-            }
-        }
-        else {
-            if !result.is_some() {
-                return ocl::Error::err("FFT is planned to be performed out of place but no result buffer was proided. Either change the FFT to operate inplace or provie a result buffer.");
-            }
-        }
-        
-        let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
-        let mut buffer = unsafe { buffer.core_as_ref().as_ptr() };
-        let mut result = match result {
-            None => 0 as ocl::ffi::cl_mem,
-            Some(res) => {
-                if self.fft_output_len != res.dims().to_len() {
-                    return ocl::Error::err(format!("FFT plan requires that result buffer must have a size of {}", self.fft_input_len));
-                }
-                unsafe { res.core_as_ref().as_ptr() }
-            }
-        };
-        let direction = translate_direction(direction);
-        clfft_try!(
-            unsafe { 
-                ffi::clfftEnqueueTransform(
-                    self.handle,
-                    direction,
-                    1,
-                    &mut queue,
-                    0,
-                    0 as *const ocl::ffi::cl_event,
-                    0 as *mut ocl::ffi::cl_event,
-                    &mut buffer,
-                    &mut result,
-                    0 as ocl::ffi::cl_mem)
-            });
-        Ok(())
+        enqueue::<T>(self.handle, direction, self.pro_que, buffer, None)
     }
-    
+}
+
+impl<'a, T: ClFftPrm> FftOutOfPlacePlan<'a, T> {  
+    /// Enqueues the FFT so that it gets performed on the device.
+    pub fn enqueue(
+        &self,
+        direction: Direction, 
+        buffer: &ocl::Buffer<T>,
+        result: &mut ocl::Buffer<T>) -> ocl::Result<()> {
+        let input_len = self.dims().to_len() * if self.input_layout() == Layout::Real { 1 } else { 2 };
+        if input_len != buffer.dims().to_len() {
+            return ocl::Error::err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len));
+        }
+        
+        let output_len = self.dims().to_len() * if self.output_layout() == Layout::Real { 1 } else { 2 };
+        if output_len != buffer.dims().to_len() {
+            return ocl::Error::err(format!("FFT plan requires that output buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", output_len));
+        }
+        
+        enqueue::<T>(self.handle, direction, self.pro_que, buffer, Some(result))
+    }
+}
+
+fn enqueue<T: ClFftPrm>(
+        plan: ffi::clfftPlanHandle, 
+        direction: Direction, 
+        pro_que: &ocl::ProQue,
+        buffer: &ocl::Buffer<T>,
+        result: Option<&mut ocl::Buffer<T>>) -> ocl::Result<()> {   
+    let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
+    let mut buffer = unsafe { buffer.core_as_ref().as_ptr() };
+    let mut result = match result {
+        None => 0 as ocl::ffi::cl_mem,
+        Some(res) => unsafe { res.core_as_ref().as_ptr() }
+    };
+    let direction = translate_direction(direction);
+    clfft_try!(
+        unsafe { 
+            ffi::clfftEnqueueTransform(
+                plan,
+                direction,
+                1,
+                &mut queue,
+                0,
+                0 as *const ocl::ffi::cl_event,
+                0 as *mut ocl::ffi::cl_event,
+                &mut buffer,
+                &mut result,
+                0 as ocl::ffi::cl_mem)
+        });
+    Ok(())
+}
+
+/// Gets the native `clFFT` plan handle from a type.
+pub trait AsClFftPlanHandle {
+    unsafe fn as_ptr(&self) -> ffi::clfftPlanHandle;
+}
+
+impl<'a, T: ClFftPrm> AsClFftPlanHandle for FftOutOfPlacePlan<'a, T> {  
     /// Returns the native clFFT plan handle.
-    pub fn plan_handle(&self) -> ffi::clfftPlanHandle {
+    unsafe fn as_ptr(&self) -> ffi::clfftPlanHandle {
         self.handle
     }
 }
 
-impl<T: ocl::traits::OclPrm> std::ops::Drop for FftPlanBuilder<T> {
+impl<'a, T: ClFftPrm> AsClFftPlanHandle for FftInplacePlan<'a, T> {  
+    /// Returns the native clFFT plan handle.
+    unsafe fn as_ptr(&self) -> ffi::clfftPlanHandle {
+        self.handle
+    }
+}
+
+/// Getters for a FFT plan.
+pub trait FftPlan {
+    /// Gets expected precision of each FFT.
+    fn precision(&self) -> Precision;
+    /// Gets the FFT dimensions.
+    fn dims(&self) -> ocl::SpatialDims;
+    /// the expected layouts of the input buffers.
+    fn input_layout(&self) -> Layout;
+    /// the expected layouts of the output buffers.
+    fn output_layout(&self) -> Layout;
+    /// Gets the scaling factors for FFTs.
+    fn forward_scale(&self) -> f32;
+    /// Gets the scaling factors for IFFTs.
+    fn backward_scale(&self) -> f32;
+    /// Gets the patch size.
+    fn batch_size(&self) -> usize;
+    /// Gets whether the input buffers are overwritten with results.
+    fn result_location(&self) -> Location;
+}
+
+impl<T: AsClFftPlanHandle> FftPlan for T {
+    fn precision(&self) -> Precision {
+        let handle = unsafe { self.as_ptr() };
+        let mut precision = ffi::clfftPrecision::CLFFT_SINGLE;
+        clfft_panic!( unsafe { ffi::clfftGetPlanPrecision(handle, &mut precision) });
+        translate_precision_back(precision)
+    }
+    
+    fn result_location(&self) -> Location {
+        let handle = unsafe { self.as_ptr() };
+        let mut location = ffi::clfftResultLocation::CLFFT_INPLACE;
+        clfft_panic!( unsafe { ffi::clfftGetResultLocation(handle, &mut location) });
+        translate_location_back(location)
+    }
+    
+    fn dims(&self) -> ocl::SpatialDims {
+        let handle = unsafe { self.as_ptr() };
+        let mut dim = ffi::clfftDim::CLFFT_1D;
+        let mut num_dims = 0;
+        clfft_panic!( unsafe { ffi::clfftGetPlanDim(handle, &mut dim, &mut num_dims) });
+        match num_dims {
+            1 => {
+                let mut dims = [0; 1];
+                clfft_panic!( unsafe { ffi::clfftGetPlanLength(handle, dim, dims.as_mut_ptr()) });
+                ocl::SpatialDims::from(dims)
+            },
+            2 => {
+                let mut dims = [0; 2];
+                clfft_panic!( unsafe { ffi::clfftGetPlanLength(handle, dim, dims.as_mut_ptr()) });
+                ocl::SpatialDims::from(dims)
+            },
+            3 => {
+                let mut dims = [0; 3];
+                clfft_panic!( unsafe { ffi::clfftGetPlanLength(handle, dim, dims.as_mut_ptr()) });
+                ocl::SpatialDims::from(dims)
+            },
+            n => panic!("Unexpeced number of dimensions {}", n)
+        }
+    }
+    
+    fn input_layout(&self) -> Layout {
+        let handle = unsafe { self.as_ptr() };
+        let mut input_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
+        let mut output_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
+        clfft_panic!( unsafe { ffi::clfftGetLayout(handle, &mut input_layout, &mut output_layout) });
+        translate_layout_back(input_layout)
+    }
+    
+    fn output_layout(&self) -> Layout {
+        let handle = unsafe { self.as_ptr() };
+        let mut input_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
+        let mut output_layout = ffi::clfftLayout::CLFFT_COMPLEX_INTERLEAVED;
+        clfft_panic!( unsafe { ffi::clfftGetLayout(handle, &mut input_layout, &mut output_layout) });
+        translate_layout_back(output_layout)
+    }
+    
+    fn forward_scale(&self) -> f32 {
+        let handle = unsafe { self.as_ptr() };
+        let mut scale = 1.0;
+        clfft_panic!( unsafe { ffi::clfftGetPlanScale(handle, ffi::clfftDirection::CLFFT_FORWARD, &mut scale) });
+        scale
+    }
+    
+    fn backward_scale(&self) -> f32 {
+        let handle = unsafe { self.as_ptr() };
+        let mut scale = 1.0;
+        clfft_panic!( unsafe { ffi::clfftGetPlanScale(handle, ffi::clfftDirection::CLFFT_BACKWARD, &mut scale) });
+        scale
+    }
+    
+    fn batch_size(&self) -> usize {
+        let handle = unsafe { self.as_ptr() };
+        let mut batch_size = 0;
+        clfft_panic!( unsafe { ffi::clfftGetPlanBatchSize(handle, &mut batch_size) });
+        batch_size
+    }
+}
+
+impl<'a, T: ClFftPrm> Drop for FftInplacePlan<'a, T> {
     fn drop(&mut self) {
         if self.handle != 0 {
-            // TODO: let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
+            let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
             self.handle = 0;
         }
     }
 }
 
-impl<T: ocl::traits::OclPrm> std::ops::Drop for FftPlan<T> {
+impl<'a, T: ClFftPrm> Drop for FftOutOfPlacePlan<'a, T> {
     fn drop(&mut self) {
         if self.handle != 0 {
-            // TODO: let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
+            let _ = unsafe { ffi::clfftDestroyPlan(&mut self.handle) };
             self.handle = 0;
         }
     }
@@ -409,7 +617,6 @@ mod tests {
     
     #[test]
     pub fn fft_test() {
-        init_lib();
         let mut source = vec![0.0; 100];
         for i in 0..source.len()/2 {
             let x = std::f64::consts::PI * 4.0 * (i as f64 / 2.0 / source.len() as f64);
@@ -423,7 +630,7 @@ mod tests {
         fft.process(&signal, &mut spectrum);
         
         let prog_bldr = ProgramBuilder::new();
-        let mut ocl_pq = ProQue::builder()
+        let ocl_pq = ProQue::builder()
             .prog_bldr(prog_bldr)
             .dims([source.len()])
             .build()
@@ -446,19 +653,22 @@ mod tests {
                 None)
                 .expect("Failed to create GPU result buffer");
         
-        let mut builder = FftPlanBuilder::<f64>::default(&ocl_pq, [source.len() / 2]).unwrap();
-        builder.set_precision(Precision::Precise).unwrap();
-        builder.set_layout(Layout::ComplexInterleaved, Layout::ComplexInterleaved).unwrap();
-        builder.set_result_location(Location::OutOfPlace).unwrap();
-        let plan = builder.build(&mut ocl_pq).unwrap();
-        plan.enqueue(Direction::Forward, &mut ocl_pq, &mut in_buffer, Some(&mut res_buffer)).unwrap();
+        let plan = 
+            builder::<f64>()
+            .precision(Precision::Precise)
+            .dims([source.len() / 2])
+            .input_layout(Layout::ComplexInterleaved)
+            .output_layout(Layout::ComplexInterleaved)
+            .bake_out_of_place_plan(&ocl_pq).unwrap();
+        plan.enqueue(Direction::Forward, &mut in_buffer, &mut res_buffer).unwrap();
         ocl_pq.queue().finish();
         
         res_buffer.cmd()
             .read(&mut source)
             .enq()
             .expect("Transferring result vector from the GPU back to memory failed");
-        drop_lib();
+        assert_eq!(plan.result_location(), Location::OutOfPlace);
+        assert_eq!(plan.dims().to_lens().unwrap(), [50, 1, 1]);
         assert_vector_eq(&source, &to_real(&spectrum), 1e-4);
     }
 }

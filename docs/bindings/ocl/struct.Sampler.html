@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Sampler` struct in crate `ocl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Sampler">
+
+    <title>ocl::Sampler - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>ocl</a></p><script>window.sidebarCurrent = {name: 'Sampler', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>ocl</a>::<wbr><a class='struct' href=''>Sampler</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-1223' class='srclink' href='../src/ocl/standard/sampler.rs.html#10' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Sampler(_);</pre><div class='docblock'><p>An image sampler used to process images.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1226' class='srclink' href='../src/ocl/standard/sampler.rs.html#12-76' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(context: &amp;<a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; normalize_coords: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addressing_mode: <a class='enum' href='../ocl/enums/enum.AddressingMode.html' title='ocl::enums::AddressingMode'>AddressingMode</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; filter_mode: <a class='enum' href='../ocl/enums/enum.FilterMode.html' title='ocl::enums::FilterMode'>FilterMode</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a>&gt;</code></span></h4>
+<div class='docblock'><p>Creates and returns a new sampler.</p>
+
+<h2 id='enum-quick-reference' class='section-header'><a href='#enum-quick-reference'>Enum Quick Reference</a></h2>
+<p><code>addressing_mode</code>:</p>
+
+<ul>
+<li>AddressingMode::None</li>
+<li>AddressingMode::ClampToEdge</li>
+<li>AddressingMode::Clamp</li>
+<li>AddressingMode::Repeat</li>
+<li>AddressingMode::MirroredRepeat</li>
+</ul>
+
+<p><code>filter_mode</code>:</p>
+
+<ul>
+<li>FilterMode::Nearest</li>
+<li>FilterMode::Linear</li>
+</ul>
+
+<p>See <a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clCreateSampler.html">SDK Docs</a>
+for more information.</p>
+</div><h4 id='method.with_defaults' class='method'><span id='with_defaults.v' class='invisible'><code>fn <a href='#method.with_defaults' class='fnname'>with_defaults</a>(context: &amp;<a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a>) -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a>&gt;</code></span></h4>
+<div class='docblock'><p>Creates and returns a new sampler with some default settings.</p>
+
+<h2 id='defaults' class='section-header'><a href='#defaults'>Defaults</a></h2>
+<ul>
+<li><code>normalize_coords</code>: false</li>
+<li><code>addressing_mode</code>: <code>AddressingMode::None</code></li>
+<li><code>filter_mode</code>: <code>FilterMode::Nearest</code></li>
+</ul>
+</div><h4 id='method.info' class='method'><span id='info.v' class='invisible'><code>fn <a href='#method.info' class='fnname'>info</a>(&amp;self, info_kind: <a class='enum' href='../ocl/enums/enum.SamplerInfo.html' title='ocl::enums::SamplerInfo'>SamplerInfo</a>) -&gt; <a class='enum' href='../ocl/enums/enum.SamplerInfoResult.html' title='ocl::enums::SamplerInfoResult'>SamplerInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns various kinds of information about the sampler.</p>
+</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>SamplerCore</a>&gt;</h2><div class='impl-items'><h4 id='method.as_ptr' class='method'><span id='as_ptr.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='../libc/enum.c_void.html' title='libc::c_void'>c_void</a></code></span></h4>
+<div class='docblock'><p>Returns a pointer, do not store it.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1242' class='srclink' href='../src/ocl/standard/sampler.rs.html#78-82' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1246' class='srclink' href='../src/ocl/standard/sampler.rs.html#84-90' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class='type'><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = <a class='struct' href='../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>SamplerCore</a></code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing</p>
+</div><h4 id='method.deref' class='method'><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>SamplerCore</a></code></span></h4>
+<div class='docblock'><p>The method called to dereference a value</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1250' class='srclink' href='../src/ocl/standard/sampler.rs.html#92-96' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.deref_mut' class='method'><span id='deref_mut.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#tymethod.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>SamplerCore</a></code></span></h4>
+<div class='docblock'><p>The method called to mutably dereference a value</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ocl";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script src="../extra.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Kernel` struct in crate `ocl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Kernel">
+
+    <title>ocl::Kernel - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>ocl</a></p><script>window.sidebarCurrent = {name: 'Kernel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>ocl</a>::<wbr><a class='struct' href=''>Kernel</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-2013' class='srclink' href='../src/ocl/standard/kernel.rs.html#119-128' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Kernel { /* fields omitted */ }</pre><div class='docblock'><p>A kernel which represents a &#39;procedure&#39;.</p>
+
+<p>Corresponds to code which must have already been compiled into a program.</p>
+
+<h2 id='clonability' class='section-header'><a href='#clonability'>Clonability</a></h2>
+<p>Cloning a kernel after creation should virtually never be necessary (and
+may indicate that your design needs improvement). If you really really
+need to clone and store something, clone the kernel core with
+<code>::core_as_ref.clone()</code> and use <code>ocl::core::enqueue_kernel(...)</code> to
+enqueue.</p>
+
+<p>TODO: Add more details, examples, etc.
+TODO: Add information about panics and errors.
+TODO: Finish arg info formatting.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-469' class='srclink' href='../src/ocl/standard/kernel.rs.html#146-621' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;S:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(name: S,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; program: &amp;<a class='struct' href='../ocl/struct.Program.html' title='ocl::Program'>Program</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; queue: &amp;<a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns a new kernel.</p>
+</div><h4 id='method.gwo' class='method'><span id='gwo.v' class='invisible'><code>fn <a href='#method.gwo' class='fnname'>gwo</a>&lt;D:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(self, gwo: D) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Sets the default global work offset (builder-style).</p>
+
+<p>Used when enqueuing kernel commands. Superseded if specified while
+making a call to enqueue or building a queue command with <code>::cmd</code>.</p>
+</div><h4 id='method.gws' class='method'><span id='gws.v' class='invisible'><code>fn <a href='#method.gws' class='fnname'>gws</a>&lt;D:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(self, gws: D) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Sets the default global work size (builder-style).</p>
+
+<p>Used when enqueuing kernel commands. Superseded if specified while
+making a call to enqueue or building a queue command with <code>::cmd</code>.</p>
+</div><h4 id='method.lws' class='method'><span id='lws.v' class='invisible'><code>fn <a href='#method.lws' class='fnname'>lws</a>&lt;D:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(self, lws: D) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Sets the default local work size (builder-style).</p>
+
+<p>Used when enqueuing kernel commands. Superseded if specified while
+making a call to enqueue or building a queue command with <code>::cmd</code>.</p>
+</div><h4 id='method.arg_buf' class='method'><span id='arg_buf.v' class='invisible'><code>fn <a href='#method.arg_buf' class='fnname'>arg_buf</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self, buffer: &amp;<a class='struct' href='../ocl/struct.Buffer.html' title='ocl::Buffer'>Buffer</a>&lt;T&gt;) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new argument to the kernel specifying the buffer object represented
+by &#39;buffer&#39; (builder-style). Argument is added to the bottom of the argument
+order.</p>
+</div><h4 id='method.arg_img' class='method'><span id='arg_img.v' class='invisible'><code>fn <a href='#method.arg_img' class='fnname'>arg_img</a>&lt;P:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self, image: &amp;<a class='struct' href='../ocl/struct.Image.html' title='ocl::Image'>Image</a>&lt;P&gt;) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new argument to the kernel specifying the image object represented
+by &#39;image&#39; (builder-style). Argument is added to the bottom of the argument
+order.</p>
+</div><h4 id='method.arg_smp' class='method'><span id='arg_smp.v' class='invisible'><code>fn <a href='#method.arg_smp' class='fnname'>arg_smp</a>(self, sampler: &amp;<a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a>) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new argument to the kernel specifying the sampler object represented
+by &#39;sampler&#39; (builder-style). Argument is added to the bottom of the argument
+order.</p>
+</div><h4 id='method.arg_scl' class='method'><span id='arg_scl.v' class='invisible'><code>fn <a href='#method.arg_scl' class='fnname'>arg_scl</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self, scalar: T) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new argument specifying the value: <code>scalar</code> (builder-style). Argument
+is added to the bottom of the argument order.</p>
+</div><h4 id='method.arg_vec' class='method'><span id='arg_vec.v' class='invisible'><code>fn <a href='#method.arg_vec' class='fnname'>arg_vec</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self, vector: T) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new argument specifying the value: <code>vector</code> (builder-style). Argument
+is added to the bottom of the argument order.</p>
+</div><h4 id='method.arg_loc' class='method'><span id='arg_loc.v' class='invisible'><code>fn <a href='#method.arg_loc' class='fnname'>arg_loc</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self, length: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new argument specifying the allocation of a local variable of size
+<code>length * sizeof(T)</code> bytes (builder_style).</p>
+
+<p>Local variables are used to share data between work items in the same
+workgroup.</p>
+</div><h4 id='method.arg_scl_named' class='method'><span id='arg_scl_named.v' class='invisible'><code>fn <a href='#method.arg_scl_named' class='fnname'>arg_scl_named</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; scalar_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new named argument (in order) specifying the value: <code>scalar</code>
+(builder-style).</p>
+
+<p>Named arguments can be easily modified later using <code>::set_arg_scl_named()</code>.</p>
+</div><h4 id='method.arg_vec_named' class='method'><span id='arg_vec_named.v' class='invisible'><code>fn <a href='#method.arg_vec_named' class='fnname'>arg_vec_named</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vector_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new named argument (in order) specifying the value: <code>vector</code>
+(builder-style).</p>
+
+<p>Named arguments can be easily modified later using <code>::set_arg_vec_named()</code>.</p>
+</div><h4 id='method.arg_buf_named' class='method'><span id='arg_buf_named.v' class='invisible'><code>fn <a href='#method.arg_buf_named' class='fnname'>arg_buf_named</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; buffer_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../ocl/struct.Buffer.html' title='ocl::Buffer'>Buffer</a>&lt;T&gt;&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new named argument specifying the buffer object represented by
+&#39;buffer&#39; (builder-style). Argument is added to the bottom of the argument order.</p>
+
+<p>Named arguments can be easily modified later using <code>::set_arg_buf_named()</code>.</p>
+</div><h4 id='method.arg_img_named' class='method'><span id='arg_img_named.v' class='invisible'><code>fn <a href='#method.arg_img_named' class='fnname'>arg_img_named</a>&lt;P:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; image_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../ocl/struct.Image.html' title='ocl::Image'>Image</a>&lt;P&gt;&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new named argument specifying the image object represented by
+&#39;image&#39; (builder-style). Argument is added to the bottom of the argument order.</p>
+
+<p>Named arguments can be easily modified later using <code>::set_arg_img_named()</code>.</p>
+</div><h4 id='method.arg_smp_named' class='method'><span id='arg_smp_named.v' class='invisible'><code>fn <a href='#method.arg_smp_named' class='fnname'>arg_smp_named</a>(self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sampler_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a>&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span></h4>
+<div class='docblock'><p>Adds a new named argument specifying the sampler object represented by
+&#39;sampler&#39; (builder-style). Argument is added to the bottom of the argument order.</p>
+
+<p>Named arguments can be easily modified later using <code>::set_arg_smp_named()</code>.</p>
+</div><h4 id='method.set_arg_scl_named' class='method'><span id='set_arg_scl_named.v' class='invisible'><code>fn <a href='#method.set_arg_scl_named' class='fnname'>set_arg_scl_named</a>&lt;'a, T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(&amp;'a mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; scalar: T)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;&amp;'a mut <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Modifies the kernel argument named: <code>name</code>.</p>
+
+<h2 id='panics-fixme' class='section-header'><a href='#panics-fixme'>Panics [FIXME]</a></h2></div><h4 id='method.set_arg_vec_named' class='method'><span id='set_arg_vec_named.v' class='invisible'><code>fn <a href='#method.set_arg_vec_named' class='fnname'>set_arg_vec_named</a>&lt;'a, T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(&amp;'a mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vector: T)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;&amp;'a mut <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Modifies the kernel argument named: <code>name</code>.</p>
+
+<h2 id='panics-fixme-1' class='section-header'><a href='#panics-fixme-1'>Panics [FIXME]</a></h2></div><h4 id='method.set_arg_buf_named' class='method'><span id='set_arg_buf_named.v' class='invisible'><code>fn <a href='#method.set_arg_buf_named' class='fnname'>set_arg_buf_named</a>&lt;'a, T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(&amp;'a mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; buffer_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../ocl/struct.Buffer.html' title='ocl::Buffer'>Buffer</a>&lt;T&gt;&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;&amp;'a mut <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Modifies the kernel argument named: <code>name</code>.</p>
+
+<h2 id='panics-fixme-2' class='section-header'><a href='#panics-fixme-2'>Panics [FIXME]</a></h2></div><h4 id='method.set_arg_img_named' class='method'><span id='set_arg_img_named.v' class='invisible'><code>fn <a href='#method.set_arg_img_named' class='fnname'>set_arg_img_named</a>&lt;'a, P:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>, T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(&amp;'a mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; image_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../ocl/struct.Image.html' title='ocl::Image'>Image</a>&lt;P&gt;&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;&amp;'a mut <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Modifies the kernel argument named: <code>name</code>.</p>
+
+<h2 id='panics-fixme-3' class='section-header'><a href='#panics-fixme-3'>Panics [FIXME]</a></h2></div><h4 id='method.set_arg_smp_named' class='method'><span id='set_arg_smp_named.v' class='invisible'><code>fn <a href='#method.set_arg_smp_named' class='fnname'>set_arg_smp_named</a>&lt;'a, T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(&amp;'a mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sampler_opt: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../ocl/struct.Sampler.html' title='ocl::Sampler'>Sampler</a>&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;&amp;'a mut <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Sets the value of a named sampler argument.</p>
+
+<h2 id='panics-fixme-4' class='section-header'><a href='#panics-fixme-4'>Panics [FIXME]</a></h2></div><h4 id='method.cmd' class='method'><span id='cmd.v' class='invisible'><code>fn <a href='#method.cmd' class='fnname'>cmd</a>(&amp;self) -&gt; <a class='struct' href='../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a></code></span></h4>
+<div class='docblock'><p>Returns a command builder which is used to chain parameters of an
+&#39;enqueue&#39; command together.</p>
+</div><h4 id='method.enq' class='method'><span id='enq.v' class='invisible'><code>fn <a href='#method.enq' class='fnname'>enq</a>(&amp;self) -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
+<div class='docblock'><p>Enqueues this kernel on the default queue and returns the result.</p>
+
+<p>Shorthand for <code>.cmd().enq()</code></p>
+</div><h4 id='method.set_default_queue' class='method'><span id='set_default_queue.v' class='invisible'><code>fn <a href='#method.set_default_queue' class='fnname'>set_default_queue</a>(&amp;mut self, queue: &amp;<a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a>) -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;&amp;mut <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Changes the default queue.</p>
+
+<p>Returns a ref for chaining i.e.:</p>
+
+<p><code>kernel.set_default_queue(queue).enqueue(....);</code></p>
+
+<p>Even when used as above, the queue is changed permanently,
+not just for the one call. Changing the queue is cheap so feel free
+to change as often as needed.</p>
+
+<p>If you want to change the queue for only a single call, use:
+<code>::cmd.queue(...)...enq()...</code></p>
+
+<p>The new queue must be associated with a device associated with the
+kernel&#39;s program.</p>
+</div><h4 id='method.default_queue' class='method'><span id='default_queue.v' class='invisible'><code>fn <a href='#method.default_queue' class='fnname'>default_queue</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a></code></span></h4>
+<div class='docblock'><p>Returns the default <code>core::CommandQueue</code> for this kernel.</p>
+</div><h4 id='method.get_gwo' class='method'><span id='get_gwo.v' class='invisible'><code>fn <a href='#method.get_gwo' class='fnname'>get_gwo</a>(&amp;self) -&gt; <a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a></code></span></h4>
+<div class='docblock'><p>Returns the default global work offset.</p>
+</div><h4 id='method.get_gws' class='method'><span id='get_gws.v' class='invisible'><code>fn <a href='#method.get_gws' class='fnname'>get_gws</a>(&amp;self) -&gt; <a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a></code></span></h4>
+<div class='docblock'><p>Returns the default global work size.</p>
+</div><h4 id='method.get_lws' class='method'><span id='get_lws.v' class='invisible'><code>fn <a href='#method.get_lws' class='fnname'>get_lws</a>(&amp;self) -&gt; <a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a></code></span></h4>
+<div class='docblock'><p>Returns the default local work size.</p>
+</div><h4 id='method.arg_count' class='method'><span id='arg_count.v' class='invisible'><code>fn <a href='#method.arg_count' class='fnname'>arg_count</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+<div class='docblock'><p>Returns the number of arguments specified for this kernel.</p>
+</div><h4 id='method.core_as_ref' class='method'><span id='core_as_ref.v' class='invisible'><code>fn <a href='#method.core_as_ref' class='fnname'>core_as_ref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>KernelCore</a></code></span></h4>
+<div class='docblock'><p>Returns a reference to the core pointer wrapper, usable by functions in
+the <code>core</code> module.</p>
+</div><h4 id='method.info' class='method'><span id='info.v' class='invisible'><code>fn <a href='#method.info' class='fnname'>info</a>(&amp;self, info_kind: <a class='enum' href='../ocl/enums/enum.KernelInfo.html' title='ocl::enums::KernelInfo'>KernelInfo</a>) -&gt; <a class='enum' href='../ocl/enums/enum.KernelInfoResult.html' title='ocl::enums::KernelInfoResult'>KernelInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns information about this kernel.</p>
+</div><h4 id='method.arg_info' class='method'><span id='arg_info.v' class='invisible'><code>fn <a href='#method.arg_info' class='fnname'>arg_info</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; arg_index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; info_kind: <a class='enum' href='../ocl/enums/enum.KernelArgInfo.html' title='ocl::enums::KernelArgInfo'>KernelArgInfo</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='../ocl/enums/enum.KernelArgInfoResult.html' title='ocl::enums::KernelArgInfoResult'>KernelArgInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns argument information for this kernel.</p>
+</div><h4 id='method.wg_info' class='method'><span id='wg_info.v' class='invisible'><code>fn <a href='#method.wg_info' class='fnname'>wg_info</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; device: &amp;<a class='struct' href='../ocl/struct.Device.html' title='ocl::Device'>Device</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; info_kind: <a class='enum' href='../ocl/enums/enum.KernelWorkGroupInfo.html' title='ocl::enums::KernelWorkGroupInfo'>KernelWorkGroupInfo</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='../ocl/enums/enum.KernelWorkGroupInfoResult.html' title='ocl::enums::KernelWorkGroupInfoResult'>KernelWorkGroupInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns work group information for this kernel.</p>
+</div><h4 id='method.name' class='method'><span id='name.v' class='invisible'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></span></h4>
+</div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>KernelCore</a>&gt;</h2><div class='impl-items'><h4 id='method.as_ptr' class='method'><span id='as_ptr.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='../libc/enum.c_void.html' title='libc::c_void'>c_void</a></code></span></h4>
+<div class='docblock'><p>Returns a pointer, do not store it.</p>
+</div><h4 id='method.program' class='method'><span id='program.v' class='invisible'><code>fn <a href='#method.program' class='fnname'>program</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../ocl_core/types/abs/struct.Program.html' title='ocl_core::types::abs::Program'>Program</a>, <a class='enum' href='../ocl/enum.Error.html' title='ocl::Error'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the program associated with this kernel.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2022' class='srclink' href='../src/ocl/standard/kernel.rs.html#118' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-673' class='srclink' href='../src/ocl/standard/kernel.rs.html#625-631' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt-1' class='method'><span id='fmt.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-678' class='srclink' href='../src/ocl/standard/kernel.rs.html#635-641' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class='type'><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = <a class='struct' href='../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>KernelCore</a></code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing</p>
+</div><h4 id='method.deref' class='method'><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>KernelCore</a></code></span></h4>
+<div class='docblock'><p>The method called to dereference a value</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-682' class='srclink' href='../src/ocl/standard/kernel.rs.html#643-647' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.deref_mut' class='method'><span id='deref_mut.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#tymethod.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>KernelCore</a></code></span></h4>
+<div class='docblock'><p>The method called to mutably dereference a value</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ocl";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script src="../extra.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

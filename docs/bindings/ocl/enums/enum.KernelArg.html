@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `KernelArg` enum in crate `ocl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, KernelArg">
+
+    <title>ocl::enums::KernelArg - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>ocl</a>::<wbr><a href='index.html'>enums</a></p><script>window.sidebarCurrent = {name: 'KernelArg', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content enum">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>enums</a>::<wbr><a class='enum' href=''>KernelArg</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-3332' class='srclink' href='../../ocl_core/types/enums/enum.KernelArg.html?gotosrc=3332' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum KernelArg&lt;'a, T&gt; <span class='where'>where T: 'a + <a class='trait' href='../../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a></span> {
+    Mem(&amp;'a <a class='struct' href='../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>Mem</a>),
+    MemNull,
+    Sampler(&amp;'a <a class='struct' href='../../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>Sampler</a>),
+    SamplerNull,
+    Scalar(T),
+    Vector(T),
+    Local(&amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>),
+    UnsafePointer {
+        size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
+        value: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='enum' href='../../libc/enum.c_void.html' title='libc::c_void'>c_void</a>,
+    },
+}</pre><div class='docblock'><p>[UNSAFE] Kernel argument option type.</p>
+
+<p>The type argument <code>T</code> is ignored for <code>Mem</code>, <code>Sampler</code>, and <code>UnsafePointer</code>
+(just put <code>usize</code> or anything).</p>
+
+<h2 id='safety' class='section-header'><a href='#safety'>Safety</a></h2>
+<p>If there was some way for this enum to be marked unsafe it would be.</p>
+
+<p>The <code>Mem</code>, <code>Sampler</code>, <code>Scalar</code>, and <code>Local</code> variants are tested and will
+work perfectly well.</p>
+
+<ul>
+<li><code>Vector</code>: The <code>Vector</code> variant is poorly tested and probably a bit
+platform dependent. Use at your own risk.</li>
+<li><code>UnsafePointer</code>: Really know what you&#39;re doing when using the
+<code>UnsafePointer</code> variant. Setting its properties, <code>size</code> and <code>value</code>,
+incorrectly can cause bugs, crashes, and data integrity issues that are
+very hard to track down. This is due to the fact that the pointer value
+is intended to be a pointer to a memory structure in YOUR programs
+memory, NOT a copy of an OpenCL object pointer (such as a <code>cl_h::cl_mem</code>
+for example, which is itself a <code>*mut libc::c_void</code>). This is made more
+complicated by the fact that the pointer can also be a pointer to a
+scalar (ex: <code>*const u32</code>, etc.). See the <a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clSetKernelArg.html">SDK docs</a> for more details.</li>
+</ul>
+</div><h2 class='variants'>Variants</h2>
+<span id='variant.Mem' class='variant'><span id='Mem.v' class='invisible'><code>Mem(&amp;'a <a class='struct' href='../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>Mem</a>)</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
+</div><span id='variant.MemNull' class='variant'><span id='MemNull.v' class='invisible'><code>MemNull</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
+</div><span id='variant.Sampler' class='variant'><span id='Sampler.v' class='invisible'><code>Sampler(&amp;'a <a class='struct' href='../../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>Sampler</a>)</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
+</div><span id='variant.SamplerNull' class='variant'><span id='SamplerNull.v' class='invisible'><code>SamplerNull</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
+</div><span id='variant.Scalar' class='variant'><span id='Scalar.v' class='invisible'><code>Scalar(T)</code></span></span><span id='variant.Vector' class='variant'><span id='Vector.v' class='invisible'><code>Vector(T)</code></span></span><span id='variant.Local' class='variant'><span id='Local.v' class='invisible'><code>Local(&amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></span><div class='docblock'><p>Length in multiples of T (not bytes).</p>
+</div><span id='variant.UnsafePointer' class='variant'><span id='UnsafePointer.v' class='invisible'><code>UnsafePointer</code></span></span><div class='docblock'><p><code>size</code>: size in bytes. Type <code>T</code> is ignored.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.UnsafePointer.field.size'><span id='UnsafePointer.v.size.v' class='invisible'><code>size:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr><tr><td id='variant.UnsafePointer.field.value'><span id='UnsafePointer.v.value.v' class='invisible'><code>value:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='enum' href='../../libc/enum.c_void.html' title='libc::c_void'>c_void</a></code></span></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../ocl/enums/enum.KernelArg.html' title='ocl::enums::KernelArg'>KernelArg</a>&lt;'a, T&gt; <span class='where'>where T: 'a + <a class='trait' href='../../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a></span></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html' title='core::fmt::Error'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "ocl";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script src="../../extra.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

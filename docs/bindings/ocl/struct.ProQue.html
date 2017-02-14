@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ProQue` struct in crate `ocl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ProQue">
+
+    <title>ocl::ProQue - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>ocl</a></p><script>window.sidebarCurrent = {name: 'ProQue', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>ocl</a>::<wbr><a class='struct' href=''>ProQue</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-2258' class='srclink' href='../src/ocl/standard/pro_que.rs.html#262-267' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct ProQue { /* fields omitted */ }</pre><div class='docblock'><p>An all-in-one chimera of the <code>Program</code>, <code>Queue</code>, <code>Context</code> and
+(optionally) <code>SpatialDims</code> types.</p>
+
+<p>Handy when you only need a single context, program, and queue for your
+project or when using a unique context and program on each device.</p>
+
+<p>All <code>ProQue</code> functionality is also provided separately by the <code>Context</code>, <code>Queue</code>,
+<code>Program</code>, and <code>SpatialDims</code> types.</p>
+
+<h1 id='creation' class='section-header'><a href='#creation'>Creation</a></h1>
+<p>There are two ways to create a <code>ProQue</code>:</p>
+
+<ol>
+<li>[Recommended] Use <code>ProQue::builder</code> or <code>ProQueBuilder::new()</code>.</li>
+<li>Call <code>::new</code> and pass pre-created components.</li>
+</ol>
+
+<h1 id='destruction' class='section-header'><a href='#destruction'>Destruction</a></h1>
+<p>Now handled automatically. Freely use, store, clone, discard, share among
+threads... put some on your toast... whatever.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1313' class='srclink' href='../src/ocl/standard/pro_que.rs.html#269-367' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.builder' class='method'><span id='builder.v' class='invisible'><code>fn <a href='#method.builder' class='fnname'>builder</a>() -&gt; <a class='struct' href='../ocl/builders/struct.ProQueBuilder.html' title='ocl::builders::ProQueBuilder'>ProQueBuilder</a></code></span></h4>
+<div class='docblock'><p>Returns a new <code>ProQueBuilder</code>.</p>
+
+<p>This is the recommended way to create a new <code>ProQue</code>.</p>
+
+<p>Calling <code>ProQueBuilder::build()</code> will return a new <code>ProQue</code>.</p>
+</div><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;D:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(context: <a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; queue: <a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; program: <a class='struct' href='../ocl/struct.Program.html' title='ocl::Program'>Program</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dims: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;D&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span></h4>
+<div class='docblock'><p>Creates a new ProQue from individual parts.</p>
+
+<p>Use <code>::builder</code> instead unless you know what you&#39;re doing. Creating
+from components associated with different devices or contexts will
+cause errors later on.</p>
+</div><h4 id='method.create_kernel' class='method'><span id='create_kernel.v' class='invisible'><code>fn <a href='#method.create_kernel' class='fnname'>create_kernel</a>(&amp;self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../ocl/struct.Kernel.html' title='ocl::Kernel'>Kernel</a>&gt;</code></span></h4>
+<div class='docblock'><p>Creates a kernel with pre-assigned dimensions.</p>
+</div><h4 id='method.create_buffer' class='method'><span id='create_buffer.v' class='invisible'><code>fn <a href='#method.create_buffer' class='fnname'>create_buffer</a>&lt;T:&nbsp;<a class='trait' href='../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt;(&amp;self) -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../ocl/struct.Buffer.html' title='ocl::Buffer'>Buffer</a>&lt;T&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Returns a new buffer</p>
+
+<p>The default dimensions for this <code>ProQue</code> will be used when creating.</p>
+
+<h1 id='errors' class='section-header'><a href='#errors'>Errors</a></h1>
+<p>This <code>ProQue</code> must have been pre-configured with default dimensions to
+use this method. If not, set them with <code>::set_dims</code>, or just create a
+buffer using <code>Buffer::new()</code>.</p>
+</div><h4 id='method.set_dims' class='method'><span id='set_dims.v' class='invisible'><code>fn <a href='#method.set_dims' class='fnname'>set_dims</a>&lt;S:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(&amp;mut self, dims: S)</code></span></h4>
+<div class='docblock'><p>Sets the default dimensions used when creating buffers and kernels.</p>
+</div><h4 id='method.max_wg_size' class='method'><span id='max_wg_size.v' class='invisible'><code>fn <a href='#method.max_wg_size' class='fnname'>max_wg_size</a>(&amp;self) -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the maximum workgroup size supported by the device associated
+with this <code>ProQue</code>.</p>
+
+<p>[UNSTABLE]: Evaluate usefulness.</p>
+</div><h4 id='method.queue' class='method'><span id='queue.v' class='invisible'><code>fn <a href='#method.queue' class='fnname'>queue</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a></code></span></h4>
+<div class='docblock'><p>Returns a reference to the queue associated with this ProQue.</p>
+</div><h4 id='method.context' class='method'><span id='context.v' class='invisible'><code>fn <a href='#method.context' class='fnname'>context</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl/struct.Context.html' title='ocl::Context'>Context</a></code></span></h4>
+<div class='docblock'><p>Returns the contained context.</p>
+</div><h4 id='method.program' class='method'><span id='program.v' class='invisible'><code>fn <a href='#method.program' class='fnname'>program</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl/struct.Program.html' title='ocl::Program'>Program</a></code></span></h4>
+<div class='docblock'><p>Returns the current program build.</p>
+</div><h4 id='method.dims' class='method'><span id='dims.v' class='invisible'><code>fn <a href='#method.dims' class='fnname'>dims</a>(&amp;self) -&gt; &amp;<a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a></code></span></h4>
+<div class='docblock'><p>Returns the current <code>dims</code> or panics.</p>
+
+<p>[UNSTABLE]: Evaluate which &#39;dims&#39; method to keep. Leaning towards this
+version at the moment.</p>
+</div><h4 id='method.dims_result' class='method'><span id='dims_result.v' class='invisible'><code>fn <a href='#method.dims_result' class='fnname'>dims_result</a>(&amp;self) -&gt; <a class='type' href='../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;&amp;<a class='enum' href='../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the current <code>dims</code> or an error.</p>
+
+<p>[UNSTABLE]: Evaluate which &#39;dims&#39; method to keep. Leaning towards the
+above, panicing version at the moment.</p>
+</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a>&gt;</h2><div class='impl-items'><h4 id='method.finish' class='method'><span id='finish.v' class='invisible'><code>fn <a href='#method.finish' class='fnname'>finish</a>(&amp;self)</code></span></h4>
+<div class='docblock'><p>Blocks until all commands in this queue have completed before returning.</p>
+</div><h4 id='method.core_as_ref' class='method'><span id='core_as_ref.v' class='invisible'><code>fn <a href='#method.core_as_ref' class='fnname'>core_as_ref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl_core/types/abs/struct.CommandQueue.html' title='ocl_core::types::abs::CommandQueue'>CommandQueueCore</a></code></span></h4>
+<div class='docblock'><p>Returns a reference to the core pointer wrapper, usable by functions in
+the <code>core</code> module.</p>
+</div><h4 id='method.context_core_as_ref' class='method'><span id='context_core_as_ref.v' class='invisible'><code>fn <a href='#method.context_core_as_ref' class='fnname'>context_core_as_ref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl_core/types/abs/struct.Context.html' title='ocl_core::types::abs::Context'>ContextCore</a></code></span></h4>
+<div class='docblock'><p>Returns a reference to the core pointer wrapper of the context
+associated with this queue, usable by functions in the <code>core</code> module.</p>
+</div><h4 id='method.device' class='method'><span id='device.v' class='invisible'><code>fn <a href='#method.device' class='fnname'>device</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl/struct.Device.html' title='ocl::Device'>Device</a></code></span></h4>
+<div class='docblock'><p>Returns the <code>OpenCL</code> device associated with this queue.</p>
+</div><h4 id='method.device_version' class='method'><span id='device_version.v' class='invisible'><code>fn <a href='#method.device_version' class='fnname'>device_version</a>(&amp;self) -&gt; <a class='struct' href='../ocl_core/types/structs/struct.OpenclVersion.html' title='ocl_core::types::structs::OpenclVersion'>OpenclVersion</a></code></span></h4>
+<div class='docblock'><p>Returns the cached device version.</p>
+</div><h4 id='method.info' class='method'><span id='info.v' class='invisible'><code>fn <a href='#method.info' class='fnname'>info</a>(&amp;self, info_kind: <a class='enum' href='../ocl/enums/enum.CommandQueueInfo.html' title='ocl::enums::CommandQueueInfo'>CommandQueueInfo</a>) -&gt; <a class='enum' href='../ocl/enums/enum.CommandQueueInfoResult.html' title='ocl::enums::CommandQueueInfoResult'>CommandQueueInfoResult</a></code></span></h4>
+<div class='docblock'><p>Returns info about this queue.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2263' class='srclink' href='../src/ocl/standard/pro_que.rs.html#261' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2270' class='srclink' href='../src/ocl/standard/pro_que.rs.html#261' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../ocl/traits/trait.MemLen.html' title='ocl::traits::MemLen'>MemLen</a> for <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1351' class='srclink' href='../src/ocl/standard/pro_que.rs.html#369-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.to_len' class='method'><span id='to_len.v' class='invisible'><code>fn <a href='../ocl/traits/trait.MemLen.html#tymethod.to_len' class='fnname'>to_len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Returns the exact number of elements of a volume of memory (equivalent to <code>Vec::len()</code>). <a href="../ocl/traits/trait.MemLen.html#tymethod.to_len">Read more</a></p>
+</div><h4 id='method.to_len_padded' class='method'><span id='to_len_padded.v' class='invisible'><code>fn <a href='../ocl/traits/trait.MemLen.html#tymethod.to_len_padded' class='fnname'>to_len_padded</a>(&amp;self, incr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Returns the length of a volumue of memory padded to the next multiple of <code>incr</code>. <a href="../ocl/traits/trait.MemLen.html#tymethod.to_len_padded">Read more</a></p>
+</div><h4 id='method.to_lens' class='method'><span id='to_lens.v' class='invisible'><code>fn <a href='../ocl/traits/trait.MemLen.html#tymethod.to_lens' class='fnname'>to_lens</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a></code></span></h4>
+<div class='docblock'><p>Returns the exact lengths of each dimension of a volume of memory.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../ocl/traits/trait.WorkDims.html' title='ocl::traits::WorkDims'>WorkDims</a> for <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1360' class='srclink' href='../src/ocl/standard/pro_que.rs.html#382-394' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.dim_count' class='method'><span id='dim_count.v' class='invisible'><code>fn <a href='../ocl/traits/trait.WorkDims.html#tymethod.dim_count' class='fnname'>dim_count</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+<div class='docblock'><p>Returns the number of dimensions defined.</p>
+</div><h4 id='method.to_work_size' class='method'><span id='to_work_size.v' class='invisible'><code>fn <a href='../ocl/traits/trait.WorkDims.html#tymethod.to_work_size' class='fnname'>to_work_size</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns an array representing the amount of work to be done by a kernel. <a href="../ocl/traits/trait.WorkDims.html#tymethod.to_work_size">Read more</a></p>
+</div><h4 id='method.to_work_offset' class='method'><span id='to_work_offset.v' class='invisible'><code>fn <a href='../ocl/traits/trait.WorkDims.html#tymethod.to_work_offset' class='fnname'>to_work_offset</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns an array representing the offset of a work item or memory location. <a href="../ocl/traits/trait.WorkDims.html#tymethod.to_work_offset">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../ocl/struct.ProQue.html' title='ocl::ProQue'>ProQue</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1369' class='srclink' href='../src/ocl/standard/pro_que.rs.html#396-402' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class='type'><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = <a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a></code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing</p>
+</div><h4 id='method.deref' class='method'><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a></code></span></h4>
+<div class='docblock'><p>The method called to dereference a value</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ocl";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script src="../extra.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

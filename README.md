@@ -3,6 +3,8 @@ Rust bindings for clFFT, a FFT library running on OpenCL devices. By default thi
 
 ## Related resources
 
+- [Example](examples/example.rs)
+- [Binding Documentation](docs/bindings/clfft/index.html)
 - [Original README](CLFFT.md)
 - [Original Documentation](http://clmathlibraries.github.io/clFFT/)
 
@@ -31,7 +33,7 @@ cargo build
 To also build `clFFT` itself you need to pass the feature flag `build_all`, e.g.
 
 ```
-cargo build --features build_all
+cargo build --features build_all,
 ```
 
 This requires that `cmake` is installed on the system, refer to the [build page](https://github.com/clMathLibraries/clFFT/wiki/Build) for more details.
