@@ -42,7 +42,7 @@ fn main() {
             .expect("Failed to create GPU result buffer");
     
     // Make a plan
-    let plan = 
+    let mut plan = 
         builder::<f64>()
         .precision(Precision::Precise)
         .dims([source.len() / 2])

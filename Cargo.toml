@@ -6,7 +6,7 @@ build = "build.rs"
 license = "Apache-2.0"
 homepage = "https://github.com/liebharc/clfft"
 repository = "https://github.com/liebharc/clfft"
-documentation = "http://clmathlibraries.github.io/clFFT/"
+documentation = "https://liebharc.github.io/clFFT/bindings/clfft/"
 keywords = ["fft", "opencl"]
 description = "Bindings for clFFT, a FFT library for OpenCL."
 

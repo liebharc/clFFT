@@ -745,7 +745,7 @@ mod tests {
                 None)
                 .expect("Failed to create GPU result buffer");
         
-        let plan = 
+        let mut plan = 
             builder::<f64>()
             .precision(Precision::Precise)
             .dims([source.len() / 2])
