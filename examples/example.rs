@@ -51,7 +51,7 @@ fn main() {
         .bake_out_of_place_plan(&ocl_pq).unwrap();
         
     // Execute plan
-    plan.enqueue(Direction::Forward, &mut in_buffer, &mut res_buffer).unwrap();
+    plan.enq(Direction::Forward, &mut in_buffer, &mut res_buffer).unwrap();
     
     // Wait for calculation to finish and read results
     res_buffer.cmd()
