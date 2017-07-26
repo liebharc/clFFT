@@ -9,6 +9,7 @@
 
     <title>clfft - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,116 +43,128 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>clfft</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>clfft</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/clfft/src/clfft.rs.html#1-766' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/clfft/clfft.rs.html#1-740' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This module provides access to the <code>clFFT</code> lib in a fashion which is more consistent with the <code>ocl</code> crate.
 Users can always use the <code>ffi</code> module to directly access <code>clFFT</code>.</p>
-
-<p>Keep in mind that this crate just provides the bindings to <code>clFFT</code>. In order to build it the linker needs to 
+<p>Keep in mind that this crate just provides the bindings to <code>clFFT</code>. In order to build it the linker needs to
 have <code>clFFT.lib</code> available and in order to run it the <code>clFFT</code> library needs to be there. See the build section in the
 README for further details.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='ffi/index.html'
-                                  title='clfft::ffi'>ffi</a></td>
+                           <td><a class="mod" href="ffi/index.html"
+                                  title='mod clfft::ffi'>ffi</a></td>
                            <td class='docblock-short'>
-                                <p>Bindings to <code>clFFT</code>. See <a href="http://clmathlibraries.github.io/clFFT/">http://clmathlibraries.github.io/clFFT/</a> for more information.</p>
+                                <p>Bindings to <code>clFFT</code>. See http://clmathlibraries.github.io/clFFT/ for more information.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.FftInplacePlan.html'
-                                  title='clfft::FftInplacePlan'>FftInplacePlan</a></td>
+                           <td><a class="struct" href="struct.FftInplacePlan.html"
+                                  title='struct clfft::FftInplacePlan'>FftInplacePlan</a></td>
                            <td class='docblock-short'>
-                                <p>A plan is a repository of state for calculating FFT&#39;s.  Allows the runtime to pre-calculate kernels, programs
+                                <p>A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs
 and buffers and associate them with buffers of specified dimensions.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.FftOutOfPlacePlan.html'
-                                  title='clfft::FftOutOfPlacePlan'>FftOutOfPlacePlan</a></td>
+                           <td><a class="struct" href="struct.FftOutOfPlacePlan.html"
+                                  title='struct clfft::FftOutOfPlacePlan'>FftOutOfPlacePlan</a></td>
                            <td class='docblock-short'>
-                                <p>A plan is a repository of state for calculating FFT&#39;s.  Allows the runtime to pre-calculate kernels, programs
+                                <p>A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs
 and buffers and associate them with buffers of specified dimensions.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.FftPlanBuilder.html'
-                                  title='clfft::FftPlanBuilder'>FftPlanBuilder</a></td>
+                           <td><a class="struct" href="struct.FftPlanBuilder.html"
+                                  title='struct clfft::FftPlanBuilder'>FftPlanBuilder</a></td>
                            <td class='docblock-short'>
-                                <p>Builder for a FFT plan.</p>
+                                <p>Builder for a FFT plan. </p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Direction.html'
-                                  title='clfft::Direction'>Direction</a></td>
+                           <td><a class="enum" href="enum.Direction.html"
+                                  title='enum clfft::Direction'>Direction</a></td>
                            <td class='docblock-short'>
                                 <p>Specify the expected direction of each FFT, time or the frequency domains</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Layout.html'
-                                  title='clfft::Layout'>Layout</a></td>
+                           <td><a class="enum" href="enum.Layout.html"
+                                  title='enum clfft::Layout'>Layout</a></td>
                            <td class='docblock-short'>
                                 <p>Specify the expected layouts of the buffers.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Location.html'
-                                  title='clfft::Location'>Location</a></td>
+                           <td><a class="enum" href="enum.Location.html"
+                                  title='enum clfft::Location'>Location</a></td>
                            <td class='docblock-short'>
                                 <p>pecify wheter the input buffers are overwritten with results</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Precision.html'
-                                  title='clfft::Precision'>Precision</a></td>
+                           <td><a class="enum" href="enum.Precision.html"
+                                  title='enum clfft::Precision'>Precision</a></td>
                            <td class='docblock-short'>
                                 <p>Specify the expected precision of each FFT.</p>
+
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.AsClFftPlanHandle.html'
-                                  title='clfft::AsClFftPlanHandle'>AsClFftPlanHandle</a></td>
+                           <td><a class="trait" href="trait.AsClFftPlanHandle.html"
+                                  title='trait clfft::AsClFftPlanHandle'>AsClFftPlanHandle</a></td>
                            <td class='docblock-short'>
                                 <p>Gets the native <code>clFFT</code> plan handle from a type.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.ClFftPrm.html'
-                                  title='clfft::ClFftPrm'>ClFftPrm</a></td>
+                           <td><a class="trait" href="trait.ClFftPrm.html"
+                                  title='trait clfft::ClFftPrm'>ClFftPrm</a></td>
                            <td class='docblock-short'>
                                 <p>A trait for all paremeters supported by <code>clFFT</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.FftPlan.html'
-                                  title='clfft::FftPlan'>FftPlan</a></td>
+                           <td><a class="trait" href="trait.FftPlan.html"
+                                  title='trait clfft::FftPlan'>FftPlan</a></td>
                            <td class='docblock-short'>
                                 <p>Getters for a FFT plan.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.builder.html'
-                                  title='clfft::builder'>builder</a></td>
+                           <td><a class="fn" href="fn.builder.html"
+                                  title='fn clfft::builder'>builder</a></td>
                            <td class='docblock-short'>
                                 <p>Creates a builder for baking a new FFT plan.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.teatdown.html'
-                                  title='clfft::teatdown'>teatdown</a></td>
+                           <td><a class="fn" href="fn.teatdown.html"
+                                  title='fn clfft::teatdown'>teatdown</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Frees all <code>clFFT</code> library resources. After calling this function
 no further methods must be called on this lib!</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -209,11 +222,9 @@ no further methods must be called on this lib!</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "clfft";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    <script src="../extra.js"></script>
     <script defer src="../search-index.js"></script>
 </body>
 </html>

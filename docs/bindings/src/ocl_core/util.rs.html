@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-core-0.3.2\src\util.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-core-0.5.1\src\util.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>util.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -611,574 +612,606 @@
 <span id="567">567</span>
 <span id="568">568</span>
 <span id="569">569</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Utility and debugging functions.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Stability</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Printing functions may be moved/renamed/removed at any time.</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Range</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
-<span class='kw'>use</span> <span class='ident'>num</span>::{<span class='ident'>Integer</span>, <span class='ident'>FromPrimitive</span>};
-<span class='kw'>use</span> <span class='ident'>rand</span>;
-<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>distributions</span>::{<span class='ident'>IndependentSample</span>, <span class='ident'>Range</span> <span class='kw'>as</span> <span class='ident'>RandRange</span>};
-<span class='kw'>use</span> <span class='ident'>error</span>::{<span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>OclResult</span>, <span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>OclError</span>};
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Utility and debugging functions.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Stability</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Printing functions may be moved/renamed/removed at any time.</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Range</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>;
+<span class="kw">use</span> <span class="ident">num</span>::{<span class="ident">Integer</span>, <span class="ident">FromPrimitive</span>};
+<span class="kw">use</span> <span class="ident">rand</span>;
+<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">distributions</span>::{<span class="ident">IndependentSample</span>, <span class="ident">Range</span> <span class="kw">as</span> <span class="ident">RandRange</span>};
+<span class="kw">use</span> <span class="ident">error</span>::{<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">OclResult</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">OclError</span>};
 
-<span class='kw'>use</span> ::{<span class='ident'>OclPrm</span>, <span class='ident'>OclScl</span>};
+<span class="kw">use</span> ::{<span class="ident">OclPrm</span>, <span class="ident">OclScl</span>};
 
-<span class='comment'>//=============================================================================</span>
-<span class='comment'>//================================= MACROS ====================================</span>
-<span class='comment'>//=============================================================================</span>
+<span class="comment">//=============================================================================</span>
+<span class="comment">//================================= MACROS ====================================</span>
+<span class="comment">//=============================================================================</span>
 
 
 
-<span class='comment'>//=============================================================================</span>
-<span class='comment'>//================================ STATICS ====================================</span>
-<span class='comment'>//=============================================================================</span>
+<span class="comment">//=============================================================================</span>
+<span class="comment">//================================ STATICS ====================================</span>
+<span class="comment">//=============================================================================</span>
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>colors</span> {
-    <span class='doccomment'>//! ASCII Color Palette</span>
-    <span class='doccomment'>//!</span>
-    <span class='doccomment'>//! [TODO]: REMOVE ME</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">colors</span> {
+    <span class="doccomment">//! ASCII Color Palette</span>
+    <span class="doccomment">//!</span>
+    <span class="doccomment">//! Used for printing functions.</span>
 
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>TAB</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;    &quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">TAB</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;    &quot;</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_DEFAULT</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[0m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_UNDER</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[1m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_DEFAULT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[0m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_UNDER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[1m&quot;</span>;
 
-    <span class='comment'>// 30–37</span>
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_RED</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[31m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_BRED</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[1;31m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_GRN</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[32m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_BGRN</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[1;32m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_ORA</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[33m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_DBL</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[34m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_PUR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[35m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_CYA</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[36m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_LGR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[37m&quot;</span>;
-    <span class='comment'>// [ADDME] 38: Extended Colors</span>
-    <span class='comment'>// pub static C_EXT38: &amp;&#39;static str = &quot;\x1b[38m&quot;;</span>
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_DFLT</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[39m&quot;</span>;
+    <span class="comment">// 30–37</span>
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_RED</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[31m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_BRED</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[1;31m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_GRN</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[32m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_BGRN</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[1;32m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_ORA</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[33m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_DBL</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[34m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_PUR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[35m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_CYA</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[36m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_LGR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[37m&quot;</span>;
+    <span class="comment">// [ADDME] 38: Extended Colors</span>
+    <span class="comment">// pub static C_EXT38: &amp;&#39;static str = &quot;\x1b[38m&quot;;</span>
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_DFLT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[39m&quot;</span>;
 
-    <span class='comment'>// 90-97</span>
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_DGR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[90m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_LRD</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[91m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_YEL</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[93m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_BLU</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[94m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_LBL</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[94m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>C_MAG</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[95m&quot;</span>;
-    <span class='comment'>// [ADDME] 38: Extended Colors</span>
-    <span class='comment'>// pub static C_EXT38: &amp;&#39;static str = &quot;\x1b[38m&quot;;</span>
+    <span class="comment">// 90-97</span>
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_DGR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[90m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_LRD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[91m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_YEL</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[93m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_BLU</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[94m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_LBL</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[94m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">C_MAG</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[95m&quot;</span>;
+    <span class="comment">// [ADDME] 38: Extended Colors</span>
+    <span class="comment">// pub static C_EXT38: &amp;&#39;static str = &quot;\x1b[38m&quot;;</span>
 
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>BGC_DEFAULT</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[49m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>BGC_GRN</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[42m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>BGC_PUR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[45m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>BGC_LGR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[47m&quot;</span>;
-    <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>BGC_DGR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;\x1b[100m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">BGC_DEFAULT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[49m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">BGC_GRN</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[42m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">BGC_PUR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[45m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">BGC_LGR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[47m&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">BGC_DGR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\x1b[100m&quot;</span>;
 }
 
 
-<span class='comment'>//=============================================================================</span>
-<span class='comment'>//=========================== UTILITY FUNCTIONS ===============================</span>
-<span class='comment'>//=============================================================================</span>
+<span class="comment">//=============================================================================</span>
+<span class="comment">//=========================== UTILITY FUNCTIONS ===============================</span>
+<span class="comment">//=============================================================================</span>
 
-<span class='doccomment'>/// Copies a byte slice to a new `u32`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Stability</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// May depricate in favor of `bytes_to`</span>
-<span class='doccomment'>///</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>bytes_to_u32</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-    <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>bytes</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>4</span>);
+<span class="doccomment">/// Copies a byte slice to a new `u32`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Stability</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// May depricate in favor of `bytes_to`</span>
+<span class="doccomment">///</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bytes_to_u32</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">bytes</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">4</span>);
 
-    <span class='ident'>bytes</span>[<span class='number'>0</span>] <span class='kw'>as</span> <span class='ident'>u32</span> <span class='op'>|</span>
-    ((<span class='ident'>bytes</span>[<span class='number'>1</span>] <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>&lt;&lt;</span> <span class='number'>8</span>) <span class='op'>|</span>
-    ((<span class='ident'>bytes</span>[<span class='number'>2</span>] <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>&lt;&lt;</span> <span class='number'>16</span>) <span class='op'>|</span>
-    ((<span class='ident'>bytes</span>[<span class='number'>3</span>] <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>&lt;&lt;</span> <span class='number'>24</span>)
+    <span class="ident">bytes</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span> <span class="op">|</span>
+    ((<span class="ident">bytes</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">8</span>) <span class="op">|</span>
+    ((<span class="ident">bytes</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">16</span>) <span class="op">|</span>
+    ((<span class="ident">bytes</span>[<span class="number">3</span>] <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">24</span>)
 }
 
-<span class='doccomment'>/// Copies a slice of bytes to a new value of arbitrary type.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Safety</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// You may want to wear a helmet.</span>
-<span class='doccomment'>///</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>bytes_to</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>if</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>() <span class='op'>==</span> <span class='ident'>bytes</span>.<span class='ident'>len</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_val</span>: <span class='ident'>T</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>();
-        <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='ident'>bytes</span>.<span class='ident'>as_ptr</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>new_val</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>bytes</span>.<span class='ident'>len</span>());
-        <span class='prelude-val'>Ok</span>(<span class='ident'>new_val</span>)
-    } <span class='kw'>else</span> {
-        <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The size of the source byte slice ({} bytes) \
-        does not match the size of the destination type ({} bytes).&quot;</span>, <span class='ident'>bytes</span>.<span class='ident'>len</span>(),
-        <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>()))
+<span class="doccomment">/// Copies a slice of bytes to a new value of arbitrary type.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// You may want to wear a helmet.</span>
+<span class="doccomment">///</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">bytes_to</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="ident">bytes</span>.<span class="ident">len</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_val</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
+        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">bytes</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">new_val</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">bytes</span>.<span class="ident">len</span>());
+        <span class="prelude-val">Ok</span>(<span class="ident">new_val</span>)
+    } <span class="kw">else</span> {
+        <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;The size of the source byte slice ({} bytes) \
+        does not match the size of the destination type ({} bytes).&quot;</span>, <span class="ident">bytes</span>.<span class="ident">len</span>(),
+        <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()))
     }
 }
 
-<span class='doccomment'>/// Converts a vector of bytes into a value of arbitrary type.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Safety</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Roughly equivalent to a weekend in Tijuana.</span>
-<span class='doccomment'>///</span>
-<span class='comment'>// [NOTE]: Not sure this is the best or simplest way to do this but whatever.</span>
-<span class='comment'>// Would be nice to not even have to copy anything and just basically</span>
-<span class='comment'>// transmute the vector into the result type. [TODO]: Fiddle with this</span>
-<span class='comment'>// at some point.</span>
-<span class='comment'>//</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>bytes_into</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>if</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>() <span class='op'>==</span> <span class='ident'>vec</span>.<span class='ident'>len</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_val</span>: <span class='ident'>T</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>();
-        <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='ident'>vec</span>.<span class='ident'>as_ptr</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>new_val</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>vec</span>.<span class='ident'>len</span>());
-        <span class='prelude-val'>Ok</span>(<span class='ident'>new_val</span>)
-    } <span class='kw'>else</span> {
-        <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The size of the source byte vector ({} bytes) \
-        does not match the size of the destination type ({} bytes).&quot;</span>, <span class='ident'>vec</span>.<span class='ident'>len</span>(),
-        <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>()))
+<span class="doccomment">/// Converts a vector of bytes into a value of arbitrary type.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Roughly equivalent to a weekend in Tijuana.</span>
+<span class="doccomment">///</span>
+<span class="comment">// [NOTE]: Not sure this is the best or simplest way to do this but whatever.</span>
+<span class="comment">// Would be nice to not even have to copy anything and just basically</span>
+<span class="comment">// transmute the vector into the result type. [TODO]: Fiddle with this</span>
+<span class="comment">// at some point.</span>
+<span class="comment">//</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">bytes_into</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="ident">vec</span>.<span class="ident">len</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_val</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
+        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">vec</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">new_val</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">vec</span>.<span class="ident">len</span>());
+        <span class="prelude-val">Ok</span>(<span class="ident">new_val</span>)
+    } <span class="kw">else</span> {
+        <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;The size of the source byte vector ({} bytes) \
+        does not match the size of the destination type ({} bytes).&quot;</span>, <span class="ident">vec</span>.<span class="ident">len</span>(),
+        <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()))
     }
 }
 
-<span class='doccomment'>/// Converts a vector of bytes into a vector of arbitrary type.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Safety</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Ummm... Say what?</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// TODO: Consider using `alloc::heap::reallocate_inplace` equivalent.</span>
-<span class='doccomment'>///</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>bytes_into_vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
-    <span class='comment'>// debug_assert!(vec.len() % mem::size_of::&lt;T&gt;() == 0);</span>
-    <span class='kw'>if</span> <span class='ident'>vec</span>.<span class='ident'>len</span>() <span class='op'>%</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>() <span class='op'>==</span> <span class='number'>0</span> {
-        <span class='kw'>let</span> <span class='ident'>new_len</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>len</span>() <span class='op'>/</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>();
-        <span class='kw'>let</span> <span class='ident'>new_cap</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>capacity</span>() <span class='op'>/</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>();
-        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>as_mut_ptr</span>();
-        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>vec</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>new_len</span>, <span class='ident'>new_cap</span>);
-        <span class='ident'>new_vec</span>.<span class='ident'>shrink_to_fit</span>();
-        <span class='prelude-val'>Ok</span>(<span class='ident'>new_vec</span>)
-    } <span class='kw'>else</span> {
-        <span class='ident'>OclError</span>::<span class='ident'>err_conversion</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The size of the source byte vector ({} bytes) is not \
-            evenly divisible by the size of the destination type ({} bytes).&quot;</span>, <span class='ident'>vec</span>.<span class='ident'>len</span>(),
-            <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>()))
+<span class="doccomment">/// Converts a vector of bytes into a vector of arbitrary type.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Ummm... Say what?</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// TODO: Consider using `alloc::heap::reallocate_inplace` equivalent.</span>
+<span class="doccomment">///</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">bytes_into_vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> {
+    <span class="comment">// debug_assert!(vec.len() % mem::size_of::&lt;T&gt;() == 0);</span>
+    <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="number">0</span> {
+        <span class="kw">let</span> <span class="ident">new_len</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="ident">new_cap</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">capacity</span>() <span class="op">/</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">as_mut_ptr</span>();
+        <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="ident">vec</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">from_raw_parts</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">new_len</span>, <span class="ident">new_cap</span>);
+        <span class="ident">new_vec</span>.<span class="ident">shrink_to_fit</span>();
+        <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+    } <span class="kw">else</span> {
+        <span class="ident">OclError</span>::<span class="ident">err_conversion</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;The size of the source byte vector ({} bytes) is not \
+            evenly divisible by the size of the destination type ({} bytes).&quot;</span>, <span class="ident">vec</span>.<span class="ident">len</span>(),
+            <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()))
     }
 }
 
-<span class='doccomment'>/// Copies a slice of bytes into a vector of arbitrary type.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Safety</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Negative.</span>
-<span class='doccomment'>///</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>bytes_to_vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
-    <span class='comment'>// debug_assert!(bytes.len() % mem::size_of::&lt;T&gt;() == 0);</span>
-    <span class='kw'>if</span> <span class='ident'>bytes</span>.<span class='ident'>len</span>() <span class='op'>%</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>() <span class='op'>==</span> <span class='number'>0</span> {
-        <span class='kw'>let</span> <span class='ident'>new_len</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>len</span>() <span class='op'>/</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>new_len</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='ident'>bytes</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>new_vec</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>bytes</span>.<span class='ident'>len</span>());
-        <span class='ident'>new_vec</span>.<span class='ident'>set_len</span>(<span class='ident'>new_len</span>);
-        <span class='prelude-val'>Ok</span>(<span class='ident'>new_vec</span>)
-    } <span class='kw'>else</span> {
-        <span class='ident'>OclError</span>::<span class='ident'>err_conversion</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The size of the source byte slice ({} bytes) is not \
-            evenly divisible by the size of the destination type ({} bytes).&quot;</span>, <span class='ident'>bytes</span>.<span class='ident'>len</span>(),
-            <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>()))
+<span class="doccomment">/// Copies a slice of bytes into a vector of arbitrary type.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Negative.</span>
+<span class="doccomment">///</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">bytes_to_vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> {
+    <span class="comment">// debug_assert!(bytes.len() % mem::size_of::&lt;T&gt;() == 0);</span>
+    <span class="kw">if</span> <span class="ident">bytes</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="number">0</span> {
+        <span class="kw">let</span> <span class="ident">new_len</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">new_len</span>);
+        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">bytes</span>.<span class="ident">as_ptr</span>(), <span class="ident">new_vec</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">bytes</span>.<span class="ident">len</span>());
+        <span class="ident">new_vec</span>.<span class="ident">set_len</span>(<span class="ident">new_len</span>);
+        <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+    } <span class="kw">else</span> {
+        <span class="ident">OclError</span>::<span class="ident">err_conversion</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;The size of the source byte slice ({} bytes) is not \
+            evenly divisible by the size of the destination type ({} bytes).&quot;</span>, <span class="ident">bytes</span>.<span class="ident">len</span>(),
+            <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()))
     }
 }
 
 
-<span class='doccomment'>/// Converts a byte Vec into a string, removing the trailing null byte if it</span>
-<span class='doccomment'>/// exists.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>bytes_into_string</span>(<span class='kw-2'>mut</span> <span class='ident'>bytes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-    <span class='kw'>if</span> <span class='ident'>bytes</span>.<span class='ident'>last</span>() <span class='op'>==</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>0u8</span>) {
-        <span class='ident'>bytes</span>.<span class='ident'>pop</span>();
+<span class="doccomment">/// Converts a byte Vec into a string, removing the trailing null byte if it</span>
+<span class="doccomment">/// exists.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bytes_into_string</span>(<span class="kw-2">mut</span> <span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">bytes</span>.<span class="ident">last</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">0u8</span>) {
+        <span class="ident">bytes</span>.<span class="ident">pop</span>();
     }
 
-    <span class='ident'>String</span>::<span class='ident'>from_utf8</span>(<span class='ident'>bytes</span>).<span class='ident'>map_err</span>(<span class='ident'>OclError</span>::<span class='ident'>from</span>)
+    <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">bytes</span>).<span class="ident">map_err</span>(<span class="ident">OclError</span>::<span class="ident">from</span>)
 }
 
 
-<span class='doccomment'>/// [UNTESTED] Copies an arbitrary primitive or struct into core bytes.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Depth</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This is not a deep copy, will only copy the surface of primitives, structs,</span>
-<span class='doccomment'>/// etc. Not 100% sure about what happens with other types but should copy</span>
-<span class='doccomment'>/// everything zero levels deep.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Endianness</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// 98% sure (speculative) this will always be correct due to the driver</span>
-<span class='doccomment'>/// automatically taking it into account.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Safety</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Don&#39;t ask.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [FIXME]: Evaluate the ins and outs of this and lock this down a bit.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>into_bytes</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>val</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-    <span class='comment'>// let big_endian = false;</span>
-    <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>iter</span>::<span class='ident'>repeat</span>(<span class='number'>0</span>).<span class='ident'>take</span>(<span class='ident'>size</span>).<span class='ident'>collect</span>();
+<span class="doccomment">/// Converts a byte Vec into a string, removing the trailing null byte if it</span>
+<span class="doccomment">/// exists, then removes leading and trailing whitespace.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bytes_into_trimmed_string</span>(<span class="kw-2">mut</span> <span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">bytes</span>.<span class="ident">last</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">0u8</span>) {
+        <span class="ident">bytes</span>.<span class="ident">pop</span>();
+    }
 
-    <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='kw-2'>&amp;</span><span class='ident'>val</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>new_vec</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>size</span>);
-
-    <span class='comment'>// if big_endian {</span>
-    <span class='comment'>//     new_vec = new_vec.into_iter().rev().collect();</span>
-    <span class='comment'>// }</span>
-
-    <span class='ident'>new_vec</span>
+    <span class="kw">let</span> <span class="ident">string</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">bytes</span>).<span class="ident">map_err</span>(<span class="ident">OclError</span>::<span class="ident">from</span>)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">string</span>.<span class="ident">trim</span>()))
 }
 
-<span class='doccomment'>/// Pads `len` to make it evenly divisible by `incr`.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>padded_len</span>(<span class='ident'>len</span>: <span class='ident'>usize</span>, <span class='ident'>incr</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-    <span class='kw'>let</span> <span class='ident'>len_mod</span> <span class='op'>=</span> <span class='ident'>len</span> <span class='op'>%</span> <span class='ident'>incr</span>;
 
-    <span class='kw'>if</span> <span class='ident'>len_mod</span> <span class='op'>==</span> <span class='number'>0</span> {
-        <span class='ident'>len</span>
-    } <span class='kw'>else</span> {
-        <span class='kw'>let</span> <span class='ident'>pad</span> <span class='op'>=</span> <span class='ident'>incr</span> <span class='op'>-</span> <span class='ident'>len_mod</span>;
-        <span class='kw'>let</span> <span class='ident'>padded_len</span> <span class='op'>=</span> <span class='ident'>len</span> <span class='op'>+</span> <span class='ident'>pad</span>;
-        <span class='macro'>debug_assert_eq</span><span class='macro'>!</span>(<span class='ident'>padded_len</span> <span class='op'>%</span> <span class='ident'>incr</span>, <span class='number'>0</span>);
-        <span class='ident'>padded_len</span>
+
+<span class="doccomment">/// [UNTESTED] Copies an arbitrary primitive or struct into core bytes.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Depth</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is not a deep copy, will only copy the surface of primitives, structs,</span>
+<span class="doccomment">/// etc. Not 100% sure about what happens with other types but should copy</span>
+<span class="doccomment">/// everything zero levels deep.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Endianness</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// 98% sure (speculative) this will always be correct due to the driver</span>
+<span class="doccomment">/// automatically taking it into account.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Don&#39;t ask.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [FIXME]: Evaluate the ins and outs of this and lock this down a bit.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">into_bytes</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">val</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="comment">// let big_endian = false;</span>
+    <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">iter</span>::<span class="ident">repeat</span>(<span class="number">0</span>).<span class="ident">take</span>(<span class="ident">size</span>).<span class="ident">collect</span>();
+
+    <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="ident">val</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">new_vec</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">size</span>);
+
+    <span class="comment">// if big_endian {</span>
+    <span class="comment">//     new_vec = new_vec.into_iter().rev().collect();</span>
+    <span class="comment">// }</span>
+
+    <span class="ident">new_vec</span>
+}
+
+<span class="doccomment">/// Pads `len` to make it evenly divisible by `incr`.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">padded_len</span>(<span class="ident">len</span>: <span class="ident">usize</span>, <span class="ident">incr</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">let</span> <span class="ident">len_mod</span> <span class="op">=</span> <span class="ident">len</span> <span class="op">%</span> <span class="ident">incr</span>;
+
+    <span class="kw">if</span> <span class="ident">len_mod</span> <span class="op">==</span> <span class="number">0</span> {
+        <span class="ident">len</span>
+    } <span class="kw">else</span> {
+        <span class="kw">let</span> <span class="ident">pad</span> <span class="op">=</span> <span class="ident">incr</span> <span class="op">-</span> <span class="ident">len_mod</span>;
+        <span class="kw">let</span> <span class="ident">padded_len</span> <span class="op">=</span> <span class="ident">len</span> <span class="op">+</span> <span class="ident">pad</span>;
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="ident">padded_len</span> <span class="op">%</span> <span class="ident">incr</span>, <span class="number">0</span>);
+        <span class="ident">padded_len</span>
     }
 }
 
-<span class='doccomment'>/// Batch removes elements from a vector using a list of indices to remove.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Will create a new vector and do a streamlined rebuild if</span>
-<span class='doccomment'>/// `remove_list.len()` &gt; `rebuild_threshold`. Threshold should typically be</span>
-<span class='doccomment'>/// set very low (less than probably 5 or 10) as it&#39;s expensive to remove one</span>
-<span class='doccomment'>/// by one.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ### Safety</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Should be perfectly safe, just need to test it a bit.</span>
-<span class='doccomment'>///</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>vec_remove_rebuild</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span>(<span class='ident'>orig_vec</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>remove_list</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>usize</span>],
-                <span class='ident'>rebuild_threshold</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>if</span> <span class='ident'>remove_list</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='ident'>orig_vec</span>.<span class='ident'>len</span>() {
-        <span class='kw'>return</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='string'>&quot;ocl::util::vec_remove_rebuild: Remove list is longer than source
+<span class="doccomment">/// Batch removes elements from a vector using a list of indices to remove.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Will create a new vector and do a streamlined rebuild if</span>
+<span class="doccomment">/// `remove_list.len()` &gt; `rebuild_threshold`. Threshold should typically be</span>
+<span class="doccomment">/// set very low (less than probably 5 or 10) as it&#39;s expensive to remove one</span>
+<span class="doccomment">/// by one.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Should be perfectly safe, just need to test it a bit.</span>
+<span class="doccomment">///</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vec_remove_rebuild</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span>(<span class="ident">orig_vec</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">remove_list</span>: <span class="kw-2">&amp;</span>[<span class="ident">usize</span>],
+                <span class="ident">rebuild_threshold</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">remove_list</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">orig_vec</span>.<span class="ident">len</span>() {
+        <span class="kw">return</span> <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="string">&quot;ocl::util::vec_remove_rebuild: Remove list is longer than source
             vector.&quot;</span>);
     }
-    <span class='kw'>let</span> <span class='ident'>orig_len</span> <span class='op'>=</span> <span class='ident'>orig_vec</span>.<span class='ident'>len</span>();
+    <span class="kw">let</span> <span class="ident">orig_len</span> <span class="op">=</span> <span class="ident">orig_vec</span>.<span class="ident">len</span>();
 
-    <span class='comment'>// If the list is below threshold</span>
-    <span class='kw'>if</span> <span class='ident'>remove_list</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='ident'>rebuild_threshold</span> {
-        <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>idx</span> <span class='kw'>in</span> <span class='ident'>remove_list</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>() {
-            <span class='kw'>if</span> <span class='ident'>idx</span> <span class='op'>&lt;</span> <span class='ident'>orig_len</span> {
-                 <span class='ident'>orig_vec</span>.<span class='ident'>remove</span>(<span class='ident'>idx</span>);
-            } <span class='kw'>else</span> {
-                <span class='kw'>return</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;ocl::util::remove_rebuild_vec: &#39;remove_list&#39; contains
-                at least one out of range index: [{}] (&#39;orig_vec.len()&#39;: {}).&quot;</span>, <span class='ident'>idx</span>, <span class='ident'>orig_len</span>));
+    <span class="comment">// If the list is below threshold</span>
+    <span class="kw">if</span> <span class="ident">remove_list</span>.<span class="ident">len</span>() <span class="op">&lt;=</span> <span class="ident">rebuild_threshold</span> {
+        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">idx</span> <span class="kw">in</span> <span class="ident">remove_list</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
+            <span class="kw">if</span> <span class="ident">idx</span> <span class="op">&lt;</span> <span class="ident">orig_len</span> {
+                 <span class="ident">orig_vec</span>.<span class="ident">remove</span>(<span class="ident">idx</span>);
+            } <span class="kw">else</span> {
+                <span class="kw">return</span> <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;ocl::util::remove_rebuild_vec: &#39;remove_list&#39; \
+                    contains at least one out of range index: [{}] (&#39;orig_vec.len()&#39;: {}).&quot;</span>,
+                    <span class="ident">idx</span>, <span class="ident">orig_len</span>));
             }
         }
-    } <span class='kw'>else</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>remove_markers</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>iter</span>::<span class='ident'>repeat</span>(<span class='bool-val'>true</span>).<span class='ident'>take</span>(<span class='ident'>orig_len</span>).<span class='ident'>collect</span>();
+    } <span class="kw">else</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">remove_markers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">iter</span>::<span class="ident">repeat</span>(<span class="bool-val">true</span>).<span class="ident">take</span>(<span class="ident">orig_len</span>).<span class="ident">collect</span>();
 
-            <span class='comment'>// Build a sparse list of which elements to remove:</span>
-            <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>idx</span> <span class='kw'>in</span> <span class='ident'>remove_list</span>.<span class='ident'>iter</span>() {
-                <span class='kw'>if</span> <span class='ident'>idx</span> <span class='op'>&lt;</span> <span class='ident'>orig_len</span> {
-                    <span class='op'>*</span><span class='ident'>remove_markers</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>idx</span>) <span class='op'>=</span> <span class='bool-val'>false</span>;
-                } <span class='kw'>else</span> {
-                    <span class='kw'>return</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;ocl::util::remove_rebuild_vec: &#39;remove_list&#39; contains
-                    at least one out of range index: [{}] (&#39;orig_vec.len()&#39;: {}).&quot;</span>, <span class='ident'>idx</span>, <span class='ident'>orig_len</span>));
+            <span class="comment">// Build a sparse list of which elements to remove:</span>
+            <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">idx</span> <span class="kw">in</span> <span class="ident">remove_list</span>.<span class="ident">iter</span>() {
+                <span class="kw">if</span> <span class="ident">idx</span> <span class="op">&lt;</span> <span class="ident">orig_len</span> {
+                    <span class="kw-2">*</span><span class="ident">remove_markers</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">idx</span>) <span class="op">=</span> <span class="bool-val">false</span>;
+                } <span class="kw">else</span> {
+                    <span class="kw">return</span> <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;ocl::util::remove_rebuild_vec: &#39;remove_list&#39; \
+                        contains at least one out of range index: [{}] (&#39;orig_vec.len()&#39;: {}).&quot;</span>,
+                        <span class="ident">idx</span>, <span class="ident">orig_len</span>));
                 }
             }
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_len</span> <span class='op'>=</span> <span class='number'>0usize</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_len</span> <span class="op">=</span> <span class="number">0usize</span>;
 
-            <span class='comment'>// Iterate through remove_markers and orig_vec, pushing when the marker is false:</span>
-            <span class='kw'>for</span> <span class='ident'>idx</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>orig_len</span> {
-                <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>remove_markers</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>idx</span>) {
-                    <span class='op'>*</span><span class='ident'>orig_vec</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>new_len</span>) <span class='op'>=</span> <span class='op'>*</span><span class='ident'>orig_vec</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>idx</span>);
-                    <span class='ident'>new_len</span> <span class='op'>+=</span> <span class='number'>1</span>;
+            <span class="comment">// Iterate through remove_markers and orig_vec, pushing when the marker is false:</span>
+            <span class="kw">for</span> <span class="ident">idx</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">orig_len</span> {
+                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">remove_markers</span>.<span class="ident">get_unchecked</span>(<span class="ident">idx</span>) {
+                    <span class="kw-2">*</span><span class="ident">orig_vec</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">new_len</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">orig_vec</span>.<span class="ident">get_unchecked</span>(<span class="ident">idx</span>);
+                    <span class="ident">new_len</span> <span class="op">+=</span> <span class="number">1</span>;
                 }
             }
 
-            <span class='macro'>debug_assert_eq</span><span class='macro'>!</span>(<span class='ident'>new_len</span>, <span class='ident'>orig_len</span> <span class='op'>-</span> <span class='ident'>remove_list</span>.<span class='ident'>len</span>());
-            <span class='ident'>orig_vec</span>.<span class='ident'>set_len</span>(<span class='ident'>new_len</span>);
+            <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="ident">new_len</span>, <span class="ident">orig_len</span> <span class="op">-</span> <span class="ident">remove_list</span>.<span class="ident">len</span>());
+            <span class="ident">orig_vec</span>.<span class="ident">set_len</span>(<span class="ident">new_len</span>);
         }
     }
 
-    <span class='prelude-val'>Ok</span>(())
+    <span class="prelude-val">Ok</span>(())
 }
 
-<span class='doccomment'>/// Wraps (`%`) each value in the list `vals` if it equals or exceeds `val_n`.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>wrap_vals</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclPrm</span> <span class='op'>+</span> <span class='ident'>Integer</span><span class='op'>&gt;</span>(<span class='ident'>vals</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>], <span class='ident'>val_n</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>vals</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span> <span class='op'>%</span> <span class='ident'>val_n</span>).<span class='ident'>collect</span>()
+<span class="doccomment">/// Wraps (`%`) each value in the list `vals` if it equals or exceeds `val_n`.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_vals</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclPrm</span> <span class="op">+</span> <span class="ident">Integer</span><span class="op">&gt;</span>(<span class="ident">vals</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>], <span class="ident">val_n</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">vals</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span> <span class="op">%</span> <span class="ident">val_n</span>).<span class="ident">collect</span>()
 }
 
 
 
-<span class='doccomment'>/// Returns a vector with length `size` containing random values in the (half-open)</span>
-<span class='doccomment'>/// range `[vals.0, vals.1)`.</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rand&quot;</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>scrambled_vec</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclScl</span><span class='op'>&gt;</span>(<span class='ident'>vals</span>: (<span class='ident'>T</span>, <span class='ident'>T</span>), <span class='ident'>size</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>size</span> <span class='op'>&gt;</span> <span class='number'>0</span>, <span class='string'>&quot;\nbuffer::shuffled_vec(): Vector size must be greater than zero.&quot;</span>);
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>vals</span>.<span class='number'>0</span> <span class='op'>&lt;</span> <span class='ident'>vals</span>.<span class='number'>1</span>, <span class='string'>&quot;\nbuffer::shuffled_vec(): Minimum value must be less than maximum.&quot;</span>);
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>weak_rng</span>();
-    <span class='kw'>let</span> <span class='ident'>range</span> <span class='op'>=</span> <span class='ident'>RandRange</span>::<span class='ident'>new</span>(<span class='ident'>vals</span>.<span class='number'>0</span>, <span class='ident'>vals</span>.<span class='number'>1</span>);
+<span class="doccomment">/// Returns a vector with length `size` containing random values in the (half-open)</span>
+<span class="doccomment">/// range `[vals.0, vals.1)`.</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rand&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scrambled_vec</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclScl</span><span class="op">&gt;</span>(<span class="ident">vals</span>: (<span class="ident">T</span>, <span class="ident">T</span>), <span class="ident">size</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">size</span> <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;\nbuffer::shuffled_vec(): Vector size must be greater than zero.&quot;</span>);
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">vals</span>.<span class="number">0</span> <span class="op">&lt;</span> <span class="ident">vals</span>.<span class="number">1</span>, <span class="string">&quot;\nbuffer::shuffled_vec(): Minimum value must be less than maximum.&quot;</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">weak_rng</span>();
+    <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">RandRange</span>::<span class="ident">new</span>(<span class="ident">vals</span>.<span class="number">0</span>, <span class="ident">vals</span>.<span class="number">1</span>);
 
-    (<span class='number'>0</span>..<span class='ident'>size</span>).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>range</span>.<span class='ident'>ind_sample</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>rng</span>)).<span class='ident'>take</span>(<span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>usize</span>).<span class='ident'>collect</span>()
+    (<span class="number">0</span>..<span class="ident">size</span>).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">range</span>.<span class="ident">ind_sample</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>)).<span class="ident">take</span>(<span class="ident">size</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">collect</span>()
 }
 
-<span class='doccomment'>/// Returns a vector with length `size` which is first filled with each integer value</span>
-<span class='doccomment'>/// in the (inclusive) range `[vals.0, vals.1]`. If `size` is greater than the</span>
-<span class='doccomment'>/// number of integers in the aforementioned range, the integers will repeat. After</span>
-<span class='doccomment'>/// being filled with `size` values, the vector is shuffled and the order of its</span>
-<span class='doccomment'>/// values is randomized.</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rand&quot;</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shuffled_vec</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclScl</span><span class='op'>&gt;</span>(<span class='ident'>vals</span>: (<span class='ident'>T</span>, <span class='ident'>T</span>), <span class='ident'>size</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>size</span>);
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>size</span> <span class='op'>&gt;</span> <span class='number'>0</span>, <span class='string'>&quot;\nbuffer::shuffled_vec(): Vector size must be greater than zero.&quot;</span>);
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>vals</span>.<span class='number'>0</span> <span class='op'>&lt;</span> <span class='ident'>vals</span>.<span class='number'>1</span>, <span class='string'>&quot;\nbuffer::shuffled_vec(): Minimum value must be less than maximum.&quot;</span>);
-    <span class='kw'>let</span> <span class='ident'>min</span> <span class='op'>=</span> <span class='ident'>vals</span>.<span class='number'>0</span>.<span class='ident'>to_i64</span>().<span class='ident'>expect</span>(<span class='string'>&quot;\nbuffer::shuffled_vec(), min&quot;</span>);
-    <span class='kw'>let</span> <span class='ident'>max</span> <span class='op'>=</span> <span class='ident'>vals</span>.<span class='number'>1</span>.<span class='ident'>to_i64</span>().<span class='ident'>expect</span>(<span class='string'>&quot;\nbuffer::shuffled_vec(), max&quot;</span>) <span class='op'>+</span> <span class='number'>1</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>range</span> <span class='op'>=</span> (<span class='ident'>min</span>..<span class='ident'>max</span>).<span class='ident'>cycle</span>();
+<span class="doccomment">/// Returns a vector with length `size` which is first filled with each integer value</span>
+<span class="doccomment">/// in the (inclusive) range `[vals.0, vals.1]`. If `size` is greater than the</span>
+<span class="doccomment">/// number of integers in the aforementioned range, the integers will repeat. After</span>
+<span class="doccomment">/// being filled with `size` values, the vector is shuffled and the order of its</span>
+<span class="doccomment">/// values is randomized.</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rand&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shuffled_vec</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclScl</span><span class="op">&gt;</span>(<span class="ident">vals</span>: (<span class="ident">T</span>, <span class="ident">T</span>), <span class="ident">size</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">size</span>);
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">size</span> <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;\nbuffer::shuffled_vec(): Vector size must be greater than zero.&quot;</span>);
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">vals</span>.<span class="number">0</span> <span class="op">&lt;</span> <span class="ident">vals</span>.<span class="number">1</span>, <span class="string">&quot;\nbuffer::shuffled_vec(): Minimum value must be less than maximum.&quot;</span>);
+    <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="ident">vals</span>.<span class="number">0</span>.<span class="ident">to_i64</span>().<span class="ident">expect</span>(<span class="string">&quot;\nbuffer::shuffled_vec(), min&quot;</span>);
+    <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="ident">vals</span>.<span class="number">1</span>.<span class="ident">to_i64</span>().<span class="ident">expect</span>(<span class="string">&quot;\nbuffer::shuffled_vec(), max&quot;</span>) <span class="op">+</span> <span class="number">1</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">range</span> <span class="op">=</span> (<span class="ident">min</span>..<span class="ident">max</span>).<span class="ident">cycle</span>();
 
-    <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>size</span> {
-        <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>range</span>.<span class='ident'>next</span>().<span class='ident'>expect</span>(<span class='string'>&quot;\nbuffer::shuffled_vec(), range&quot;</span>)).<span class='ident'>expect</span>(<span class='string'>&quot;\nbuffer::shuffled_vec(), from_usize&quot;</span>));
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">size</span> {
+        <span class="ident">vec</span>.<span class="ident">push</span>(<span class="ident">FromPrimitive</span>::<span class="ident">from_i64</span>(<span class="ident">range</span>.<span class="ident">next</span>().<span class="ident">expect</span>(<span class="string">&quot;\nbuffer::shuffled_vec(), range&quot;</span>))
+            .<span class="ident">expect</span>(<span class="string">&quot;\nbuffer::shuffled_vec(), from_usize&quot;</span>));
     }
 
-    <span class='ident'>shuffle</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>vec</span>);
-    <span class='ident'>vec</span>
+    <span class="ident">shuffle</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">vec</span>);
+    <span class="ident">vec</span>
 }
 
 
-<span class='doccomment'>/// Shuffles the values in a vector using a single pass of Fisher-Yates with a</span>
-<span class='doccomment'>/// weak (not cryptographically secure) random number generator.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shuffle</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclScl</span><span class='op'>&gt;</span>(<span class='ident'>vec</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>]) {
-    <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>len</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>weak_rng</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ridx</span>: <span class='ident'>usize</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tmp</span>: <span class='ident'>T</span>;
+<span class="doccomment">/// Shuffles the values in a vector using a single pass of Fisher-Yates with a</span>
+<span class="doccomment">/// weak (not cryptographically secure) random number generator.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shuffle</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclScl</span><span class="op">&gt;</span>(<span class="ident">vec</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>]) {
+    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">len</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">weak_rng</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ridx</span>: <span class="ident">usize</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp</span>: <span class="ident">T</span>;
 
-    <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>len</span> {
-        <span class='ident'>ridx</span> <span class='op'>=</span> <span class='ident'>RandRange</span>::<span class='ident'>new</span>(<span class='ident'>i</span>, <span class='ident'>len</span>).<span class='ident'>ind_sample</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>rng</span>);
-        <span class='ident'>tmp</span> <span class='op'>=</span> <span class='ident'>vec</span>[<span class='ident'>i</span>];
-        <span class='ident'>vec</span>[<span class='ident'>i</span>] <span class='op'>=</span> <span class='ident'>vec</span>[<span class='ident'>ridx</span>];
-        <span class='ident'>vec</span>[<span class='ident'>ridx</span>] <span class='op'>=</span> <span class='ident'>tmp</span>;
-    }
-}
-
-
-<span class='comment'>// /// Converts a length in `T` to a size in bytes.</span>
-<span class='comment'>// #[inline]</span>
-<span class='comment'>// pub fn len_to_size&lt;T&gt;(len: usize) -&gt; usize {</span>
-<span class='comment'>//     len * mem::size_of::&lt;T&gt;()</span>
-<span class='comment'>// }</span>
-
-<span class='comment'>// /// Converts lengths in `T` to sizes in bytes for a `[usize; 3]`.</span>
-<span class='comment'>// #[inline]</span>
-<span class='comment'>// pub fn len3_to_size3&lt;T&gt;(lens: [usize; 3]) -&gt; [usize; 3] {</span>
-<span class='comment'>//     [len_to_size::&lt;T&gt;(lens[0]), len_to_size::&lt;T&gt;(lens[1]), len_to_size::&lt;T&gt;(lens[2])]</span>
-<span class='comment'>// }</span>
-
-<span class='comment'>// /// Converts lengths in `T` to sizes in bytes for a `&amp;[usize]`.</span>
-<span class='comment'>// pub fn lens_to_sizes&lt;T&gt;(lens: &amp;[usize]) -&gt; Vec&lt;usize&gt; {</span>
-<span class='comment'>//     lens.iter().map(|len| len * mem::size_of::&lt;T&gt;()).collect()</span>
-<span class='comment'>// }</span>
-
-<span class='comment'>//=============================================================================</span>
-<span class='comment'>//=========================== PRINTING FUNCTIONS ==============================</span>
-<span class='comment'>//=============================================================================</span>
-
-<span class='doccomment'>/// Does what is says it&#39;s gonna.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>print_bytes_as_hex</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) {
-    <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;0x&quot;</span>);
-
-    <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>byte</span> <span class='kw'>in</span> <span class='ident'>bytes</span>.<span class='ident'>iter</span>() {
-        <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{:x}&quot;</span>, <span class='ident'>byte</span>);
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">len</span> {
+        <span class="ident">ridx</span> <span class="op">=</span> <span class="ident">RandRange</span>::<span class="ident">new</span>(<span class="ident">i</span>, <span class="ident">len</span>).<span class="ident">ind_sample</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
+        <span class="ident">tmp</span> <span class="op">=</span> <span class="ident">vec</span>[<span class="ident">i</span>];
+        <span class="ident">vec</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">vec</span>[<span class="ident">ridx</span>];
+        <span class="ident">vec</span>[<span class="ident">ridx</span>] <span class="op">=</span> <span class="ident">tmp</span>;
     }
 }
 
 
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_assignments</span>, <span class='ident'>unused_variables</span>)]</span>
-<span class='doccomment'>/// [UNSTABLE]: MAY BE REMOVED AT ANY TIME</span>
-<span class='doccomment'>/// Prints a vector to stdout. Used for debugging.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>print_slice</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclScl</span><span class='op'>&gt;</span>(
-            <span class='ident'>vec</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>],
-            <span class='ident'>every</span>: <span class='ident'>usize</span>,
-            <span class='ident'>val_range</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>T</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span>,
-            <span class='ident'>idx_range</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;&gt;</span>,
-            <span class='ident'>show_zeros</span>: <span class='ident'>bool</span>,
+<span class="comment">// /// Converts a length in `T` to a size in bytes.</span>
+<span class="comment">// #[inline]</span>
+<span class="comment">// pub fn len_to_size&lt;T&gt;(len: usize) -&gt; usize {</span>
+<span class="comment">//     len * mem::size_of::&lt;T&gt;()</span>
+<span class="comment">// }</span>
+
+<span class="comment">// /// Converts lengths in `T` to sizes in bytes for a `[usize; 3]`.</span>
+<span class="comment">// #[inline]</span>
+<span class="comment">// pub fn len3_to_size3&lt;T&gt;(lens: [usize; 3]) -&gt; [usize; 3] {</span>
+<span class="comment">//     [len_to_size::&lt;T&gt;(lens[0]), len_to_size::&lt;T&gt;(lens[1]), len_to_size::&lt;T&gt;(lens[2])]</span>
+<span class="comment">// }</span>
+
+<span class="comment">// /// Converts lengths in `T` to sizes in bytes for a `&amp;[usize]`.</span>
+<span class="comment">// pub fn lens_to_sizes&lt;T&gt;(lens: &amp;[usize]) -&gt; Vec&lt;usize&gt; {</span>
+<span class="comment">//     lens.iter().map(|len| len * mem::size_of::&lt;T&gt;()).collect()</span>
+<span class="comment">// }</span>
+
+<span class="comment">//=============================================================================</span>
+<span class="comment">//=========================== PRINTING FUNCTIONS ==============================</span>
+<span class="comment">//=============================================================================</span>
+
+<span class="doccomment">/// Does what is says it&#39;s gonna.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_bytes_as_hex</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
+    <span class="macro">print</span><span class="macro">!</span>(<span class="string">&quot;0x&quot;</span>);
+
+    <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">byte</span> <span class="kw">in</span> <span class="ident">bytes</span>.<span class="ident">iter</span>() {
+        <span class="macro">print</span><span class="macro">!</span>(<span class="string">&quot;{:x}&quot;</span>, <span class="ident">byte</span>);
+    }
+}
+
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_assignments</span>, <span class="ident">unused_variables</span>)]</span>
+<span class="doccomment">/// [UNSTABLE]: MAY BE REMOVED AT ANY TIME</span>
+<span class="doccomment">/// Prints a vector to stdout. Used for debugging.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_slice</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclScl</span><span class="op">&gt;</span>(
+            <span class="ident">vec</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>],
+            <span class="ident">every</span>: <span class="ident">usize</span>,
+            <span class="ident">val_range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>,
+            <span class="ident">idx_range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;&gt;</span>,
+            <span class="ident">show_zeros</span>: <span class="ident">bool</span>,
             ) {
-    <span class='macro'>print</span><span class='macro'>!</span>( <span class='string'>&quot;{cdgr}[{cg}{}{cdgr}/{}&quot;</span>, <span class='ident'>vec</span>.<span class='ident'>len</span>(), <span class='ident'>every</span>, <span class='ident'>cg</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_GRN</span>, <span class='ident'>cdgr</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DGR</span>);
+    <span class="macro">print</span><span class="macro">!</span>( <span class="string">&quot;{cdgr}[{cg}{}{cdgr}/{}&quot;</span>, <span class="ident">vec</span>.<span class="ident">len</span>(), <span class="ident">every</span>, <span class="ident">cg</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_GRN</span>, <span class="ident">cdgr</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DGR</span>);
 
-    <span class='kw'>let</span> (<span class='ident'>vr_start</span>, <span class='ident'>vr_end</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>val_range</span> {
-        <span class='prelude-val'>Some</span>(<span class='ident'>vr</span>) <span class='op'>=&gt;</span> {
-            <span class='macro'>print</span><span class='macro'>!</span>( <span class='string'>&quot;;({}-{})&quot;</span>, <span class='ident'>vr</span>.<span class='number'>0</span>, <span class='ident'>vr</span>.<span class='number'>1</span>);
-            <span class='ident'>vr</span>
+    <span class="kw">let</span> (<span class="ident">vr_start</span>, <span class="ident">vr_end</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">val_range</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">vr</span>) <span class="op">=&gt;</span> {
+            <span class="macro">print</span><span class="macro">!</span>( <span class="string">&quot;;({}-{})&quot;</span>, <span class="ident">vr</span>.<span class="number">0</span>, <span class="ident">vr</span>.<span class="number">1</span>);
+            <span class="ident">vr</span>
         },
 
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> (<span class='ident'>Default</span>::<span class='ident'>default</span>(), <span class='ident'>Default</span>::<span class='ident'>default</span>()),
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> (<span class="ident">Default</span>::<span class="ident">default</span>(), <span class="ident">Default</span>::<span class="ident">default</span>()),
     };
 
-    <span class='kw'>let</span> (<span class='ident'>ir_start</span>, <span class='ident'>ir_end</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>idx_range</span> {
-        <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ir</span>) <span class='op'>=&gt;</span> {
-            <span class='macro'>print</span><span class='macro'>!</span>( <span class='string'>&quot;;[{}..{}]&quot;</span>, <span class='ident'>ir</span>.<span class='ident'>start</span>, <span class='ident'>ir</span>.<span class='ident'>end</span>);
-            (<span class='ident'>ir</span>.<span class='ident'>start</span>, <span class='ident'>ir</span>.<span class='ident'>end</span>)
+    <span class="kw">let</span> (<span class="ident">ir_start</span>, <span class="ident">ir_end</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">idx_range</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">ir</span>) <span class="op">=&gt;</span> {
+            <span class="macro">print</span><span class="macro">!</span>( <span class="string">&quot;;[{}..{}]&quot;</span>, <span class="ident">ir</span>.<span class="ident">start</span>, <span class="ident">ir</span>.<span class="ident">end</span>);
+            (<span class="ident">ir</span>.<span class="ident">start</span>, <span class="ident">ir</span>.<span class="ident">end</span>)
         },
 
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> (<span class='number'>0usize</span>, <span class='number'>0usize</span>),
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> (<span class="number">0usize</span>, <span class="number">0usize</span>),
     };
 
-    <span class='macro'>print</span><span class='macro'>!</span>( <span class='string'>&quot;]:{cd} &quot;</span>, <span class='ident'>cd</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DEFAULT</span>,);
+    <span class="macro">print</span><span class="macro">!</span>( <span class="string">&quot;]:{cd} &quot;</span>, <span class="ident">cd</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DEFAULT</span>,);
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ttl_nz</span> <span class='op'>=</span> <span class='number'>0usize</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ttl_ir</span> <span class='op'>=</span> <span class='number'>0usize</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>within_idx_range</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>within_val_range</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hi</span>: <span class='ident'>T</span> <span class='op'>=</span> <span class='ident'>vr_start</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>lo</span>: <span class='ident'>T</span> <span class='op'>=</span> <span class='ident'>vr_end</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>sum</span>: <span class='ident'>i64</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ttl_prntd</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>len</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ttl_nz</span> <span class="op">=</span> <span class="number">0usize</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ttl_ir</span> <span class="op">=</span> <span class="number">0usize</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">within_idx_range</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">within_val_range</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hi</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">vr_start</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lo</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">vr_end</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sum</span>: <span class="ident">i64</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ttl_prntd</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">len</span>();
 
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>color</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DEFAULT</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>prnt</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">color</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DEFAULT</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prnt</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
-    <span class='comment'>// Yes, this clusterfuck needs rewriting someday</span>
-    <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>item</span>) <span class='kw'>in</span> <span class='ident'>vec</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
+    <span class="comment">// Yes, this clusterfuck needs rewriting someday</span>
+    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="ident">vec</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
 
-        <span class='ident'>prnt</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+        <span class="ident">prnt</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
-        <span class='kw'>if</span> <span class='ident'>every</span> <span class='op'>!=</span> <span class='number'>0</span> {
-            <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>%</span> <span class='ident'>every</span> <span class='op'>==</span> <span class='number'>0</span> {
-                <span class='ident'>prnt</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
-            } <span class='kw'>else</span> {
-                <span class='ident'>prnt</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+        <span class="kw">if</span> <span class="ident">every</span> <span class="op">!=</span> <span class="number">0</span> {
+            <span class="kw">if</span> <span class="ident">i</span> <span class="op">%</span> <span class="ident">every</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="ident">prnt</span> <span class="op">=</span> <span class="bool-val">true</span>;
+            } <span class="kw">else</span> {
+                <span class="ident">prnt</span> <span class="op">=</span> <span class="bool-val">false</span>;
             }
         }
 
-        <span class='kw'>if</span> <span class='ident'>idx_range</span>.<span class='ident'>is_some</span>() {
-            <span class='kw'>let</span> <span class='ident'>ir</span> <span class='op'>=</span> <span class='ident'>idx_range</span>.<span class='ident'>as_ref</span>().<span class='ident'>expect</span>(<span class='string'>&quot;ocl::buffer::print_vec()&quot;</span>);
+        <span class="kw">if</span> <span class="ident">idx_range</span>.<span class="ident">is_some</span>() {
+            <span class="kw">let</span> <span class="ident">ir</span> <span class="op">=</span> <span class="ident">idx_range</span>.<span class="ident">as_ref</span>().<span class="ident">expect</span>(<span class="string">&quot;ocl::buffer::print_vec()&quot;</span>);
 
-            <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>ir_start</span> <span class='op'>||</span> <span class='ident'>i</span> <span class='op'>&gt;=</span> <span class='ident'>ir_end</span> {
-                <span class='ident'>prnt</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
-                <span class='ident'>within_idx_range</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
-            } <span class='kw'>else</span> {
-                <span class='ident'>within_idx_range</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+            <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">ir_start</span> <span class="op">||</span> <span class="ident">i</span> <span class="op">&gt;=</span> <span class="ident">ir_end</span> {
+                <span class="ident">prnt</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                <span class="ident">within_idx_range</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            } <span class="kw">else</span> {
+                <span class="ident">within_idx_range</span> <span class="op">=</span> <span class="bool-val">true</span>;
             }
-        } <span class='kw'>else</span> {
-            <span class='ident'>within_idx_range</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+        } <span class="kw">else</span> {
+            <span class="ident">within_idx_range</span> <span class="op">=</span> <span class="bool-val">true</span>;
         }
 
-        <span class='kw'>if</span> <span class='ident'>val_range</span>.<span class='ident'>is_some</span>() {
-            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>item</span> <span class='op'>&lt;</span> <span class='ident'>vr_start</span> <span class='op'>||</span> <span class='op'>*</span><span class='ident'>item</span> <span class='op'>&gt;</span> <span class='ident'>vr_end</span> {
-                <span class='ident'>prnt</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
-                <span class='ident'>within_val_range</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
-            } <span class='kw'>else</span> {
-                <span class='kw'>if</span> <span class='ident'>within_idx_range</span> {
-                    <span class='comment'>// if *item == Default::default() {</span>
-                    <span class='comment'>//     ttl_ir += 1;</span>
-                    <span class='comment'>// } else {</span>
-                    <span class='comment'>//     ttl_ir += 1;</span>
-                    <span class='comment'>// }</span>
-                    <span class='ident'>ttl_ir</span> <span class='op'>+=</span> <span class='number'>1</span>;
+        <span class="kw">if</span> <span class="ident">val_range</span>.<span class="ident">is_some</span>() {
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">item</span> <span class="op">&lt;</span> <span class="ident">vr_start</span> <span class="op">||</span> <span class="kw-2">*</span><span class="ident">item</span> <span class="op">&gt;</span> <span class="ident">vr_end</span> {
+                <span class="ident">prnt</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                <span class="ident">within_val_range</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            } <span class="kw">else</span> {
+                <span class="kw">if</span> <span class="ident">within_idx_range</span> {
+                    <span class="comment">// if *item == Default::default() {</span>
+                    <span class="comment">//     ttl_ir += 1;</span>
+                    <span class="comment">// } else {</span>
+                    <span class="comment">//     ttl_ir += 1;</span>
+                    <span class="comment">// }</span>
+                    <span class="ident">ttl_ir</span> <span class="op">+=</span> <span class="number">1</span>;
                 }
 
-                <span class='ident'>within_val_range</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+                <span class="ident">within_val_range</span> <span class="op">=</span> <span class="bool-val">true</span>;
             }
         }
 
-        <span class='kw'>if</span> <span class='ident'>within_idx_range</span> <span class='op'>&amp;&amp;</span> <span class='ident'>within_val_range</span> {
-            <span class='ident'>sum</span> <span class='op'>+=</span> <span class='ident'>item</span>.<span class='ident'>to_i64</span>().<span class='ident'>expect</span>(<span class='string'>&quot;ocl::buffer::print_vec(): vec[i]&quot;</span>);
+        <span class="kw">if</span> <span class="ident">within_idx_range</span> <span class="op">&amp;&amp;</span> <span class="ident">within_val_range</span> {
+            <span class="ident">sum</span> <span class="op">+=</span> <span class="ident">item</span>.<span class="ident">to_i64</span>().<span class="ident">expect</span>(<span class="string">&quot;ocl::buffer::print_vec(): vec[i]&quot;</span>);
 
-            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>item</span> <span class='op'>&gt;</span> <span class='ident'>hi</span> { <span class='ident'>hi</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>item</span> };
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">item</span> <span class="op">&gt;</span> <span class="ident">hi</span> { <span class="ident">hi</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">item</span> };
 
-            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>item</span> <span class='op'>&lt;</span> <span class='ident'>lo</span> { <span class='ident'>lo</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>item</span> };
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">item</span> <span class="op">&lt;</span> <span class="ident">lo</span> { <span class="ident">lo</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">item</span> };
 
-            <span class='kw'>if</span> <span class='ident'>vec</span>[<span class='ident'>i</span>] <span class='op'>!=</span> <span class='ident'>Default</span>::<span class='ident'>default</span>() {
-                <span class='ident'>ttl_nz</span> <span class='op'>+=</span> <span class='number'>1usize</span>;
-                <span class='ident'>color</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_ORA</span>;
-            } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>show_zeros</span> {
-                <span class='ident'>color</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DEFAULT</span>;
-            } <span class='kw'>else</span> {
-                <span class='ident'>prnt</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+            <span class="kw">if</span> <span class="ident">vec</span>[<span class="ident">i</span>] <span class="op">!=</span> <span class="ident">Default</span>::<span class="ident">default</span>() {
+                <span class="ident">ttl_nz</span> <span class="op">+=</span> <span class="number">1usize</span>;
+                <span class="ident">color</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_ORA</span>;
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">show_zeros</span> {
+                <span class="ident">color</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DEFAULT</span>;
+            } <span class="kw">else</span> {
+                <span class="ident">prnt</span> <span class="op">=</span> <span class="bool-val">false</span>;
             }
         }
 
-        <span class='kw'>if</span> <span class='ident'>prnt</span> {
-            <span class='macro'>print</span><span class='macro'>!</span>( <span class='string'>&quot;{cg}[{cd}{}{cg}:{cc}{}{cg}]{cd}&quot;</span>, <span class='ident'>i</span>, <span class='ident'>vec</span>[<span class='ident'>i</span>], <span class='ident'>cc</span> <span class='op'>=</span> <span class='ident'>color</span>, <span class='ident'>cd</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DEFAULT</span>, <span class='ident'>cg</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DGR</span>);
-            <span class='ident'>ttl_prntd</span> <span class='op'>+=</span> <span class='number'>1</span>;
+        <span class="kw">if</span> <span class="ident">prnt</span> {
+            <span class="macro">print</span><span class="macro">!</span>( <span class="string">&quot;{cg}[{cd}{}{cg}:{cc}{}{cg}]{cd}&quot;</span>, <span class="ident">i</span>, <span class="ident">vec</span>[<span class="ident">i</span>], <span class="ident">cc</span> <span class="op">=</span> <span class="ident">color</span>, <span class="ident">cd</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DEFAULT</span>, <span class="ident">cg</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DGR</span>);
+            <span class="ident">ttl_prntd</span> <span class="op">+=</span> <span class="number">1</span>;
         }
     }
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>anz</span>: <span class='ident'>f32</span> <span class='op'>=</span> <span class='number'>0f32</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>nz_pct</span>: <span class='ident'>f32</span> <span class='op'>=</span> <span class='number'>0f32</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">anz</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0f32</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nz_pct</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0f32</span>;
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ir_pct</span>: <span class='ident'>f32</span> <span class='op'>=</span> <span class='number'>0f32</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>avg_ir</span>: <span class='ident'>f32</span> <span class='op'>=</span> <span class='number'>0f32</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ir_pct</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0f32</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">avg_ir</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0f32</span>;
 
-    <span class='kw'>if</span> <span class='ident'>ttl_nz</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
-        <span class='ident'>anz</span> <span class='op'>=</span> <span class='ident'>sum</span> <span class='kw'>as</span> <span class='ident'>f32</span> <span class='op'>/</span> <span class='ident'>ttl_nz</span> <span class='kw'>as</span> <span class='ident'>f32</span>;
-        <span class='ident'>nz_pct</span> <span class='op'>=</span> (<span class='ident'>ttl_nz</span> <span class='kw'>as</span> <span class='ident'>f32</span> <span class='op'>/</span> <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>f32</span>) <span class='op'>*</span> <span class='number'>100f32</span>;
-        <span class='comment'>//print!( &quot;[ttl_nz: {}, nz_pct: {:.0}%, len: {}]&quot;, ttl_nz, nz_pct, len);</span>
+    <span class="kw">if</span> <span class="ident">ttl_nz</span> <span class="op">&gt;</span> <span class="number">0</span> {
+        <span class="ident">anz</span> <span class="op">=</span> <span class="ident">sum</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="ident">ttl_nz</span> <span class="kw">as</span> <span class="ident">f32</span>;
+        <span class="ident">nz_pct</span> <span class="op">=</span> (<span class="ident">ttl_nz</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="ident">len</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="op">*</span> <span class="number">100f32</span>;
+        <span class="comment">//print!( &quot;[ttl_nz: {}, nz_pct: {:.0}%, len: {}]&quot;, ttl_nz, nz_pct, len);</span>
     }
 
-    <span class='kw'>if</span> <span class='ident'>ttl_ir</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
-        <span class='ident'>avg_ir</span> <span class='op'>=</span> <span class='ident'>sum</span> <span class='kw'>as</span> <span class='ident'>f32</span> <span class='op'>/</span> <span class='ident'>ttl_ir</span> <span class='kw'>as</span> <span class='ident'>f32</span>;
-        <span class='ident'>ir_pct</span> <span class='op'>=</span> (<span class='ident'>ttl_ir</span> <span class='kw'>as</span> <span class='ident'>f32</span> <span class='op'>/</span> <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>f32</span>) <span class='op'>*</span> <span class='number'>100f32</span>;
-        <span class='comment'>//print!( &quot;[ttl_nz: {}, nz_pct: {:.0}%, len: {}]&quot;, ttl_nz, nz_pct, len);</span>
+    <span class="kw">if</span> <span class="ident">ttl_ir</span> <span class="op">&gt;</span> <span class="number">0</span> {
+        <span class="ident">avg_ir</span> <span class="op">=</span> <span class="ident">sum</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="ident">ttl_ir</span> <span class="kw">as</span> <span class="ident">f32</span>;
+        <span class="ident">ir_pct</span> <span class="op">=</span> (<span class="ident">ttl_ir</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="ident">len</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="op">*</span> <span class="number">100f32</span>;
+        <span class="comment">//print!( &quot;[ttl_nz: {}, nz_pct: {:.0}%, len: {}]&quot;, ttl_nz, nz_pct, len);</span>
     }
 
 
-    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{cdgr} ;(nz:{clbl}{}{cdgr}({clbl}{:.2}%{cdgr}),\
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{cdgr}; (nz:{clbl}{}{cdgr}({clbl}{:.2}%{cdgr}),\
         ir:{clbl}{}{cdgr}({clbl}{:.2}%{cdgr}),hi:{},lo:{},anz:{:.2},prntd:{}){cd} &quot;</span>,
-        <span class='ident'>ttl_nz</span>, <span class='ident'>nz_pct</span>, <span class='ident'>ttl_ir</span>, <span class='ident'>ir_pct</span>, <span class='ident'>hi</span>, <span class='ident'>lo</span>, <span class='ident'>anz</span>, <span class='ident'>ttl_prntd</span>, <span class='ident'>cd</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DEFAULT</span>, <span class='ident'>clbl</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_LBL</span>, <span class='ident'>cdgr</span> <span class='op'>=</span> <span class='ident'>colors</span>::<span class='ident'>C_DGR</span>);
+        <span class="ident">ttl_nz</span>, <span class="ident">nz_pct</span>, <span class="ident">ttl_ir</span>, <span class="ident">ir_pct</span>, <span class="ident">hi</span>, <span class="ident">lo</span>, <span class="ident">anz</span>, <span class="ident">ttl_prntd</span>, <span class="ident">cd</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DEFAULT</span>, <span class="ident">clbl</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_LBL</span>, <span class="ident">cdgr</span> <span class="op">=</span> <span class="ident">colors</span>::<span class="ident">C_DGR</span>);
 }
 
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>print_simple</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclScl</span><span class='op'>&gt;</span>(<span class='ident'>slice</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>]) {
-    <span class='ident'>print_slice</span>(<span class='ident'>slice</span>, <span class='number'>1</span>, <span class='prelude-val'>None</span>, <span class='prelude-val'>None</span>, <span class='bool-val'>true</span>);
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_simple</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclScl</span><span class="op">&gt;</span>(<span class="ident">slice</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>]) {
+    <span class="ident">print_slice</span>(<span class="ident">slice</span>, <span class="number">1</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="bool-val">true</span>);
 }
 
 
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>print_val_range</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclScl</span><span class='op'>&gt;</span>(<span class='ident'>slice</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>], <span class='ident'>every</span>: <span class='ident'>usize</span>, <span class='ident'>val_range</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>T</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span>) {
-    <span class='ident'>print_slice</span>(<span class='ident'>slice</span>, <span class='ident'>every</span>, <span class='ident'>val_range</span>, <span class='prelude-val'>None</span>, <span class='bool-val'>true</span>);
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_val_range</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclScl</span><span class="op">&gt;</span>(<span class="ident">slice</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>], <span class="ident">every</span>: <span class="ident">usize</span>, <span class="ident">val_range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>) {
+    <span class="ident">print_slice</span>(<span class="ident">slice</span>, <span class="ident">every</span>, <span class="ident">val_range</span>, <span class="prelude-val">None</span>, <span class="bool-val">true</span>);
 }
 
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='comment'>// use std::iter;</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="comment">// use std::iter;</span>
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>remove_rebuild</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>primary_vals</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span> <span class='op'>=</span> (<span class='number'>0</span>..(<span class='number'>2</span> <span class='op'>&lt;&lt;</span> <span class='number'>18</span>)).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span>).<span class='ident'>collect</span>();
-        <span class='kw'>let</span> <span class='ident'>orig_len</span> <span class='op'>=</span> <span class='ident'>primary_vals</span>.<span class='ident'>len</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">remove_rebuild</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">primary_vals</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..(<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="number">18</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>).<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">orig_len</span> <span class="op">=</span> <span class="ident">primary_vals</span>.<span class="ident">len</span>();
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bad_indices</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>::<span class='ident'>with_capacity</span>(<span class='number'>2</span> <span class='op'>&lt;&lt;</span> <span class='number'>16</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>idx</span> <span class='op'>=</span> <span class='number'>0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bad_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">with_capacity</span>(<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="number">16</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
 
-        <span class='comment'>// Mark every whateverth value &#39;bad&#39;:</span>
-        <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>val</span> <span class='kw'>in</span> <span class='ident'>primary_vals</span>.<span class='ident'>iter</span>() {
-            <span class='kw'>if</span> (<span class='ident'>val</span> <span class='op'>%</span> <span class='number'>19</span> <span class='op'>==</span> <span class='number'>0</span>) <span class='op'>||</span> (<span class='ident'>val</span> <span class='op'>%</span> <span class='number'>31</span> <span class='op'>==</span> <span class='number'>0</span>) <span class='op'>||</span> (<span class='ident'>val</span> <span class='op'>%</span> <span class='number'>107</span> <span class='op'>==</span> <span class='number'>0</span>) {
-                <span class='ident'>bad_indices</span>.<span class='ident'>push</span>(<span class='ident'>idx</span>);
+        <span class="comment">// Mark every whateverth value &#39;bad&#39;:</span>
+        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">val</span> <span class="kw">in</span> <span class="ident">primary_vals</span>.<span class="ident">iter</span>() {
+            <span class="kw">if</span> (<span class="ident">val</span> <span class="op">%</span> <span class="number">19</span> <span class="op">==</span> <span class="number">0</span>) <span class="op">||</span> (<span class="ident">val</span> <span class="op">%</span> <span class="number">31</span> <span class="op">==</span> <span class="number">0</span>) <span class="op">||</span> (<span class="ident">val</span> <span class="op">%</span> <span class="number">107</span> <span class="op">==</span> <span class="number">0</span>) {
+                <span class="ident">bad_indices</span>.<span class="ident">push</span>(<span class="ident">idx</span>);
             }
 
-            <span class='ident'>idx</span> <span class='op'>+=</span> <span class='number'>1</span>;
+            <span class="ident">idx</span> <span class="op">+=</span> <span class="number">1</span>;
         }
 
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;util::tests::remove_rebuild(): bad_indices: {}&quot;</span>, <span class='ident'>bad_indices</span>.<span class='ident'>len</span>());
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;util::tests::remove_rebuild(): bad_indices: {}&quot;</span>, <span class="ident">bad_indices</span>.<span class="ident">len</span>());
 
-        <span class='comment'>// Remove the bad values:</span>
-        <span class='kw'>super</span>::<span class='ident'>vec_remove_rebuild</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>primary_vals</span>, <span class='kw-2'>&amp;</span><span class='ident'>bad_indices</span>[..], <span class='number'>3</span>)
-            .<span class='ident'>expect</span>(<span class='string'>&quot;util::tests::remove_rebuild()&quot;</span>);
+        <span class="comment">// Remove the bad values:</span>
+        <span class="kw">super</span>::<span class="ident">vec_remove_rebuild</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">primary_vals</span>, <span class="kw-2">&amp;</span><span class="ident">bad_indices</span>[..], <span class="number">3</span>)
+            .<span class="ident">expect</span>(<span class="string">&quot;util::tests::remove_rebuild()&quot;</span>);
 
-        <span class='comment'>// Check:</span>
-        <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>val</span> <span class='kw'>in</span> <span class='ident'>primary_vals</span>.<span class='ident'>iter</span>() {
-            <span class='kw'>if</span> (<span class='ident'>val</span> <span class='op'>%</span> <span class='number'>19</span> <span class='op'>==</span> <span class='number'>0</span>) <span class='op'>||</span> (<span class='ident'>val</span> <span class='op'>%</span> <span class='number'>31</span> <span class='op'>==</span> <span class='number'>0</span>) <span class='op'>||</span> (<span class='ident'>val</span> <span class='op'>%</span> <span class='number'>107</span> <span class='op'>==</span> <span class='number'>0</span>) {
-                <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;util::tests::remove_rebuild(): Value: &#39;{}&#39; found in list!&quot;</span>, <span class='ident'>val</span>);
+        <span class="comment">// Check:</span>
+        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">val</span> <span class="kw">in</span> <span class="ident">primary_vals</span>.<span class="ident">iter</span>() {
+            <span class="kw">if</span> (<span class="ident">val</span> <span class="op">%</span> <span class="number">19</span> <span class="op">==</span> <span class="number">0</span>) <span class="op">||</span> (<span class="ident">val</span> <span class="op">%</span> <span class="number">31</span> <span class="op">==</span> <span class="number">0</span>) <span class="op">||</span> (<span class="ident">val</span> <span class="op">%</span> <span class="number">107</span> <span class="op">==</span> <span class="number">0</span>) {
+                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;util::tests::remove_rebuild(): Value: &#39;{}&#39; found in list!&quot;</span>, <span class="ident">val</span>);
             }
         }
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>orig_len</span>, <span class='ident'>primary_vals</span>.<span class='ident'>len</span>() <span class='op'>+</span> <span class='ident'>bad_indices</span>.<span class='ident'>len</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">orig_len</span>, <span class="ident">primary_vals</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">bad_indices</span>.<span class="ident">len</span>());
     }
 }
 </pre>
@@ -1238,11 +1271,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

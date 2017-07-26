@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.2.1\src\cl_egl_h.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.3.0\src\cl_egl_h.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>cl_egl_h.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -200,165 +201,165 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! OpenGL EGL Sharing.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! OpenGL EGL Sharing.</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
 
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_void</span>, <span class='ident'>intptr_t</span>};
+<span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_void</span>, <span class="ident">intptr_t</span>};
 
-<span class='comment'>// /* CLeglImageKHR is an opaque handle to an EGLImage */</span>
-<span class='comment'>// typedef void* CLeglImageKHR;</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>CLeglImageKHR</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>;
+<span class="comment">// /* CLeglImageKHR is an opaque handle to an EGLImage */</span>
+<span class="comment">// typedef void* CLeglImageKHR;</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">CLeglImageKHR</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
 
-<span class='comment'>// /* CLeglDisplayKHR is an opaque handle to an EGLDisplay */</span>
-<span class='comment'>// typedef void* CLeglDisplayKHR;</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>CLeglDisplayKHR</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>;
+<span class="comment">// /* CLeglDisplayKHR is an opaque handle to an EGLDisplay */</span>
+<span class="comment">// typedef void* CLeglDisplayKHR;</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">CLeglDisplayKHR</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
 
-<span class='comment'>// /* CLeglSyncKHR is an opaque handle to an EGLSync object */</span>
-<span class='comment'>// typedef void* CLeglSyncKHR;</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>CLeglSyncKHR</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>;
+<span class="comment">// /* CLeglSyncKHR is an opaque handle to an EGLSync object */</span>
+<span class="comment">// typedef void* CLeglSyncKHR;</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">CLeglSyncKHR</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
 
-<span class='comment'>// /* properties passed to clCreateFromEGLImageKHR */</span>
-<span class='comment'>// typedef intptr_t cl_egl_image_properties_khr;</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cl_egl_image_properties_khr</span> <span class='op'>=</span> <span class='ident'>intptr_t</span>;
+<span class="comment">// /* properties passed to clCreateFromEGLImageKHR */</span>
+<span class="comment">// typedef intptr_t cl_egl_image_properties_khr;</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cl_egl_image_properties_khr</span> <span class="op">=</span> <span class="ident">intptr_t</span>;
 
-<span class='comment'>// /*******************************************************************************</span>
-<span class='comment'>//  * Copyright (c) 2008-2015 The Khronos Group Inc.</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * Permission is hereby granted, free of charge, to any person obtaining a</span>
-<span class='comment'>//  * copy of this software and/or associated documentation files (the</span>
-<span class='comment'>//  * &quot;Materials&quot;), to deal in the Materials without restriction, including</span>
-<span class='comment'>//  * without limitation the rights to use, copy, modify, merge, publish,</span>
-<span class='comment'>//  * distribute, sublicense, and/or sell copies of the Materials, and to</span>
-<span class='comment'>//  * permit persons to whom the Materials are furnished to do so, subject to</span>
-<span class='comment'>//  * the following conditions:</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * The above copyright notice and this permission notice shall be included</span>
-<span class='comment'>//  * in all copies or substantial portions of the Materials.</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * MODIFICATIONS TO THIS FILE MAY MEAN IT NO LONGER ACCURATELY REFLECTS</span>
-<span class='comment'>//  * KHRONOS STANDARDS. THE UNMODIFIED, NORMATIVE VERSIONS OF KHRONOS</span>
-<span class='comment'>//  * SPECIFICATIONS AND HEADER INFORMATION ARE LOCATED AT</span>
-<span class='comment'>//  *    https://www.khronos.org/registry/</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * THE MATERIALS ARE PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,</span>
-<span class='comment'>//  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span>
-<span class='comment'>//  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span>
-<span class='comment'>//  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span>
-<span class='comment'>//  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span>
-<span class='comment'>//  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span>
-<span class='comment'>//  * MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.</span>
-<span class='comment'>//  ******************************************************************************/</span>
+<span class="comment">// /*******************************************************************************</span>
+<span class="comment">//  * Copyright (c) 2008-2015 The Khronos Group Inc.</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * Permission is hereby granted, free of charge, to any person obtaining a</span>
+<span class="comment">//  * copy of this software and/or associated documentation files (the</span>
+<span class="comment">//  * &quot;Materials&quot;), to deal in the Materials without restriction, including</span>
+<span class="comment">//  * without limitation the rights to use, copy, modify, merge, publish,</span>
+<span class="comment">//  * distribute, sublicense, and/or sell copies of the Materials, and to</span>
+<span class="comment">//  * permit persons to whom the Materials are furnished to do so, subject to</span>
+<span class="comment">//  * the following conditions:</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * The above copyright notice and this permission notice shall be included</span>
+<span class="comment">//  * in all copies or substantial portions of the Materials.</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * MODIFICATIONS TO THIS FILE MAY MEAN IT NO LONGER ACCURATELY REFLECTS</span>
+<span class="comment">//  * KHRONOS STANDARDS. THE UNMODIFIED, NORMATIVE VERSIONS OF KHRONOS</span>
+<span class="comment">//  * SPECIFICATIONS AND HEADER INFORMATION ARE LOCATED AT</span>
+<span class="comment">//  *    https://www.khronos.org/registry/</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * THE MATERIALS ARE PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,</span>
+<span class="comment">//  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span>
+<span class="comment">//  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span>
+<span class="comment">//  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span>
+<span class="comment">//  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span>
+<span class="comment">//  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span>
+<span class="comment">//  * MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.</span>
+<span class="comment">//  ******************************************************************************/</span>
 
-<span class='comment'>// #ifndef __OPENCL_CL_EGL_H</span>
-<span class='comment'>// #define __OPENCL_CL_EGL_H</span>
+<span class="comment">// #ifndef __OPENCL_CL_EGL_H</span>
+<span class="comment">// #define __OPENCL_CL_EGL_H</span>
 
-<span class='comment'>// #ifdef __APPLE__</span>
+<span class="comment">// #ifdef __APPLE__</span>
 
-<span class='comment'>// #else</span>
-<span class='comment'>// #include &lt;CL/cl.h&gt;</span>
-<span class='comment'>// #endif  </span>
+<span class="comment">// #else</span>
+<span class="comment">// #include &lt;CL/cl.h&gt;</span>
+<span class="comment">// #endif  </span>
 
-<span class='comment'>// #ifdef __cplusplus</span>
-<span class='comment'>// extern &quot;C&quot; {</span>
-<span class='comment'>// #endif</span>
-
-
-<span class='comment'>// /* Command type for events created with clEnqueueAcquireEGLObjectsKHR */</span>
-<span class='comment'>// #define CL_COMMAND_EGL_FENCE_SYNC_OBJECT_KHR  0x202F</span>
-<span class='comment'>// #define CL_COMMAND_ACQUIRE_EGL_OBJECTS_KHR    0x202D</span>
-<span class='comment'>// #define CL_COMMAND_RELEASE_EGL_OBJECTS_KHR    0x202E</span>
-
-<span class='comment'>// /* Error type for clCreateFromEGLImageKHR */</span>
-<span class='comment'>// #define CL_INVALID_EGL_OBJECT_KHR             -1093</span>
-<span class='comment'>// #define CL_EGL_RESOURCE_NOT_ACQUIRED_KHR      -1092</span>
-
-<span class='comment'>// /* CLeglImageKHR is an opaque handle to an EGLImage */</span>
-<span class='comment'>// typedef void* CLeglImageKHR;</span>
-
-<span class='comment'>// /* CLeglDisplayKHR is an opaque handle to an EGLDisplay */</span>
-<span class='comment'>// typedef void* CLeglDisplayKHR;</span>
-
-<span class='comment'>// /* CLeglSyncKHR is an opaque handle to an EGLSync object */</span>
-<span class='comment'>// typedef void* CLeglSyncKHR;</span>
-
-<span class='comment'>// /* properties passed to clCreateFromEGLImageKHR */</span>
-<span class='comment'>// typedef intptr_t cl_egl_image_properties_khr;</span>
+<span class="comment">// #ifdef __cplusplus</span>
+<span class="comment">// extern &quot;C&quot; {</span>
+<span class="comment">// #endif</span>
 
 
-<span class='comment'>// #define cl_khr_egl_image 1</span>
+<span class="comment">// /* Command type for events created with clEnqueueAcquireEGLObjectsKHR */</span>
+<span class="comment">// #define CL_COMMAND_EGL_FENCE_SYNC_OBJECT_KHR  0x202F</span>
+<span class="comment">// #define CL_COMMAND_ACQUIRE_EGL_OBJECTS_KHR    0x202D</span>
+<span class="comment">// #define CL_COMMAND_RELEASE_EGL_OBJECTS_KHR    0x202E</span>
 
-<span class='comment'>// extern CL_API_ENTRY cl_mem CL_API_CALL</span>
-<span class='comment'>// clCreateFromEGLImageKHR(cl_context                  /* context */,</span>
-<span class='comment'>//                         CLeglDisplayKHR             /* egldisplay */,</span>
-<span class='comment'>//                         CLeglImageKHR               /* eglimage */,</span>
-<span class='comment'>//                         cl_mem_flags                /* flags */,</span>
-<span class='comment'>//                         const cl_egl_image_properties_khr * /* properties */,</span>
-<span class='comment'>//                         cl_int *                    /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// /* Error type for clCreateFromEGLImageKHR */</span>
+<span class="comment">// #define CL_INVALID_EGL_OBJECT_KHR             -1093</span>
+<span class="comment">// #define CL_EGL_RESOURCE_NOT_ACQUIRED_KHR      -1092</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromEGLImageKHR_fn)(</span>
-<span class='comment'>// 	cl_context                  context,</span>
-<span class='comment'>// 	CLeglDisplayKHR             egldisplay,</span>
-<span class='comment'>// 	CLeglImageKHR               eglimage,</span>
-<span class='comment'>// 	cl_mem_flags                flags,</span>
-<span class='comment'>// 	const cl_egl_image_properties_khr * properties,</span>
-<span class='comment'>// 	cl_int *                    errcode_ret);</span>
+<span class="comment">// /* CLeglImageKHR is an opaque handle to an EGLImage */</span>
+<span class="comment">// typedef void* CLeglImageKHR;</span>
 
+<span class="comment">// /* CLeglDisplayKHR is an opaque handle to an EGLDisplay */</span>
+<span class="comment">// typedef void* CLeglDisplayKHR;</span>
 
-<span class='comment'>// extern CL_API_ENTRY cl_int CL_API_CALL</span>
-<span class='comment'>// clEnqueueAcquireEGLObjectsKHR(cl_command_queue /* command_queue */,</span>
-<span class='comment'>//                               cl_uint          /* num_objects */,</span>
-<span class='comment'>//                               const cl_mem *   /* mem_objects */,</span>
-<span class='comment'>//                               cl_uint          /* num_events_in_wait_list */,</span>
-<span class='comment'>//                               const cl_event * /* event_wait_list */,</span>
-<span class='comment'>//                               cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// /* CLeglSyncKHR is an opaque handle to an EGLSync object */</span>
+<span class="comment">// typedef void* CLeglSyncKHR;</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueAcquireEGLObjectsKHR_fn)(</span>
-<span class='comment'>// 	cl_command_queue command_queue,</span>
-<span class='comment'>// 	cl_uint          num_objects,</span>
-<span class='comment'>// 	const cl_mem *   mem_objects,</span>
-<span class='comment'>// 	cl_uint          num_events_in_wait_list,</span>
-<span class='comment'>// 	const cl_event * event_wait_list,</span>
-<span class='comment'>// 	cl_event *       event);</span>
+<span class="comment">// /* properties passed to clCreateFromEGLImageKHR */</span>
+<span class="comment">// typedef intptr_t cl_egl_image_properties_khr;</span>
 
 
-<span class='comment'>// extern CL_API_ENTRY cl_int CL_API_CALL</span>
-<span class='comment'>// clEnqueueReleaseEGLObjectsKHR(cl_command_queue /* command_queue */,</span>
-<span class='comment'>//                               cl_uint          /* num_objects */,</span>
-<span class='comment'>//                               const cl_mem *   /* mem_objects */,</span>
-<span class='comment'>//                               cl_uint          /* num_events_in_wait_list */,</span>
-<span class='comment'>//                               const cl_event * /* event_wait_list */,</span>
-<span class='comment'>//                               cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// #define cl_khr_egl_image 1</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueReleaseEGLObjectsKHR_fn)(</span>
-<span class='comment'>// 	cl_command_queue command_queue,</span>
-<span class='comment'>// 	cl_uint          num_objects,</span>
-<span class='comment'>// 	const cl_mem *   mem_objects,</span>
-<span class='comment'>// 	cl_uint          num_events_in_wait_list,</span>
-<span class='comment'>// 	const cl_event * event_wait_list,</span>
-<span class='comment'>// 	cl_event *       event);</span>
+<span class="comment">// extern CL_API_ENTRY cl_mem CL_API_CALL</span>
+<span class="comment">// clCreateFromEGLImageKHR(cl_context                  /* context */,</span>
+<span class="comment">//                         CLeglDisplayKHR             /* egldisplay */,</span>
+<span class="comment">//                         CLeglImageKHR               /* eglimage */,</span>
+<span class="comment">//                         cl_mem_flags                /* flags */,</span>
+<span class="comment">//                         const cl_egl_image_properties_khr * /* properties */,</span>
+<span class="comment">//                         cl_int *                    /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;</span>
+
+<span class="comment">// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromEGLImageKHR_fn)(</span>
+<span class="comment">// 	cl_context                  context,</span>
+<span class="comment">// 	CLeglDisplayKHR             egldisplay,</span>
+<span class="comment">// 	CLeglImageKHR               eglimage,</span>
+<span class="comment">// 	cl_mem_flags                flags,</span>
+<span class="comment">// 	const cl_egl_image_properties_khr * properties,</span>
+<span class="comment">// 	cl_int *                    errcode_ret);</span>
 
 
-<span class='comment'>// #define cl_khr_egl_event 1</span>
+<span class="comment">// extern CL_API_ENTRY cl_int CL_API_CALL</span>
+<span class="comment">// clEnqueueAcquireEGLObjectsKHR(cl_command_queue /* command_queue */,</span>
+<span class="comment">//                               cl_uint          /* num_objects */,</span>
+<span class="comment">//                               const cl_mem *   /* mem_objects */,</span>
+<span class="comment">//                               cl_uint          /* num_events_in_wait_list */,</span>
+<span class="comment">//                               const cl_event * /* event_wait_list */,</span>
+<span class="comment">//                               cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// extern CL_API_ENTRY cl_event CL_API_CALL</span>
-<span class='comment'>// clCreateEventFromEGLSyncKHR(cl_context      /* context */,</span>
-<span class='comment'>//                             CLeglSyncKHR    /* sync */,</span>
-<span class='comment'>//                             CLeglDisplayKHR /* display */,</span>
-<span class='comment'>//                             cl_int *        /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueAcquireEGLObjectsKHR_fn)(</span>
+<span class="comment">// 	cl_command_queue command_queue,</span>
+<span class="comment">// 	cl_uint          num_objects,</span>
+<span class="comment">// 	const cl_mem *   mem_objects,</span>
+<span class="comment">// 	cl_uint          num_events_in_wait_list,</span>
+<span class="comment">// 	const cl_event * event_wait_list,</span>
+<span class="comment">// 	cl_event *       event);</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_event (CL_API_CALL *clCreateEventFromEGLSyncKHR_fn)(</span>
-<span class='comment'>// 	cl_context      context,</span>
-<span class='comment'>// 	CLeglSyncKHR    sync,</span>
-<span class='comment'>// 	CLeglDisplayKHR display,</span>
-<span class='comment'>// 	cl_int *        errcode_ret);</span>
 
-<span class='comment'>// #ifdef __cplusplus</span>
-<span class='comment'>// }</span>
-<span class='comment'>// #endif</span>
+<span class="comment">// extern CL_API_ENTRY cl_int CL_API_CALL</span>
+<span class="comment">// clEnqueueReleaseEGLObjectsKHR(cl_command_queue /* command_queue */,</span>
+<span class="comment">//                               cl_uint          /* num_objects */,</span>
+<span class="comment">//                               const cl_mem *   /* mem_objects */,</span>
+<span class="comment">//                               cl_uint          /* num_events_in_wait_list */,</span>
+<span class="comment">//                               const cl_event * /* event_wait_list */,</span>
+<span class="comment">//                               cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// #endif /* __OPENCL_CL_EGL_H */</span></pre>
+<span class="comment">// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueReleaseEGLObjectsKHR_fn)(</span>
+<span class="comment">// 	cl_command_queue command_queue,</span>
+<span class="comment">// 	cl_uint          num_objects,</span>
+<span class="comment">// 	const cl_mem *   mem_objects,</span>
+<span class="comment">// 	cl_uint          num_events_in_wait_list,</span>
+<span class="comment">// 	const cl_event * event_wait_list,</span>
+<span class="comment">// 	cl_event *       event);</span>
+
+
+<span class="comment">// #define cl_khr_egl_event 1</span>
+
+<span class="comment">// extern CL_API_ENTRY cl_event CL_API_CALL</span>
+<span class="comment">// clCreateEventFromEGLSyncKHR(cl_context      /* context */,</span>
+<span class="comment">//                             CLeglSyncKHR    /* sync */,</span>
+<span class="comment">//                             CLeglDisplayKHR /* display */,</span>
+<span class="comment">//                             cl_int *        /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;</span>
+
+<span class="comment">// typedef CL_API_ENTRY cl_event (CL_API_CALL *clCreateEventFromEGLSyncKHR_fn)(</span>
+<span class="comment">// 	cl_context      context,</span>
+<span class="comment">// 	CLeglSyncKHR    sync,</span>
+<span class="comment">// 	CLeglDisplayKHR display,</span>
+<span class="comment">// 	cl_int *        errcode_ret);</span>
+
+<span class="comment">// #ifdef __cplusplus</span>
+<span class="comment">// }</span>
+<span class="comment">// #endif</span>
+
+<span class="comment">// #endif /* __OPENCL_CL_EGL_H */</span></pre>
 </section>
     <section id='search' class="content hidden"></section>
 
@@ -415,11 +416,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "cl_sys";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

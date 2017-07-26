@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.12.0\src\standard\platform.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.14.1\src\standard\platform.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>platform.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -252,215 +253,243 @@
 <span id="208">208</span>
 <span id="209">209</span>
 <span id="210">210</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! An `OpenCL` platform identifier.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Documentation copied from [https://www.khronos.org/registry/cl/sdk/1.2/doc</span>
-<span class='doccomment'>//! s/man/xhtml/clGetPlatformInfo.html](https://www.khronos.org/registry/cl/sd</span>
-<span class='doccomment'>//! k/1.2/docs/man/xhtml/clGetPlatformInfo.html)</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! An `OpenCL` platform identifier.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Documentation copied from [https://www.khronos.org/registry/cl/sdk/1.2/doc</span>
+<span class="doccomment">//! s/man/xhtml/clGetPlatformInfo.html](https://www.khronos.org/registry/cl/sd</span>
+<span class="doccomment">//! k/1.2/docs/man/xhtml/clGetPlatformInfo.html)</span>
 
-<span class='comment'>// use std::fmt::{std::fmt::Display, std::fmt::Formatter, Result as std::fmt::Result};</span>
-<span class='kw'>use</span> <span class='ident'>std</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Deref</span>, <span class='ident'>DerefMut</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>Into</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::{<span class='self'>self</span>, <span class='ident'>PlatformId</span> <span class='kw'>as</span> <span class='ident'>PlatformIdCore</span>, <span class='ident'>PlatformInfo</span>, <span class='ident'>PlatformInfoResult</span>, <span class='ident'>ClPlatformIdPtr</span>};
+<span class="comment">// use std::fmt::{std::fmt::Display, std::fmt::Formatter, Result as std::fmt::Result};</span>
+<span class="kw">use</span> <span class="ident">std</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>};
+<span class="comment">// use std::convert::Into;</span>
+<span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">cl_platform_id</span>;
+<span class="kw">use</span> <span class="ident">core</span>::{<span class="self">self</span>, <span class="ident">PlatformId</span> <span class="kw">as</span> <span class="ident">PlatformIdCore</span>, <span class="ident">PlatformInfo</span>, <span class="ident">PlatformInfoResult</span>, <span class="ident">ClPlatformIdPtr</span>};
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>)]</span>
-<span class='doccomment'>/// A platform identifier.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Platform</span>(<span class='ident'>PlatformIdCore</span>);
+<span class="doccomment">/// A platform identifier.</span>
+<span class="doccomment">///</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Platform</span>(<span class="ident">PlatformIdCore</span>);
 
-<span class='kw'>impl</span> <span class='ident'>Platform</span> {
-    <span class='doccomment'>/// Returns a list of all platforms avaliable on the host machine.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list</span>() <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Platform</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>list_core</span> <span class='op'>=</span> <span class='ident'>core</span>::<span class='ident'>get_platform_ids</span>()
-            .<span class='ident'>expect</span>(<span class='string'>&quot;Platform::list: Error retrieving platform list&quot;</span>);
+<span class="kw">impl</span> <span class="ident">Platform</span> {
+    <span class="doccomment">/// Returns a list of all platforms avaliable on the host machine.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list</span>() <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">list_core</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">get_platform_ids</span>()
+            .<span class="ident">expect</span>(<span class="string">&quot;Platform::list: Error retrieving platform list&quot;</span>);
 
-        <span class='ident'>list_core</span>.<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='ident'>Platform</span>::<span class='ident'>new</span>).<span class='ident'>collect</span>()
+        <span class="ident">list_core</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Platform</span>::<span class="ident">new</span>).<span class="ident">collect</span>()
     }
 
-    <span class='comment'>// DEPRICATED:</span>
-    <span class='comment'>// /// Returns the first available platform on the host machine.</span>
-    <span class='comment'>// pub fn first() -&gt; Platform {</span>
-    <span class='comment'>//     let list_core = core::get_platform_ids()</span>
-    <span class='comment'>//         .expect(&quot;Platform::default: Error retrieving platform&quot;);</span>
+    <span class="comment">// DEPRICATED:</span>
+    <span class="comment">// /// Returns the first available platform on the host machine.</span>
+    <span class="comment">// pub fn first() -&gt; Platform {</span>
+    <span class="comment">//     let list_core = core::get_platform_ids()</span>
+    <span class="comment">//         .expect(&quot;Platform::default: Error retrieving platform&quot;);</span>
 
-    <span class='comment'>//     // let first_idx = list_core.len() - 1;</span>
-    <span class='comment'>//     let first_idx = 0;</span>
+    <span class="comment">//     // let first_idx = list_core.len() - 1;</span>
+    <span class="comment">//     let first_idx = 0;</span>
 
-    <span class='comment'>//     Platform::new(list_core[first_idx].clone());</span>
-    <span class='comment'>//     panic!(&quot;Platform::default(): This method has been depricated. Please use &#39;Platform::default()&#39;&quot;);</span>
-    <span class='comment'>// }</span>
+    <span class="comment">//     Platform::new(list_core[first_idx].clone());</span>
+    <span class="comment">//     panic!(&quot;Platform::default(): This method has been depricated. Please use &#39;Platform::default()&#39;&quot;);</span>
+    <span class="comment">// }</span>
 
-    <span class='doccomment'>/// Creates a new `Platform` from a `PlatformIdCore`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ## Safety</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Not meant to be called unless you know what you&#39;re doing.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use list to get a list of platforms.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>id_core</span>: <span class='ident'>PlatformIdCore</span>) <span class='op'>-&gt;</span> <span class='ident'>Platform</span> {
-        <span class='ident'>Platform</span>(<span class='ident'>id_core</span>)
+    <span class="doccomment">/// Creates a new `Platform` from a `PlatformIdCore`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Safety</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Not meant to be called unless you know what you&#39;re doing.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Use list to get a list of platforms.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">id_core</span>: <span class="ident">PlatformIdCore</span>) <span class="op">-&gt;</span> <span class="ident">Platform</span> {
+        <span class="ident">Platform</span>(<span class="ident">id_core</span>)
     }
 
-    <span class='doccomment'>/// Returns a list of `Platform`s from a list of `PlatformIdCore`s</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list_from_core</span>(<span class='ident'>platforms</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>PlatformIdCore</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Platform</span><span class='op'>&gt;</span> {
-        <span class='ident'>platforms</span>.<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='ident'>Platform</span>::<span class='ident'>new</span>).<span class='ident'>collect</span>()
+    <span class="doccomment">/// Returns a list of `Platform`s from a list of `PlatformIdCore`s</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_from_core</span>(<span class="ident">platforms</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PlatformIdCore</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;</span> {
+        <span class="ident">platforms</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Platform</span>::<span class="ident">new</span>).<span class="ident">collect</span>()
     }
 
-    <span class='comment'>// /// Returns a string containing a formatted list of every platform property.</span>
-    <span class='comment'>// pub fn to_string(&amp;self) -&gt; String {</span>
-    <span class='comment'>//     // self.clone().into()</span>
-    <span class='comment'>//     format!(&quot;{}&quot;, self)</span>
-    <span class='comment'>// }</span>
+    <span class="comment">// /// Returns a string containing a formatted list of every platform property.</span>
+    <span class="comment">// pub fn to_string(&amp;self) -&gt; String {</span>
+    <span class="comment">//     // self.clone().into()</span>
+    <span class="comment">//     format!(&quot;{}&quot;, self)</span>
+    <span class="comment">// }</span>
 
-    <span class='doccomment'>/// Returns info about the platform.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info_kind</span>: <span class='ident'>PlatformInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>PlatformInfoResult</span> {
-        <span class='comment'>// match core::get_platform_info(Some(self.0.clone()), info_kind) {</span>
-        <span class='comment'>//     Ok(pi) =&gt; pi,</span>
-        <span class='comment'>//     Err(err) =&gt; PlatformInfoResult::Error(Box::new(err)),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_platform_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>info_kind</span>)
+    <span class="doccomment">/// Returns info about the platform.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">info_kind</span>: <span class="ident">PlatformInfo</span>) <span class="op">-&gt;</span> <span class="ident">PlatformInfoResult</span> {
+        <span class="comment">// match core::get_platform_info(Some(self.0.clone()), info_kind) {</span>
+        <span class="comment">//     Ok(pi) =&gt; pi,</span>
+        <span class="comment">//     Err(err) =&gt; PlatformInfoResult::Error(Box::new(err)),</span>
+        <span class="comment">// }</span>
+        <span class="ident">core</span>::<span class="ident">get_platform_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">info_kind</span>)
     }
 
-    <span class='doccomment'>/// Returns the platform profile as a string.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns the profile name supported by the implementation. The profile</span>
-    <span class='doccomment'>/// name returned can be one of the following strings:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * FULL_PROFILE - if the implementation supports the OpenCL</span>
-    <span class='doccomment'>///   specification (functionality defined as part of the core</span>
-    <span class='doccomment'>///   specification and does not require any extensions to be supported).</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * EMBEDDED_PROFILE - if the implementation supports the OpenCL</span>
-    <span class='doccomment'>///   embedded profile. The embedded profile is defined to be a subset for</span>
-    <span class='doccomment'>///   each version of OpenCL.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>profile</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='comment'>// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Profile) {</span>
-        <span class='comment'>//     Ok(pi) =&gt; pi.into(),</span>
-        <span class='comment'>//     Err(err) =&gt; err.into(),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_platform_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>PlatformInfo</span>::<span class='ident'>Profile</span>).<span class='ident'>into</span>()
+    <span class="doccomment">/// Returns the platform profile as a string.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns the profile name supported by the implementation. The profile</span>
+    <span class="doccomment">/// name returned can be one of the following strings:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * FULL_PROFILE - if the implementation supports the OpenCL</span>
+    <span class="doccomment">///   specification (functionality defined as part of the core</span>
+    <span class="doccomment">///   specification and does not require any extensions to be supported).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * EMBEDDED_PROFILE - if the implementation supports the OpenCL</span>
+    <span class="doccomment">///   embedded profile. The embedded profile is defined to be a subset for</span>
+    <span class="doccomment">///   each version of OpenCL.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">profile</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="comment">// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Profile) {</span>
+        <span class="comment">//     Ok(pi) =&gt; pi.into(),</span>
+        <span class="comment">//     Err(err) =&gt; err.into(),</span>
+        <span class="comment">// }</span>
+        <span class="ident">core</span>::<span class="ident">get_platform_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">PlatformInfo</span>::<span class="ident">Profile</span>).<span class="ident">into</span>()
     }
 
-    <span class='doccomment'>/// Returns the platform driver version as a string.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns the OpenCL version supported by the implementation. This</span>
-    <span class='doccomment'>/// version string has the following format:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * OpenCL&lt;space&gt;&lt;major_version.minor_version&gt;&lt;space&gt;&lt;platform-specific</span>
-    <span class='doccomment'>///   information&gt;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * The major_version.minor_version value returned will be &#39;1.2&#39;.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [TODO]: Convert this to new version system returning an `OpenclVersion`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>version</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='comment'>// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Version) {</span>
-        <span class='comment'>//     Ok(pi) =&gt; pi.into(),</span>
-        <span class='comment'>//     Err(err) =&gt; err.into(),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_platform_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>PlatformInfo</span>::<span class='ident'>Version</span>).<span class='ident'>into</span>()
+    <span class="doccomment">/// Returns the platform driver version as a string.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns the OpenCL version supported by the implementation. This</span>
+    <span class="doccomment">/// version string has the following format:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * OpenCL&lt;space&gt;&lt;major_version.minor_version&gt;&lt;space&gt;&lt;platform-specific</span>
+    <span class="doccomment">///   information&gt;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * The major_version.minor_version value returned will be &#39;1.2&#39;.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * TODO: Convert this to new version system returning an `OpenclVersion`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="comment">// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Version) {</span>
+        <span class="comment">//     Ok(pi) =&gt; pi.into(),</span>
+        <span class="comment">//     Err(err) =&gt; err.into(),</span>
+        <span class="comment">// }</span>
+        <span class="ident">core</span>::<span class="ident">get_platform_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">PlatformInfo</span>::<span class="ident">Version</span>).<span class="ident">into</span>()
     }
 
-    <span class='doccomment'>/// Returns the platform name as a string.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='comment'>// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Name) {</span>
-        <span class='comment'>//     Ok(pi) =&gt; pi.into(),</span>
-        <span class='comment'>//     Err(err) =&gt; err.into(),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_platform_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>PlatformInfo</span>::<span class='ident'>Name</span>).<span class='ident'>into</span>()
+    <span class="doccomment">/// Returns the platform name as a string.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="comment">// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Name) {</span>
+        <span class="comment">//     Ok(pi) =&gt; pi.into(),</span>
+        <span class="comment">//     Err(err) =&gt; err.into(),</span>
+        <span class="comment">// }</span>
+        <span class="ident">core</span>::<span class="ident">get_platform_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">PlatformInfo</span>::<span class="ident">Name</span>).<span class="ident">into</span>()
     }
 
-    <span class='doccomment'>/// Returns the platform vendor as a string.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>vendor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='comment'>// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Vendor) {</span>
-        <span class='comment'>//     Ok(pi) =&gt; pi.into(),</span>
-        <span class='comment'>//     Err(err) =&gt; err.into(),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_platform_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>PlatformInfo</span>::<span class='ident'>Vendor</span>).<span class='ident'>into</span>()
+    <span class="doccomment">/// Returns the platform vendor as a string.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vendor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="comment">// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Vendor) {</span>
+        <span class="comment">//     Ok(pi) =&gt; pi.into(),</span>
+        <span class="comment">//     Err(err) =&gt; err.into(),</span>
+        <span class="comment">// }</span>
+        <span class="ident">core</span>::<span class="ident">get_platform_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">PlatformInfo</span>::<span class="ident">Vendor</span>).<span class="ident">into</span>()
     }
 
-    <span class='doccomment'>/// Returns the list of platform extensions as a string.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns a space-separated list of extension names (the extension names</span>
-    <span class='doccomment'>/// themselves do not contain any spaces) supported by the platform.</span>
-    <span class='doccomment'>/// Extensions defined here must be supported by all devices associated</span>
-    <span class='doccomment'>/// with this platform.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>extensions</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='comment'>// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Extensions) {</span>
-        <span class='comment'>//     Ok(pi) =&gt; pi.into(),</span>
-        <span class='comment'>//     Err(err) =&gt; err.into(),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_platform_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>PlatformInfo</span>::<span class='ident'>Extensions</span>).<span class='ident'>into</span>()
+    <span class="doccomment">/// Returns the list of platform extensions as a string.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a space-separated list of extension names (the extension names</span>
+    <span class="doccomment">/// themselves do not contain any spaces) supported by the platform.</span>
+    <span class="doccomment">/// Extensions defined here must be supported by all devices associated</span>
+    <span class="doccomment">/// with this platform.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="comment">// match core::get_platform_info(Some(self.0.clone()), PlatformInfo::Extensions) {</span>
+        <span class="comment">//     Ok(pi) =&gt; pi.into(),</span>
+        <span class="comment">//     Err(err) =&gt; err.into(),</span>
+        <span class="comment">// }</span>
+        <span class="ident">core</span>::<span class="ident">get_platform_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">PlatformInfo</span>::<span class="ident">Extensions</span>).<span class="ident">into</span>()
     }
 
-    <span class='doccomment'>/// Returns a reference to the underlying `PlatformIdCore`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_core</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>PlatformIdCore</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>
+    <span class="doccomment">/// Returns a reference to the underlying `PlatformIdCore`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_core</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">PlatformIdCore</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>fmt_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='ident'>f</span>.<span class='ident'>debug_struct</span>(<span class='string'>&quot;Platform&quot;</span>)
-            .<span class='ident'>field</span>(<span class='string'>&quot;Profile&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>PlatformInfo</span>::<span class='ident'>Profile</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Version&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>PlatformInfo</span>::<span class='ident'>Version</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Name&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>PlatformInfo</span>::<span class='ident'>Name</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Vendor&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>PlatformInfo</span>::<span class='ident'>Vendor</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Extensions&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>PlatformInfo</span>::<span class='ident'>Extensions</span>))
-            .<span class='ident'>finish</span>()
-    }
-}
-
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>ClPlatformIdPtr</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {}
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ClPlatformIdPtr</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Platform</span> {}
-
-<span class='kw'>impl</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {
-    <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Platform</span> {
-        <span class='comment'>// let list_core = core::get_platform_ids()</span>
-        <span class='comment'>//     .expect(&quot;Platform::default: Error retrieving platform&quot;);</span>
-
-        <span class='comment'>// // let first_idx = list_core.len() - 1;</span>
-        <span class='comment'>// let first_idx = 0;</span>
-
-        <span class='kw'>let</span> <span class='ident'>dflt_plat_core</span> <span class='op'>=</span> <span class='ident'>core</span>::<span class='ident'>default_platform</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Platform::default()&quot;</span>);
-        <span class='ident'>Platform</span>::<span class='ident'>new</span>(<span class='ident'>dflt_plat_core</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {
-    <span class='kw'>fn</span> <span class='ident'>into</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>)
+    <span class="kw">fn</span> <span class="ident">fmt_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Platform&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;Profile&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">PlatformInfo</span>::<span class="ident">Profile</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Version&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">PlatformInfo</span>::<span class="ident">Version</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">PlatformInfo</span>::<span class="ident">Name</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Vendor&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">PlatformInfo</span>::<span class="ident">Vendor</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Extensions&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">PlatformInfo</span>::<span class="ident">Extensions</span>))
+            .<span class="ident">finish</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>PlatformIdCore</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {
-    <span class='kw'>fn</span> <span class='ident'>into</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>PlatformIdCore</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">ClPlatformIdPtr</span> <span class="kw">for</span> <span class="ident">Platform</span> {
+    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">cl_platform_id</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ptr</span>()
+    }
+}
+<span class="comment">// unsafe impl&lt;&#39;a&gt; ClPlatformIdPtr for &amp;&#39;a Platform {}</span>
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Platform</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Platform</span> {
+        <span class="comment">// let list_core = core::get_platform_ids()</span>
+        <span class="comment">//     .expect(&quot;Platform::default: Error retrieving platform&quot;);</span>
+
+        <span class="comment">// // let first_idx = list_core.len() - 1;</span>
+        <span class="comment">// let first_idx = 0;</span>
+
+        <span class="kw">let</span> <span class="ident">dflt_plat_core</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">default_platform</span>().<span class="ident">expect</span>(<span class="string">&quot;Platform::default()&quot;</span>);
+        <span class="ident">Platform</span>::<span class="ident">new</span>(<span class="ident">dflt_plat_core</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='self'>self</span>.<span class='ident'>fmt_info</span>(<span class='ident'>f</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PlatformIdCore</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Platform</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">core</span>: <span class="ident">PlatformIdCore</span>) <span class="op">-&gt;</span> <span class="ident">Platform</span> {
+        <span class="ident">Platform</span>(<span class="ident">core</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Platform</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Platform</span> {
-        <span class='self'>self</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="ident">Platform</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">p</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>PlatformIdCore</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>PlatformIdCore</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PlatformIdCore</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="ident">Platform</span>) <span class="op">-&gt;</span> <span class="ident">PlatformIdCore</span> {
+        <span class="ident">p</span>.<span class="number">0</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>Platform</span> {
-    <span class='kw'>fn</span> <span class='ident'>deref_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>PlatformIdCore</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Platform</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PlatformIdCore</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Platform</span>) <span class="op">-&gt;</span> <span class="ident">PlatformIdCore</span> {
+        <span class="ident">p</span>.<span class="number">0</span>.<span class="ident">clone</span>()
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Platform</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="self">self</span>.<span class="ident">fmt_info</span>(<span class="ident">f</span>)
+    }
+}
+
+
+<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Platform</span> {
+    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">PlatformIdCore</span>;
+
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">PlatformIdCore</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">Platform</span> {
+    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PlatformIdCore</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>
     }
 }
 </pre>
@@ -520,11 +549,9 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

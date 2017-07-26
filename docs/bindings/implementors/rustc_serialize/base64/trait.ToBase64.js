@@ -1,5 +1,9 @@
 (function() {var implementors = {};
-implementors["rustc_serialize"] = [];implementors["num"] = [];implementors["ocl"] = [];implementors["clfft"] = [];
+implementors["clfft"] = [];
+implementors["num"] = [];
+implementors["ocl"] = [];
+implementors["ocl_core"] = [];
+implementors["rustc_serialize"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

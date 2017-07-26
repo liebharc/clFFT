@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `BufferBuilder` struct in crate `ocl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, BufferBuilder">
+
+    <title>ocl::builders::BufferBuilder - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a></p><script>window.sidebarCurrent = {name: 'BufferBuilder', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class="struct" href=''>BufferBuilder</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/ocl/standard/buffer.rs.html#1878-1884' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[must_use = "builders do nothing unless \'::build\' is called"]
+</div>pub struct BufferBuilder&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'a,&nbsp;</span> { /* fields omitted */ }</pre><div class='docblock'><p>A buffer builder.</p>
+<ul>
+<li>TODO: Add examples and details. For now see project examples folder.</li>
+</ul>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'a + <a class="trait" href="../../ocl/traits/trait.OclPrm.html" title="trait ocl::traits::OclPrm">OclPrm</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/ocl/standard/buffer.rs.html#1886-2045' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt;</code></span></h4>
+<div class='docblock'><p>Returns a new buffer builder.</p>
+</div><h4 id='method.context' class="method"><span id='context.v' class='invisible'><code>fn <a href='#method.context' class='fnname'>context</a>&lt;'o&gt;(self, context: &amp;'o <a class="struct" href="../../ocl/struct.Context.html" title="struct ocl::Context">Context</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'o: 'a,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Sets the context with which to associate the buffer.</p>
+<p>May not be used in combination with <code>::queue</code> (use one or the other).</p>
+</div><h4 id='method.queue' class="method"><span id='queue.v' class='invisible'><code>fn <a href='#method.queue' class='fnname'>queue</a>&lt;'b&gt;(self, default_queue: <a class="struct" href="../../ocl/struct.Queue.html" title="struct ocl::Queue">Queue</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt;</code></span></h4>
+<div class='docblock'><p>Sets the default queue.</p>
+<p>If this is set, the context associated with the <code>default_queue</code> will
+be used when creating the buffer (use one or the other).</p>
+</div><h4 id='method.flags' class="method"><span id='flags.v' class='invisible'><code>fn <a href='#method.flags' class='fnname'>flags</a>&lt;'b&gt;(self, flags: <a class="struct" href="../../ocl/flags/struct.MemFlags.html" title="struct ocl::flags::MemFlags">MemFlags</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt;</code></span></h4>
+<div class='docblock'><p>Sets the flags used when creating the buffer.</p>
+<p>Defaults to <code>flags::MEM_READ_WRITE</code> aka. <code>MemFlags::new().read_write()</code>
+if this is not set. See the <a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clCreateBuffer.html">SDK Docs</a> for more information about
+flags. Note that the <code>host_ptr</code> mentioned in the <a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clCreateBuffer.html">SDK Docs</a> is
+equivalent to the slice optionally passed as the <code>host_data</code> argument.
+Also note that the names of all flags in this library have the <code>CL_</code>
+prefix removed for brevity.</p>
+</div><h4 id='method.host_data' class="method"><span id='host_data.v' class='invisible'><code>fn <a href='#method.host_data' class='fnname'>host_data</a>&lt;'d&gt;(self, host_data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'d [</a>T<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'d: 'a,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>A slice use to designate a region of memory for use in combination of
+one of the two following flags:</p>
+<ul>
+<li>
+<p><code>flags::MEM_USE_HOST_PTR</code> aka. <code>MemFlags::new().use_host_ptr()</code>:</p>
+<ul>
+<li>This flag is valid only if <code>host_data</code> is not <code>None</code>. If
+specified, it indicates that the application wants the OpenCL
+implementation to use memory referenced by <code>host_data</code> as the
+storage bits for the memory object (buffer/image).</li>
+<li>OpenCL implementations are allowed to cache the buffer contents
+pointed to by <code>host_data</code> in device memory. This cached copy can
+be used when kernels are executed on a device.</li>
+<li>The result of OpenCL commands that operate on multiple buffer
+objects created with the same <code>host_data</code> or overlapping host
+regions is considered to be undefined.</li>
+<li>Refer to the <a href="https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/dataTypes.html">description of the alignment</a> rules for
+<code>host_data</code> for memory objects (buffer and images) created using
+<code>MEM_USE_HOST_PTR</code>.</li>
+<li><code>MEM_ALLOC_HOST_PTR</code> and <code>MEM_USE_HOST_PTR</code> are mutually exclusive.</li>
+</ul>
+</li>
+<li>
+<p><code>flags::MEM_COPY_HOST_PTR</code> aka. <code>MemFlags::new().copy_host_ptr()</code></p>
+<ul>
+<li>This flag is valid only if <code>host_data</code> is not NULL. If specified, it
+indicates that the application wants the OpenCL implementation to
+allocate memory for the memory object and copy the data from
+memory referenced by <code>host_data</code>.</li>
+<li>CL_MEM_COPY_HOST_PTR and CL_MEM_USE_HOST_PTR are mutually
+exclusive.</li>
+<li>CL_MEM_COPY_HOST_PTR can be used with CL_MEM_ALLOC_HOST_PTR to
+initialize the contents of the cl_mem object allocated using
+host-accessible (e.g. PCIe) memory.</li>
+</ul>
+</li>
+</ul>
+<p>Note: Descriptions adapted from:
+<a href="https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/clCreateBuffer.html">https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/clCreateBuffer.html</a>.</p>
+</div><h4 id='method.dims' class="method"><span id='dims.v' class='invisible'><code>fn <a href='#method.dims' class='fnname'>dims</a>&lt;'b, D&gt;(self, dims: D) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;D: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/enum.SpatialDims.html" title="enum ocl::SpatialDims">SpatialDims</a>&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Sets the dimensions for this buffer.</p>
+<p>Typically a single integer value to set the total length is used
+however up to three dimensions may be specified in order to more
+easily coordinate with kernel work sizes.</p>
+<p>Note that although sizes in the standard OpenCL API are expressed in
+bytes, sizes, lengths, and dimensions in this library are always
+specified in <code>bytes / sizeof(T)</code> (like everything else in Rust) unless
+otherwise noted.</p>
+</div><h4 id='method.fill_val' class="method"><span id='fill_val.v' class='invisible'><code>fn <a href='#method.fill_val' class='fnname'>fill_val</a>&lt;'b, 'e, En&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;fill_val: T, <br>&nbsp;&nbsp;&nbsp;&nbsp;enew: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;En&gt;<br>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'a,<br>&nbsp;&nbsp;&nbsp;&nbsp;En: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClNullEventPtrEnum.html" title="enum ocl::builders::ClNullEventPtrEnum">ClNullEventPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Allows the caller to automatically fill the buffer with a value (such
+as zero) immediately after creation.</p>
+<p>Platforms that have trouble with <code>clEnqueueFillBuffer</code> such as
+<a href="http://portablecl.org/">pocl</a> should not use this option and should
+handle initializing buffers manually (using a kernel or copy host data
+flag).</p>
+<p>The <code>enew</code> argument is provided to allow an empty event to be
+associated with the <code>fill</code> command which will be enqueued after
+creation and just before returning the new buffer. It is up to the
+caller to ensure that the command has completed before performing any
+other operations on the buffer. Failure to do so may cause the fill
+command to run <strong>after</strong> subsequently queued commands if multiple or
+out-of-order queues are being used. Passing <code>None</code> for <code>enew</code> (use
+<code>None::&lt;()&gt;</code> to avoid the the type inference error) will cause the
+fill command to block before returning the new buffer and is the safe
+option if you don't want to worry about it.</p>
+<h3 id="examples" class="section-header"><a href="#examples">Examples</a></h3>
+<ul>
+<li>TODO: Provide examples once this stabilizes.</li>
+</ul>
+<p>[UNSTABLE]: May be changed or removed.</p>
+</div><h4 id='method.build' class="method"><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>(self) -&gt; <a class="type" href="../../ocl/type.Result.html" title="type ocl::Result">OclResult</a>&lt;<a class="struct" href="../../ocl/struct.Buffer.html" title="struct ocl::Buffer">Buffer</a>&lt;T&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Creates a buffer and returns it.</p>
+<p>Dimensions and either a context or default queue must be specified
+before calling <code>::build</code>.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../ocl/builders/struct.BufferBuilder.html" title="struct ocl::builders::BufferBuilder">BufferBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'a,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/ocl/standard/buffer.rs.html#1877' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "ocl";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

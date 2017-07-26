@@ -9,6 +9,7 @@
 
     <title>ocl - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,204 +43,282 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>ocl</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>ocl</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/ocl/lib.rs.html#1-167' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'>
-<h1 id='a-hrefhttpscratesiocratesoclimg-srchttpmeritbadgeherokuappcomocl-alta--a-hrefhttpsgithubcomcogciprocateoclgithuba' class='section-header'><a href='#a-hrefhttpscratesiocratesoclimg-srchttpmeritbadgeherokuappcomocl-alta--a-hrefhttpsgithubcomcogciprocateoclgithuba'><a href="https://crates.io/crates/ocl"><img src="http://meritbadge.herokuapp.com/ocl" alt=""></a> | <a href="https://github.com/cogciprocate/ocl">GitHub</a></a></h1>
-<p>Rust implementation of <code>OpenCL</code>&trade;.</p>
-
-<p>This documentation is occasionally built from development branches and may
-differ slightly from what is on crates.io and the master branch.</p>
-
-<p>The pages within are very much a work in progress, as is the library
-itself. Please help by filing an
-<a href="https://github.com/cogciprocate/ocl/issues">issue</a> about unclear and/or
-incomplete documentation and it will be addressed.</p>
-
-<p>An explanation/tutorial of how dimensions and sizes of buffers and work
-queues are used will be coming as soon. Until then please see the
-<a href="https://github.com/cogciprocate/ocl/tree/master/examples">examples</a>.</p>
-
-<h2 id='low-level-interfaces' class='section-header'><a href='#low-level-interfaces'>Low Level Interfaces</a></h2>
+               </span><a class='srclink' href='../src/ocl/lib.rs.html#1-199' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><h1 id="--github" class="section-header"><a href="#--github"><a href="https://crates.io/crates/ocl"><img src="http://meritbadge.herokuapp.com/ocl" alt="" /></a> | <a href="https://github.com/cogciprocate/ocl">GitHub</a></a></h1>
+<p>Rust implementation of the <a href="https://www.khronos.org/registry/OpenCL/">OpenCL™ API</a>.</p>
+<p>Some versions of this documentation are built from development branches
+and may differ slightly between what is on crates.io and the master
+branch. See the <a href="https://github.com/cogciprocate/ocl">repo page</a> for links
+to both versions.</p>
+<p>Please report unclear documentation or places where examples would be
+appreciated by filing an <a href="https://github.com/cogciprocate/ocl/issues">issue</a>.</p>
+<h2 id="foundations" class="section-header"><a href="#foundations">Foundations</a></h2>
 <p>For lower level interfaces and to use <code>OpenCL</code> features that have not yet
 been implemented on the <code>standard</code> (high-level) interface types, see the
 <a href="https://github.com/cogciprocate/ocl-core"><code>ocl-core</code></a> and <a href="https://github.com/cogciprocate/cl-sys"><code>cl-sys</code></a> crates.</p>
-
-<h2 id='help-wanted' class='section-header'><a href='#help-wanted'>Help Wanted</a></h2>
-<p>Please help complete any functionality you may need by filing an
-<a href="https://github.com/cogciprocate/ocl/issues">issue</a> or creating a <a href="https://github.com/cogciprocate/ocl/pulls">pull request</a>.</p>
-
-<h2 id='feedback-appreciated' class='section-header'><a href='#feedback-appreciated'>Feedback appreciated</a></h2>
-<p>Suggestions and nitpicks are most welcome. This isn&#39;t ever going to be a
-busy repo so don&#39;t hesitate to file an <a href="https://github.com/cogciprocate/ocl/issues">issue</a> to offer constructive criticism.</p>
-
+<h2 id="help-wanted" class="section-header"><a href="#help-wanted">Help Wanted</a></h2>
+<p>Please request or help complete any functionality you may need by filing
+an <a href="https://github.com/cogciprocate/ocl/issues">issue</a> or creating a <a href="https://github.com/cogciprocate/ocl/pulls">pull
+request</a>.</p>
+<p>Keep an eye out for places where examples would be useful and let us know!</p>
+<h2 id="feedback-appreciated" class="section-header"><a href="#feedback-appreciated">Feedback appreciated</a></h2>
+<p>Suggestions and nitpicks are most welcome. Don't hesitate to file an
+<a href="https://github.com/cogciprocate/ocl/issues">issue</a> just to offer constructive criticism.</p>
 <p><br/>
 <em>“<code>OpenCL</code> and the <code>OpenCL</code> logo are trademarks of Apple Inc. used by permission by Khronos.”</em></p>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub extern crate <a class='mod' href='../ocl_core/index.html' title='ocl_core'>ocl_core</a> as core;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr><td><code>pub extern crate <a class="mod" href="../ocl_core/index.html" title="mod ocl_core">ocl_core</a> as core;</code></td></tr><tr><td><code>pub use core::<a class="mod" href="../cl_sys/index.html" title="mod cl_sys">ffi</a>;</code></td></tr><tr><td><code>pub use core::<a class="mod" href="../ocl_core/util/index.html" title="mod ocl_core::util">util</a>;</code></td></tr><tr><td><code>pub use core::<a class="trait" href="../ocl/traits/trait.OclPrm.html" title="trait ocl::traits::OclPrm">OclPrm</a>;</code></td></tr><tr><td><code>pub use core::<a class="trait" href="../ocl/traits/trait.OclScl.html" title="trait ocl::traits::OclScl">OclScl</a>;</code></td></tr><tr><td><code>pub use core::<a class="trait" href="../ocl/traits/trait.OclVec.html" title="trait ocl::traits::OclVec">OclVec</a>;</code></td></tr><tr><td><code>pub use core::<a class="struct" href="../ocl/flags/struct.DeviceType.html" title="struct ocl::flags::DeviceType">DeviceType</a>;</code></td></tr><tr><td><code>pub use core::<a class="struct" href="../ocl/flags/struct.CommandQueueProperties.html" title="struct ocl::flags::CommandQueueProperties">CommandQueueProperties</a>;</code></td></tr><tr><td><code>pub use core::<a class="struct" href="../ocl/flags/struct.MemFlags.html" title="struct ocl::flags::MemFlags">MemFlags</a>;</code></td></tr><tr><td><code>pub use core::<a class="struct" href="../ocl/flags/struct.MapFlags.html" title="struct ocl::flags::MapFlags">MapFlags</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='aliases/index.html'
-                                  title='ocl::aliases'>aliases</a></td>
+                           <td><a class="mod" href="async/index.html"
+                                  title='mod ocl::async'>async</a></td>
                            <td class='docblock-short'>
-                                <p>Type aliases and structs meant to mirror those available within a
-kernel.</p>
+                                <p>Types related to futures and asynchrony.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='builders/index.html'
-                                  title='ocl::builders'>builders</a></td>
+                           <td><a class="mod" href="builders/index.html"
+                                  title='mod ocl::builders'>builders</a></td>
                            <td class='docblock-short'>
                                 <p>Builders and associated settings-related types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='enums/index.html'
-                                  title='ocl::enums'>enums</a></td>
+                           <td><a class="mod" href="enums/index.html"
+                                  title='mod ocl::enums'>enums</a></td>
                            <td class='docblock-short'>
                                 <p>Enumerators for settings and information requests.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='ffi/index.html'
-                                  title='ocl::ffi'>ffi</a></td>
-                           <td class='docblock-short'>
-                                <p>FFI bindings for OpenCL.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='mod' href='flags/index.html'
-                                  title='ocl::flags'>flags</a></td>
+                           <td><a class="mod" href="flags/index.html"
+                                  title='mod ocl::flags'>flags</a></td>
                            <td class='docblock-short'>
                                 <p>Bitflags for various parameter types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='traits/index.html'
-                                  title='ocl::traits'>traits</a></td>
+                           <td><a class="mod" href="prm/index.html"
+                                  title='mod ocl::prm'>prm</a></td>
+                           <td class='docblock-short'>
+                                <p>OpenCL scalar and vector primitive types.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="traits/index.html"
+                                  title='mod ocl::traits'>traits</a></td>
                            <td class='docblock-short'>
                                 <p>Commonly used traits.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='mod' href='util/index.html'
-                                  title='ocl::util'>util</a></td>
-                           <td class='docblock-short'>
-                                <p>Utility and debugging functions.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Buffer.html'
-                                  title='ocl::Buffer'>Buffer</a></td>
+                           <td><a class="struct" href="struct.Buffer.html"
+                                  title='struct ocl::Buffer'>Buffer</a></td>
                            <td class='docblock-short'>
                                 <p>A chunk of memory physically located on a device, such as a GPU.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Context.html'
-                                  title='ocl::Context'>Context</a></td>
+                           <td><a class="struct" href="struct.Context.html"
+                                  title='struct ocl::Context'>Context</a></td>
                            <td class='docblock-short'>
                                 <p>A context for a particular platform and set of device types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Device.html'
-                                  title='ocl::Device'>Device</a></td>
+                           <td><a class="struct" href="struct.Device.html"
+                                  title='struct ocl::Device'>Device</a></td>
                            <td class='docblock-short'>
                                 <p>An individual device identifier (an OpenCL device_id).</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Event.html'
-                                  title='ocl::Event'>Event</a></td>
+                           <td><a class="struct" href="struct.Event.html"
+                                  title='struct ocl::Event'>Event</a></td>
                            <td class='docblock-short'>
                                 <p>An event representing a command or user created event.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.EventList.html'
-                                  title='ocl::EventList'>EventList</a></td>
+                           <td><a class="struct" href="struct.EventArray.html"
+                                  title='struct ocl::EventArray'>EventArray</a></td>
                            <td class='docblock-short'>
                                 <p>A list of events for coordinating enqueued commands.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Image.html'
-                                  title='ocl::Image'>Image</a></td>
+                           <td><a class="struct" href="struct.EventList.html"
+                                  title='struct ocl::EventList'>EventList</a></td>
+                           <td class='docblock-short'>
+                                <p>A list of events for coordinating enqueued commands.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FutureMemMap.html"
+                                  title='struct ocl::FutureMemMap'>FutureMemMap</a></td>
+                           <td class='docblock-short'>
+                                <p>A future which resolves to a <code>MemMap</code> as soon as its creating command
+completes.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FutureRwGuard.html"
+                                  title='struct ocl::FutureRwGuard'>FutureRwGuard</a></td>
+                           <td class='docblock-short'>
+                                <p>A future that resolves to a read or write guard after ensuring that the
+data being guarded is appropriately locked during the execution of an
+OpenCL command.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Image.html"
+                                  title='struct ocl::Image'>Image</a></td>
                            <td class='docblock-short'>
                                 <p>A section of device memory which represents one or many images.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Kernel.html'
-                                  title='ocl::Kernel'>Kernel</a></td>
+                           <td><a class="struct" href="struct.Kernel.html"
+                                  title='struct ocl::Kernel'>Kernel</a></td>
                            <td class='docblock-short'>
-                                <p>A kernel which represents a &#39;procedure&#39;.</p>
+                                <p>A kernel which represents a 'procedure'.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Platform.html'
-                                  title='ocl::Platform'>Platform</a></td>
+                           <td><a class="struct" href="struct.MemMap.html"
+                                  title='struct ocl::MemMap'>MemMap</a></td>
+                           <td class='docblock-short'>
+                                <p>A view of memory mapped by <code>clEnqueueMap{...}</code>.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Platform.html"
+                                  title='struct ocl::Platform'>Platform</a></td>
                            <td class='docblock-short'>
                                 <p>A platform identifier.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.ProQue.html'
-                                  title='ocl::ProQue'>ProQue</a></td>
+                           <td><a class="struct" href="struct.ProQue.html"
+                                  title='struct ocl::ProQue'>ProQue</a></td>
                            <td class='docblock-short'>
                                 <p>An all-in-one chimera of the <code>Program</code>, <code>Queue</code>, <code>Context</code> and
 (optionally) <code>SpatialDims</code> types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Program.html'
-                                  title='ocl::Program'>Program</a></td>
+                           <td><a class="struct" href="struct.Program.html"
+                                  title='struct ocl::Program'>Program</a></td>
                            <td class='docblock-short'>
                                 <p>A program from which kernels can be created from.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Queue.html'
-                                  title='ocl::Queue'>Queue</a></td>
+                           <td><a class="struct" href="struct.Queue.html"
+                                  title='struct ocl::Queue'>Queue</a></td>
                            <td class='docblock-short'>
                                 <p>A command queue which manages all actions taken on kernels, buffers, and
 images.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Sampler.html'
-                                  title='ocl::Sampler'>Sampler</a></td>
+                           <td><a class="struct" href="struct.ReadGuard.html"
+                                  title='struct ocl::ReadGuard'>ReadGuard</a></td>
+                           <td class='docblock-short'>
+                                <p>Allows access to the data contained within a lock just like a mutex guard.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.RwVec.html"
+                                  title='struct ocl::RwVec'>RwVec</a></td>
+                           <td class='docblock-short'>
+                                <p>A locking <code>Vec</code> which interoperates with OpenCL events and Rust futures to
+provide exclusive access to data.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Sampler.html"
+                                  title='struct ocl::Sampler'>Sampler</a></td>
                            <td class='docblock-short'>
                                 <p>An image sampler used to process images.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.WriteGuard.html"
+                                  title='struct ocl::WriteGuard'>WriteGuard</a></td>
+                           <td class='docblock-short'>
+                                <p>Allows access to the data contained within just like a mutex guard.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Error.html'
-                                  title='ocl::Error'>Error</a></td>
+                           <td><a class="enum" href="enum.Error.html"
+                                  title='enum ocl::Error'>Error</a></td>
                            <td class='docblock-short'>
                                 <p>An enum containing either a <code>String</code> or one of several other error types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.SpatialDims.html'
-                                  title='ocl::SpatialDims'>SpatialDims</a></td>
+                           <td><a class="enum" href="enum.SpatialDims.html"
+                                  title='enum ocl::SpatialDims'>SpatialDims</a></td>
                            <td class='docblock-short'>
                                 <p>Specifies a size or offset in up to three dimensions.</p>
+
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='type' href='type.Result.html'
-                                  title='ocl::Result'>Result</a></td>
+                           <td><a class="type" href="type.FutureReader.html"
+                                  title='type ocl::FutureReader'>FutureReader</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.FutureWriter.html"
+                                  title='type ocl::FutureWriter'>FutureWriter</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.Result.html"
+                                  title='type ocl::Result'>Result</a></td>
                            <td class='docblock-short'>
                                 <p><code>ocl::Error</code> result type.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -297,11 +376,9 @@ images.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    <script src="../extra.js"></script>
     <script defer src="../search-index.js"></script>
 </body>
 </html>

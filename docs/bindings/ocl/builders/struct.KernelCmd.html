@@ -9,6 +9,7 @@
 
     <title>ocl::builders::KernelCmd - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,35 +43,38 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class='struct' href=''>KernelCmd</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class="struct" href=''>KernelCmd</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-424' class='srclink' href='../../src/ocl/standard/kernel.rs.html#16-24' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct KernelCmd&lt;'k&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A kernel command builder used to queue a kernel with a mix of default
+               </span><a class='srclink' href='../../src/ocl/standard/kernel.rs.html#23-31' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[must_use = "commands do nothing unless enqueued"]
+</div>pub struct KernelCmd&lt;'k&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A kernel command builder used to queue a kernel with a mix of default
 and optionally specified arguments.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'k&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-433' class='srclink' href='../../src/ocl/standard/kernel.rs.html#27-96' title='goto source code'>[src]</a></span></h3>
-<div class='docblock'><p>[UNSTABLE]: All methods still being tuned.</p>
-</div><div class='impl-items'><h4 id='method.queue' class='method'><span id='queue.v' class='invisible'><code>fn <a href='#method.queue' class='fnname'>queue</a>&lt;Q:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='../../ocl_core/types/abs/struct.CommandQueue.html' title='ocl_core::types::abs::CommandQueue'>CommandQueueCore</a>&gt;&gt;(self, queue: &amp;'k Q) -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'k&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/ocl/standard/kernel.rs.html#36-123' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>A kernel enqueue command.</p>
+<p>[UNSTABLE]: Methods still being tuned.</p>
+</div><div class='impl-items'><h4 id='method.queue' class="method"><span id='queue.v' class='invisible'><code>fn <a href='#method.queue' class='fnname'>queue</a>&lt;'q, Q&gt;(self, queue: &amp;'q Q) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'q: 'k,<br>&nbsp;&nbsp;&nbsp;&nbsp;Q: 'k + <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="../../ocl_core/types/abs/struct.CommandQueue.html" title="struct ocl_core::types::abs::CommandQueue">CommandQueueCore</a>&gt;,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Specifies a queue to use for this call only.</p>
-</div><h4 id='method.gwo' class='method'><span id='gwo.v' class='invisible'><code>fn <a href='#method.gwo' class='fnname'>gwo</a>&lt;D:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(self, gwo: D) -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
+</div><h4 id='method.gwo' class="method"><span id='gwo.v' class='invisible'><code>fn <a href='#method.gwo' class='fnname'>gwo</a>&lt;D:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/enum.SpatialDims.html" title="enum ocl::SpatialDims">SpatialDims</a>&gt;&gt;(self, gwo: D) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt;</code></span></h4>
 <div class='docblock'><p>Specifies a global work offset for this call only.</p>
-</div><h4 id='method.gws' class='method'><span id='gws.v' class='invisible'><code>fn <a href='#method.gws' class='fnname'>gws</a>&lt;D:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(self, gws: D) -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
+</div><h4 id='method.gws' class="method"><span id='gws.v' class='invisible'><code>fn <a href='#method.gws' class='fnname'>gws</a>&lt;D:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/enum.SpatialDims.html" title="enum ocl::SpatialDims">SpatialDims</a>&gt;&gt;(self, gws: D) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt;</code></span></h4>
 <div class='docblock'><p>Specifies a global work size for this call only.</p>
-</div><h4 id='method.lws' class='method'><span id='lws.v' class='invisible'><code>fn <a href='#method.lws' class='fnname'>lws</a>&lt;D:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../../ocl/enum.SpatialDims.html' title='ocl::SpatialDims'>SpatialDims</a>&gt;&gt;(self, lws: D) -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
+</div><h4 id='method.lws' class="method"><span id='lws.v' class='invisible'><code>fn <a href='#method.lws' class='fnname'>lws</a>&lt;D:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/enum.SpatialDims.html" title="enum ocl::SpatialDims">SpatialDims</a>&gt;&gt;(self, lws: D) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt;</code></span></h4>
 <div class='docblock'><p>Specifies a local work size for this call only.</p>
-</div><h4 id='method.ewait' class='method'><span id='ewait.v' class='invisible'><code>fn <a href='#method.ewait' class='fnname'>ewait</a>(self, wait_list: &amp;'k <a class='trait' href='../../ocl_core/types/abs/trait.ClWaitList.html' title='ocl_core::types::abs::ClWaitList'>ClWaitList</a>) -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
-<div class='docblock'><p>Specifies the list of events to wait on before the command will run.</p>
-</div><h4 id='method.ewait_opt' class='method'><span id='ewait_opt.v' class='invisible'><code>fn <a href='#method.ewait_opt' class='fnname'>ewait_opt</a>(self, wait_list: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'k <a class='trait' href='../../ocl_core/types/abs/trait.ClWaitList.html' title='ocl_core::types::abs::ClWaitList'>ClWaitList</a>&gt;) -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
+</div><h4 id='method.ewait' class="method"><span id='ewait.v' class='invisible'><code>fn <a href='#method.ewait' class='fnname'>ewait</a>&lt;'e, Ewl&gt;(self, ewait: Ewl) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'k,<br>&nbsp;&nbsp;&nbsp;&nbsp;Ewl: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClWaitListPtrEnum.html" title="enum ocl::builders::ClWaitListPtrEnum">ClWaitListPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Specifies a list of events to wait on before the command will run.</p>
-</div><h4 id='method.enew' class='method'><span id='enew.v' class='invisible'><code>fn <a href='#method.enew' class='fnname'>enew</a>(self, new_event_dest: &amp;'k mut <a class='trait' href='../../ocl_core/types/abs/trait.ClEventPtrNew.html' title='ocl_core::types::abs::ClEventPtrNew'>ClEventPtrNew</a>) -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
+</div><h4 id='method.ewait_opt' class="method"><span id='ewait_opt.v' class='invisible'><code>fn <a href='#method.ewait_opt' class='fnname'>ewait_opt</a>&lt;'e, Ewl&gt;(self, ewait: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Ewl&gt;) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'k,<br>&nbsp;&nbsp;&nbsp;&nbsp;Ewl: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClWaitListPtrEnum.html" title="enum ocl::builders::ClWaitListPtrEnum">ClWaitListPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Specifies a list of events to wait on before the command will run or
+resets it to <code>None</code>.</p>
+</div><h4 id='method.enew' class="method"><span id='enew.v' class='invisible'><code>fn <a href='#method.enew' class='fnname'>enew</a>&lt;'e, En&gt;(self, new_event_dest: En) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'k,<br>&nbsp;&nbsp;&nbsp;&nbsp;En: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClNullEventPtrEnum.html" title="enum ocl::builders::ClNullEventPtrEnum">ClNullEventPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Specifies the destination list or empty event for a new, optionally
 created event associated with this command.</p>
-</div><h4 id='method.enew_opt' class='method'><span id='enew_opt.v' class='invisible'><code>fn <a href='#method.enew_opt' class='fnname'>enew_opt</a>(self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new_event_list: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'k mut <a class='trait' href='../../ocl_core/types/abs/trait.ClEventPtrNew.html' title='ocl_core::types::abs::ClEventPtrNew'>ClEventPtrNew</a>&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../../ocl/builders/struct.KernelCmd.html' title='ocl::builders::KernelCmd'>KernelCmd</a>&lt;'k&gt;</code></span></h4>
+</div><h4 id='method.enew_opt' class="method"><span id='enew_opt.v' class='invisible'><code>fn <a href='#method.enew_opt' class='fnname'>enew_opt</a>&lt;'e, En&gt;(self, new_event_list: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;En&gt;) -&gt; <a class="struct" href="../../ocl/builders/struct.KernelCmd.html" title="struct ocl::builders::KernelCmd">KernelCmd</a>&lt;'k&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'k,<br>&nbsp;&nbsp;&nbsp;&nbsp;En: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClNullEventPtrEnum.html" title="enum ocl::builders::ClNullEventPtrEnum">ClNullEventPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Specifies a destination list for a new, optionally created event
 associated with this command.</p>
-</div><h4 id='method.enq' class='method'><span id='enq.v' class='invisible'><code>fn <a href='#method.enq' class='fnname'>enq</a>(self) -&gt; <a class='type' href='../../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
+</div><h4 id='method.enq' class="method"><span id='enq.v' class='invisible'><code>fn <a href='#method.enq' class='fnname'>enq</a>(self) -&gt; <a class="type" href="../../ocl/type.Result.html" title="type ocl::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
 <div class='docblock'><p>Enqueues this kernel command.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -128,11 +132,9 @@ associated with this command.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

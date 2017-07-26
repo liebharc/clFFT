@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.12.0\src\standard\program.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.14.1\src\standard\program.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>program.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -418,383 +419,565 @@
 <span id="374">374</span>
 <span id="375">375</span>
 <span id="376">376</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! An `OpenCL` program.</span>
-<span class='kw'>use</span> <span class='ident'>std</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Deref</span>, <span class='ident'>DerefMut</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CString</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Read</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::<span class='ident'>File</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>PathBuf</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashSet</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>Into</span>;
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! An `OpenCL` program.</span>
+<span class="kw">use</span> <span class="ident">std</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CString</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashSet</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">Into</span>;
 
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>error</span>::{<span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>OclResult</span>, <span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>OclError</span>};
-<span class='kw'>use</span> <span class='ident'>core</span>::{<span class='self'>self</span>, <span class='ident'>Program</span> <span class='kw'>as</span> <span class='ident'>ProgramCore</span>, <span class='ident'>Context</span> <span class='kw'>as</span> <span class='ident'>ContextCore</span>,
-    <span class='ident'>ProgramInfo</span>, <span class='ident'>ProgramInfoResult</span>, <span class='ident'>ProgramBuildInfo</span>, <span class='ident'>ProgramBuildInfoResult</span>};
-<span class='kw'>use</span> <span class='ident'>standard</span>::{<span class='ident'>Context</span>, <span class='ident'>Device</span>, <span class='ident'>DeviceSpecifier</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">error</span>::{<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">OclResult</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">OclError</span>};
+<span class="kw">use</span> <span class="ident">core</span>::{<span class="self">self</span>, <span class="ident">Program</span> <span class="kw">as</span> <span class="ident">ProgramCore</span>, <span class="ident">Context</span> <span class="kw">as</span> <span class="ident">ContextCore</span>,
+    <span class="ident">ProgramInfo</span>, <span class="ident">ProgramInfoResult</span>, <span class="ident">ProgramBuildInfo</span>, <span class="ident">ProgramBuildInfoResult</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_1&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">ClVersions</span>;
+<span class="kw">use</span> <span class="ident">standard</span>::{<span class="ident">Context</span>, <span class="ident">Device</span>, <span class="ident">DeviceSpecifier</span>};
 
 
-<span class='doccomment'>/// A build option used by ProgramBuilder.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Strings intended for use either by the compiler as a command line switch</span>
-<span class='doccomment'>/// or for inclusion in the final build source code.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A few of the often used variants have constructors for convenience.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [FIXME] TODO: Explain how each variant is used.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [FIXME] TODO: Examples.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>BuildOpt</span> {
-    <span class='ident'>CmplrDefine</span> { <span class='ident'>ident</span>: <span class='ident'>String</span>, <span class='ident'>val</span>: <span class='ident'>String</span> },
-    <span class='ident'>CmplrInclDir</span> { <span class='ident'>path</span>: <span class='ident'>String</span> },
-    <span class='ident'>CmplrOther</span>(<span class='ident'>String</span>),
-    <span class='ident'>IncludeDefine</span> { <span class='ident'>ident</span>: <span class='ident'>String</span>, <span class='ident'>val</span>: <span class='ident'>String</span> },
-    <span class='ident'>IncludeRaw</span>(<span class='ident'>String</span>),
-    <span class='ident'>IncludeRawEof</span>(<span class='ident'>String</span>),
+<span class="doccomment">/// A program from which kernels can be created from.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// To use with multiple devices, create manually with `::from_parts()`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Destruction</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Handled automatically. Feel free to store, clone, and share among threads</span>
+<span class="doccomment">/// as you please.</span>
+<span class="doccomment">///</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Program</span>(<span class="ident">ProgramCore</span>);
+
+<span class="kw">impl</span> <span class="ident">Program</span> {
+    <span class="doccomment">/// Returns a new `ProgramBuilder`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="ident">ProgramBuilder</span>::<span class="ident">new</span>()
+    }
+
+    <span class="doccomment">/// Returns a new program built from pre-created build components and device</span>
+    <span class="doccomment">/// list.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Prefer `::builder` to create a new `Program`.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">context_obj_core</span>: <span class="kw-2">&amp;</span><span class="ident">ContextCore</span>, <span class="ident">src_strings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;</span>,
+            <span class="ident">device_ids</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">Device</span>]<span class="op">&gt;</span>, <span class="ident">cmplr_opts</span>: <span class="ident">CString</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Program</span><span class="op">&gt;</span>
+    {
+        <span class="kw">let</span> <span class="ident">obj_core</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">core</span>::<span class="ident">create_build_program</span>(<span class="ident">context_obj_core</span>, <span class="kw-2">&amp;</span><span class="ident">src_strings</span>, <span class="ident">device_ids</span>,
+            <span class="kw-2">&amp;</span><span class="ident">cmplr_opts</span>));
+
+        <span class="prelude-val">Ok</span>(<span class="ident">Program</span>(<span class="ident">obj_core</span>))
+    }
+
+    <span class="doccomment">/// Returns a new program built from pre-created build components and device</span>
+    <span class="doccomment">/// list for programs with intermediate language byte source.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_1&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_il</span>(<span class="ident">il</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">device_ids</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">Device</span>]<span class="op">&gt;</span>, <span class="ident">cmplr_opts</span>: <span class="ident">CString</span>,
+            <span class="ident">context_obj_core</span>: <span class="kw-2">&amp;</span><span class="ident">ContextCore</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Program</span><span class="op">&gt;</span>
+    {
+        <span class="kw">let</span> <span class="ident">device_versions</span> <span class="op">=</span> <span class="ident">context_obj_core</span>.<span class="ident">device_versions</span>()<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">obj_core</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">create_program_with_il</span>(<span class="ident">context_obj_core</span>, <span class="kw-2">&amp;</span><span class="ident">il</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">device_versions</span>))<span class="question-mark">?</span>;
+
+        <span class="ident">core</span>::<span class="ident">build_program</span>(<span class="kw-2">&amp;</span><span class="ident">obj_core</span>, <span class="ident">device_ids</span>, <span class="kw-2">&amp;</span><span class="ident">cmplr_opts</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+        <span class="comment">// let devices = context_obj_core.devices()?.into_iter().map(|d| d.into()).collect();</span>
+
+        <span class="prelude-val">Ok</span>(<span class="ident">Program</span>(<span class="ident">obj_core</span>))
+    }
+
+    <span class="doccomment">/// Returns a reference to the core pointer wrapper, usable by functions in</span>
+    <span class="doccomment">/// the `core` module.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span><span class="op">=</span><span class="string">&quot;0.13.0&quot;</span>, <span class="ident">note</span><span class="op">=</span><span class="string">&quot;Use `::core` instead.&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">core_as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ProgramCore</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    }
+
+    <span class="doccomment">/// Returns a reference to the core pointer wrapper, usable by functions in</span>
+    <span class="doccomment">/// the `core` module.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">core</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ProgramCore</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    }
+
+    <span class="doccomment">/// Returns the list of devices associated with this program.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span><span class="op">=</span><span class="string">&quot;0.13.0&quot;</span>, <span class="ident">note</span><span class="op">=</span><span class="string">&quot;Use `::info` with `ProgramInfo::Devices` instead.&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devices</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> {
+        <span class="macro">unimplemented</span><span class="macro">!</span>();
+    }
+
+    <span class="doccomment">/// Returns info about this program.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">info_kind</span>: <span class="ident">ProgramInfo</span>) <span class="op">-&gt;</span> <span class="ident">ProgramInfoResult</span> {
+        <span class="ident">core</span>::<span class="ident">get_program_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">info_kind</span>)
+    }
+
+    <span class="doccomment">/// Returns info about this program&#39;s build.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * TODO: Check that device is valid.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">device</span>: <span class="ident">Device</span>, <span class="ident">info_kind</span>: <span class="ident">ProgramBuildInfo</span>) <span class="op">-&gt;</span> <span class="ident">ProgramBuildInfoResult</span> {
+        <span class="ident">core</span>::<span class="ident">get_program_build_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">device</span>, <span class="ident">info_kind</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">fmt_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Program&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;ReferenceCount&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">ReferenceCount</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Context&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">Context</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NumDevices&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">NumDevices</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Devices&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">Devices</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Source&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">Source</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;BinarySizes&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">BinarySizes</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Binaries&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">Binaries</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NumKernels&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">NumKernels</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;KernelNames&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">ProgramInfo</span>::<span class="ident">KernelNames</span>))
+            .<span class="ident">finish</span>()
+    }
 }
 
-<span class='kw'>impl</span> <span class='ident'>BuildOpt</span> {
-    <span class='doccomment'>/// Returns a `BuildOpt::CmplrDefine`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cmplr_def</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>ident</span>: <span class='ident'>S</span>, <span class='ident'>val</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>BuildOpt</span> {
-        <span class='ident'>BuildOpt</span>::<span class='ident'>CmplrDefine</span> {
-            <span class='ident'>ident</span>: <span class='ident'>ident</span>.<span class='ident'>into</span>(),
-            <span class='ident'>val</span>: <span class='ident'>val</span>.<span class='ident'>to_string</span>(),
+
+<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Program</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="self">self</span>.<span class="ident">fmt_info</span>(<span class="ident">f</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Program</span> {
+    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">ProgramCore</span>;
+
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ProgramCore</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">Program</span> {
+    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProgramCore</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>
+    }
+}
+
+
+<span class="doccomment">/// A build option used by ProgramBuilder.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Strings intended for use either by the compiler as a command line switch</span>
+<span class="doccomment">/// or for inclusion in the final build source code.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A few of the often used variants have constructors for convenience.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * [FIXME] TODO: Explain how each variant is used.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * [FIXME] TODO: Examples.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BuildOpt</span> {
+    <span class="ident">CmplrDefine</span> { <span class="ident">ident</span>: <span class="ident">String</span>, <span class="ident">val</span>: <span class="ident">String</span> },
+    <span class="ident">CmplrInclDir</span> { <span class="ident">path</span>: <span class="ident">String</span> },
+    <span class="ident">CmplrOther</span>(<span class="ident">String</span>),
+    <span class="ident">IncludeDefine</span> { <span class="ident">ident</span>: <span class="ident">String</span>, <span class="ident">val</span>: <span class="ident">String</span> },
+    <span class="ident">IncludeRaw</span>(<span class="ident">String</span>),
+    <span class="ident">IncludeRawEof</span>(<span class="ident">String</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">BuildOpt</span> {
+    <span class="doccomment">/// Returns a `BuildOpt::CmplrDefine`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cmplr_def</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="ident">ident</span>: <span class="ident">S</span>, <span class="ident">val</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">BuildOpt</span> {
+        <span class="ident">BuildOpt</span>::<span class="ident">CmplrDefine</span> {
+            <span class="ident">ident</span>: <span class="ident">ident</span>.<span class="ident">into</span>(),
+            <span class="ident">val</span>: <span class="ident">val</span>.<span class="ident">to_string</span>(),
         }
     }
 
-    <span class='doccomment'>/// Returns a `BuildOpt::IncludeDefine`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>include_def</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>ident</span>: <span class='ident'>S</span>, <span class='ident'>val</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='ident'>BuildOpt</span> {
-        <span class='ident'>BuildOpt</span>::<span class='ident'>IncludeDefine</span> {
-            <span class='ident'>ident</span>: <span class='ident'>ident</span>.<span class='ident'>into</span>(),
-            <span class='ident'>val</span>: <span class='ident'>val</span>,
+    <span class="doccomment">/// Returns a `BuildOpt::IncludeDefine`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">include_def</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="ident">ident</span>: <span class="ident">S</span>, <span class="ident">val</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="ident">BuildOpt</span> {
+        <span class="ident">BuildOpt</span>::<span class="ident">IncludeDefine</span> {
+            <span class="ident">ident</span>: <span class="ident">ident</span>.<span class="ident">into</span>(),
+            <span class="ident">val</span>: <span class="ident">val</span>,
         }
     }
 }
 
 
-<span class='doccomment'>/// A builder for `Program`.</span>
-<span class='doccomment'>///</span>
-<span class='comment'>// [SOMEDAY TODO]: Keep track of line number range for each string and print</span>
-<span class='comment'>// out during build failure.</span>
-<span class='comment'>//</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ProgramBuilder</span> {
-    <span class='ident'>options</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>BuildOpt</span><span class='op'>&gt;</span>,
-    <span class='ident'>src_files</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;</span>,
-    <span class='ident'>device_spec</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DeviceSpecifier</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// A builder for `Program`.</span>
+<span class="doccomment">///</span>
+<span class="comment">// * [SOMEDAY TODO]: Keep track of line number range for each string and print</span>
+<span class="comment">// out during build failure.</span>
+<span class="comment">//</span>
+<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;builders do nothing unless &#39;::build&#39; is called&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ProgramBuilder</span> {
+    <span class="ident">options</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BuildOpt</span><span class="op">&gt;</span>,
+    <span class="ident">src_files</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
+    <span class="ident">il</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">device_spec</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeviceSpecifier</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>ProgramBuilder</span> {
-    <span class='doccomment'>/// Returns a new, empty, build configuration object.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span> {
-        <span class='ident'>ProgramBuilder</span> {
-            <span class='ident'>options</span>: <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>64</span>),
-            <span class='ident'>src_files</span>: <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>16</span>),
-            <span class='ident'>device_spec</span>: <span class='prelude-val'>None</span>,
+<span class="kw">impl</span> <span class="ident">ProgramBuilder</span> {
+    <span class="doccomment">/// Returns a new, empty, build configuration object.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="ident">ProgramBuilder</span> {
+            <span class="ident">options</span>: <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">64</span>),
+            <span class="ident">src_files</span>: <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">16</span>),
+            <span class="ident">il</span>: <span class="prelude-val">None</span>,
+            <span class="ident">device_spec</span>: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class='doccomment'>/// Returns a newly built Program.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [TODO]: If the context is associated with more than one device,</span>
-    <span class='doccomment'>/// check that at least one of those devices has been specified. An empty</span>
-    <span class='doccomment'>/// device list will cause an `OpenCL` error in that case.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [TODO]: Check for duplicate devices in the final device list.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>Context</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Program</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>device_list</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>device_spec</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ds</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ds</span>.<span class='ident'>to_device_list</span>(<span class='ident'>context</span>.<span class='ident'>platform</span>())),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[],
+    <span class="doccomment">/// Returns a newly built Program.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * TODO: If the context is associated with more than one device,</span>
+    <span class="doccomment">/// check that at least one of those devices has been specified. An empty</span>
+    <span class="doccomment">/// device list will cause an `OpenCL` error in that case.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * TODO: Check for duplicate devices in the final device list.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_1&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Program</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">device_list</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">device_spec</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">ds</span>) <span class="op">=&gt;</span> <span class="ident">ds</span>.<span class="ident">to_device_list</span>(<span class="ident">context</span>.<span class="ident">platform</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">context</span>.<span class="ident">devices</span>(),
         };
 
-        <span class='kw'>if</span> <span class='ident'>device_list</span>.<span class='ident'>is_empty</span>() {
-            <span class='kw'>return</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='string'>&quot;ocl::ProgramBuilder::build: No devices found.&quot;</span>);
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">il</span> {
+            <span class="prelude-val">Some</span>(_) <span class="op">=&gt;</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;ocl::ProgramBuilder::build: Unreachable section (IL).&quot;</span>.<span class="ident">into</span>());
+            },
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="ident">Program</span>::<span class="ident">new</span>(
+                    <span class="ident">context</span>,
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">get_src_strings</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">device_list</span>[..]),
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">get_compiler_options</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())),
+                )
+            },
         }
-
-        <span class='ident'>Program</span>::<span class='ident'>new</span>(
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_src_strings</span>().<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>to_string</span>())),
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_compiler_options</span>().<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>to_string</span>())),
-            <span class='ident'>context</span>,
-            <span class='kw-2'>&amp;</span><span class='ident'>device_list</span>[..])
     }
 
-    <span class='doccomment'>/// Adds a build option containing a compiler command line definition.</span>
-    <span class='doccomment'>/// Formatted as `-D {name}={val}`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ## Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `...cmplr_def(&quot;MAX_ITERS&quot;, 500)...`</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cmplr_def</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>name</span>: <span class='ident'>S</span>, <span class='ident'>val</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span> {
-        <span class='self'>self</span>.<span class='ident'>options</span>.<span class='ident'>push</span>(<span class='ident'>BuildOpt</span>::<span class='ident'>cmplr_def</span>(<span class='ident'>name</span>, <span class='ident'>val</span>));
-        <span class='self'>self</span>
+    <span class="doccomment">/// Returns a newly built Program.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * TODO: If the context is associated with more than one device,</span>
+    <span class="doccomment">/// check that at least one of those devices has been specified. An empty</span>
+    <span class="doccomment">/// device list will cause an `OpenCL` error in that case.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * TODO: Check for duplicate devices in the final device list.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_1&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Program</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">device_list</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">device_spec</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">ds</span>) <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">ds</span>.<span class="ident">to_device_list</span>(<span class="ident">context</span>.<span class="ident">platform</span>()<span class="question-mark">?</span>)),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">context</span>.<span class="ident">devices</span>().<span class="ident">to_owned</span>(),
+        };
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">il</span>.<span class="ident">take</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">il</span>) <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_1&quot;</span>) {
+                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">src_files</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> { <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;ProgramBuilder::build: \
+                        No source files may be set when building with IR.&quot;</span>.<span class="ident">into</span>()); }
+
+                    <span class="ident">Program</span>::<span class="ident">with_il</span>(
+                        <span class="ident">il</span>,
+                        <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">device_list</span>[..]),
+                        <span class="self">self</span>.<span class="ident">get_compiler_options</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())<span class="question-mark">?</span>,
+                        <span class="ident">context</span>
+                    )
+                } <span class="kw">else</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;ocl::ProgramBuilder::build: Unreachable section.&quot;</span>.<span class="ident">into</span>());
+                }
+            },
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="ident">Program</span>::<span class="ident">new</span>(
+                    <span class="ident">context</span>,
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">get_src_strings</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">device_list</span>[..]),
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">get_compiler_options</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())),
+                )
+            },
+        }
     }
 
-    <span class='doccomment'>/// Adds a build option containing a raw compiler command line parameter.</span>
-    <span class='doccomment'>/// Formatted as `{}` (exact text).</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ## Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `...cmplr_opt(&quot;-g&quot;)...`</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cmplr_opt</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>co</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span> {
-        <span class='self'>self</span>.<span class='ident'>options</span>.<span class='ident'>push</span>(<span class='ident'>BuildOpt</span>::<span class='ident'>CmplrOther</span>(<span class='ident'>co</span>.<span class='ident'>into</span>()));
-        <span class='self'>self</span>
+    <span class="doccomment">/// Adds a build option containing a compiler command line definition.</span>
+    <span class="doccomment">/// Formatted as `-D {name}={val}`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `...cmplr_def(&quot;MAX_ITERS&quot;, 500)...`</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cmplr_def</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">S</span>, <span class="ident">val</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">push</span>(<span class="ident">BuildOpt</span>::<span class="ident">cmplr_def</span>(<span class="ident">name</span>, <span class="ident">val</span>));
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Pushes pre-created build option to the list of options.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>bo</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>bo</span>: <span class='ident'>BuildOpt</span>) <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span> {
-        <span class='self'>self</span>.<span class='ident'>options</span>.<span class='ident'>push</span>(<span class='ident'>bo</span>);
-        <span class='self'>self</span>
+    <span class="doccomment">/// Adds a build option containing a raw compiler command line parameter.</span>
+    <span class="doccomment">/// Formatted as `{}` (exact text).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `...cmplr_opt(&quot;-g&quot;)...`</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cmplr_opt</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">co</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">push</span>(<span class="ident">BuildOpt</span>::<span class="ident">CmplrOther</span>(<span class="ident">co</span>.<span class="ident">into</span>()));
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Adds the contents of a file to the program.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>src_file</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>file_path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span> {
-        <span class='kw'>let</span> <span class='ident'>file_path</span> <span class='op'>=</span> <span class='ident'>file_path</span>.<span class='ident'>into</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>file_path</span>.<span class='ident'>is_file</span>(), <span class='string'>&quot;ProgramBuilder::src_file(): Source file error: \
-            &#39;{}&#39; does not exist.&quot;</span>, <span class='ident'>file_path</span>.<span class='ident'>display</span>());
-        <span class='self'>self</span>.<span class='ident'>src_files</span>.<span class='ident'>push</span>(<span class='ident'>file_path</span>);
-        <span class='self'>self</span>
+    <span class="doccomment">/// Pushes pre-created build option to the list of options.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bo</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bo</span>: <span class="ident">BuildOpt</span>) <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">push</span>(<span class="ident">bo</span>);
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Adds raw text to the program source.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>src</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span> {
-        <span class='self'>self</span>.<span class='ident'>options</span>.<span class='ident'>push</span>(<span class='ident'>BuildOpt</span>::<span class='ident'>IncludeRawEof</span>(<span class='ident'>src</span>.<span class='ident'>into</span>()));
-        <span class='self'>self</span>
+    <span class="doccomment">/// Adds the contents of a file to the program.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">src_file</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">file_path</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="kw">let</span> <span class="ident">file_path</span> <span class="op">=</span> <span class="ident">file_path</span>.<span class="ident">into</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">file_path</span>.<span class="ident">is_file</span>(), <span class="string">&quot;ProgramBuilder::src_file(): Source file error: \
+            &#39;{}&#39; does not exist.&quot;</span>, <span class="ident">file_path</span>.<span class="ident">display</span>());
+        <span class="self">self</span>.<span class="ident">src_files</span>.<span class="ident">push</span>(<span class="ident">file_path</span>);
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Specify a list of devices to build this program on. The devices must</span>
-    <span class='doccomment'>/// also be associated with the context passed to `::build` later on.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [FIXME]: Include `DeviceSpecifier` usage instructions.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ## Panics</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Devices may not have already been specified.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>devices</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>DeviceSpecifier</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>device_spec</span>: <span class='ident'>D</span>)
-            <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span>
+    <span class="doccomment">/// Adds raw text to the program source.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">src</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">src</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">push</span>(<span class="ident">BuildOpt</span>::<span class="ident">IncludeRawEof</span>(<span class="ident">src</span>.<span class="ident">into</span>()));
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Adds SPIR-V or an implementation-defined intermediate language to this program.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Any source files or source text added to this build will cause an</span>
+    <span class="doccomment">/// error upon building.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Use the `include_bytes!` macro to include source code from a file statically.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * TODO: Future addition: Allow IL to be loaded directly from a file</span>
+    <span class="doccomment">/// in the same way that text source is.</span>
+    <span class="doccomment">///</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_1&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">il</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">il</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span> {
+        <span class="self">self</span>.<span class="ident">il</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">il</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Specifies a list of devices to build this program on. The devices must</span>
+    <span class="doccomment">/// be associated with the context passed to `::build` later on.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Devices may be specified in any number of ways including simply</span>
+    <span class="doccomment">/// passing a device or slice of devices. See the [`impl</span>
+    <span class="doccomment">/// From`][device_specifier_from] section of</span>
+    <span class="doccomment">/// [`DeviceSpecifier`][device_specifier] for more information.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Devices must not have already been specified.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [device_specifier_from]: enum.DeviceSpecifier.html#method.from</span>
+    <span class="doccomment">/// [device_specifier]: enum.DeviceSpecifier.html</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devices</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">DeviceSpecifier</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">device_spec</span>: <span class="ident">D</span>)
+            <span class="op">-&gt;</span> <span class="ident">ProgramBuilder</span>
     {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>device_spec</span>.<span class='ident'>is_none</span>(), <span class='string'>&quot;ocl::ProgramBuilder::devices(): Devices already specified&quot;</span>);
-        <span class='self'>self</span>.<span class='ident'>device_spec</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>device_spec</span>.<span class='ident'>into</span>());
-        <span class='self'>self</span>
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">device_spec</span>.<span class="ident">is_none</span>(), <span class="string">&quot;ocl::ProgramBuilder::devices(): Devices already specified&quot;</span>);
+        <span class="self">self</span>.<span class="ident">device_spec</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">device_spec</span>.<span class="ident">into</span>());
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Returns the devices specified to be associated the program.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_device_spec</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DeviceSpecifier</span><span class='op'>&gt;</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>device_spec</span>
+    <span class="doccomment">/// Returns the devices specified to be associated the program.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_device_spec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeviceSpecifier</span><span class="op">&gt;</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_spec</span>
     }
 
-    <span class='doccomment'>/// Returns a contatenated string of command line options to be passed to</span>
-    <span class='doccomment'>/// the compiler when building this program.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_compiler_options</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>CString</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>64</span>);
+    <span class="doccomment">/// Returns a concatenated string of command line options to be passed to</span>
+    <span class="doccomment">/// the compiler when building this program.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_compiler_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">opts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">64</span>);
 
-        <span class='kw'>for</span> <span class='ident'>option</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>options</span> {
-            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>option</span> {
-                <span class='ident'>BuildOpt</span>::<span class='ident'>CmplrDefine</span> { <span class='kw-2'>ref</span> <span class='ident'>ident</span>, <span class='kw-2'>ref</span> <span class='ident'>val</span> } <span class='op'>=&gt;</span> {
-                    <span class='ident'>opts</span>.<span class='ident'>push</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;-D {}={}&quot;</span>, <span class='ident'>ident</span>, <span class='ident'>val</span>))
+        <span class="kw">for</span> <span class="ident">option</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">options</span> {
+            <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">option</span> {
+                <span class="ident">BuildOpt</span>::<span class="ident">CmplrDefine</span> { <span class="kw-2">ref</span> <span class="ident">ident</span>, <span class="kw-2">ref</span> <span class="ident">val</span> } <span class="op">=&gt;</span> {
+                    <span class="ident">opts</span>.<span class="ident">push</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;-D {}={}&quot;</span>, <span class="ident">ident</span>, <span class="ident">val</span>))
                 },
 
-                <span class='ident'>BuildOpt</span>::<span class='ident'>CmplrInclDir</span> { <span class='kw-2'>ref</span> <span class='ident'>path</span> } <span class='op'>=&gt;</span> {
-                    <span class='ident'>opts</span>.<span class='ident'>push</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;-I {}&quot;</span>, <span class='ident'>path</span>))
+                <span class="ident">BuildOpt</span>::<span class="ident">CmplrInclDir</span> { <span class="kw-2">ref</span> <span class="ident">path</span> } <span class="op">=&gt;</span> {
+                    <span class="ident">opts</span>.<span class="ident">push</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;-I {}&quot;</span>, <span class="ident">path</span>))
                 },
 
-                <span class='ident'>BuildOpt</span>::<span class='ident'>CmplrOther</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>) <span class='op'>=&gt;</span> {
-                    <span class='ident'>opts</span>.<span class='ident'>push</span>(<span class='ident'>s</span>.<span class='ident'>clone</span>())
+                <span class="ident">BuildOpt</span>::<span class="ident">CmplrOther</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=&gt;</span> {
+                    <span class="ident">opts</span>.<span class="ident">push</span>(<span class="ident">s</span>.<span class="ident">clone</span>())
                 },
 
-                _ <span class='op'>=&gt;</span> (),
+                _ <span class="op">=&gt;</span> (),
             }
         }
 
-        <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>opts</span>.<span class='ident'>join</span>(<span class='string'>&quot; &quot;</span>).<span class='ident'>into_bytes</span>()).<span class='ident'>map_err</span>(<span class='ident'>OclError</span>::<span class='ident'>from</span>)
+        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">opts</span>.<span class="ident">join</span>(<span class="string">&quot; &quot;</span>).<span class="ident">into_bytes</span>()).<span class="ident">map_err</span>(<span class="ident">OclError</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Returns the final program source code as a list of strings.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Order of Inclusion</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// 1. Macro definitions and code strings specified by a</span>
-    <span class='doccomment'>///    `BuildOpt::IncludeDefine` or `BuildOpt::IncludeRaw` via `::bo`</span>
-    <span class='doccomment'>/// 2. Contents of files specified via `::src_file`</span>
-    <span class='doccomment'>/// 3. Contents of strings specified via `::src` or a</span>
-    <span class='doccomment'>///   `BuildOpt::IncludeRawEof` via `::bo`</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_src_strings</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>CString</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>src_strings</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>CString</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>64</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>src_file_history</span>: <span class='ident'>HashSet</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashSet</span>::<span class='ident'>with_capacity</span>(<span class='number'>64</span>);
+    <span class="doccomment">/// Returns the final program source code as a list of strings.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Order of Inclusion</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// 1. Macro definitions and code strings specified by a</span>
+    <span class="doccomment">///    `BuildOpt::IncludeDefine` or `BuildOpt::IncludeRaw` via `::bo`</span>
+    <span class="doccomment">/// 2. Contents of files specified via `::src_file`</span>
+    <span class="doccomment">/// 3. Contents of strings specified via `::src` or a</span>
+    <span class="doccomment">///   `BuildOpt::IncludeRawEof` via `::bo`</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_src_strings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">src_strings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">64</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">src_file_history</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashSet</span>::<span class="ident">with_capacity</span>(<span class="number">64</span>);
 
-        <span class='ident'>src_strings</span>.<span class='ident'>extend_from_slice</span>(<span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_includes</span>()));
+        <span class="ident">src_strings</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">get_includes</span>()));
 
-        <span class='kw'>for</span> <span class='ident'>srcpath</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>src_files</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>src_bytes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>100000</span>);
+        <span class="kw">for</span> <span class="ident">srcpath</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">src_files</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">src_bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">100000</span>);
 
-            <span class='kw'>if</span> <span class='ident'>src_file_history</span>.<span class='ident'>contains</span>(<span class='ident'>srcpath</span>) { <span class='kw'>continue</span>; }
-            <span class='ident'>src_file_history</span>.<span class='ident'>insert</span>(<span class='ident'>srcpath</span>.<span class='ident'>clone</span>());
+            <span class="kw">if</span> <span class="ident">src_file_history</span>.<span class="ident">contains</span>(<span class="ident">srcpath</span>) { <span class="kw">continue</span>; }
+            <span class="ident">src_file_history</span>.<span class="ident">insert</span>(<span class="ident">srcpath</span>.<span class="ident">clone</span>());
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>src_file_handle</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>open</span>(<span class='ident'>srcpath</span>));
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">src_file_handle</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">srcpath</span>));
 
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>src_file_handle</span>.<span class='ident'>read_to_end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>src_bytes</span>));
-            <span class='ident'>src_bytes</span>.<span class='ident'>shrink_to_fit</span>();
-            <span class='ident'>src_strings</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>src_bytes</span>)));
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">src_file_handle</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">src_bytes</span>));
+            <span class="ident">src_bytes</span>.<span class="ident">shrink_to_fit</span>();
+            <span class="ident">src_strings</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">src_bytes</span>)));
         }
 
-        <span class='ident'>src_strings</span>.<span class='ident'>extend_from_slice</span>(<span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_includes_eof</span>()));
-
-        <span class='prelude-val'>Ok</span>(<span class='ident'>src_strings</span>)
+        <span class="ident">src_strings</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">get_includes_eof</span>()));
+        <span class="ident">src_strings</span>.<span class="ident">shrink_to_fit</span>();
+        <span class="prelude-val">Ok</span>(<span class="ident">src_strings</span>)
     }
 
-    <span class='doccomment'>/// Parses `self.options` for options intended for inclusion at the beginning of</span>
-    <span class='doccomment'>/// the final program source and returns them as a list of strings.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Generally used for #define directives, constants, etc. Normally called from</span>
-    <span class='doccomment'>/// `::get_src_strings()`.</span>
-    <span class='kw'>fn</span> <span class='ident'>get_includes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>CString</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>strings</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>64</span>);
-        <span class='ident'>strings</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='string'>&quot;\n&quot;</span>.<span class='ident'>as_bytes</span>())));
+    <span class="doccomment">/// Parses `self.options` for options intended for inclusion at the beginning of</span>
+    <span class="doccomment">/// the final program source and returns them as a list of strings.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Generally used for #define directives, constants, etc. Normally called from</span>
+    <span class="doccomment">/// `::get_src_strings()`.</span>
+    <span class="kw">fn</span> <span class="ident">get_includes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">strings</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">64</span>);
+        <span class="ident">strings</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;\n&quot;</span>.<span class="ident">as_bytes</span>())));
 
-        <span class='kw'>for</span> <span class='ident'>option</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>options</span> {
-            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>option</span> {
-                <span class='ident'>BuildOpt</span>::<span class='ident'>IncludeDefine</span> { <span class='kw-2'>ref</span> <span class='ident'>ident</span>, <span class='kw-2'>ref</span> <span class='ident'>val</span> } <span class='op'>=&gt;</span> {
-                    <span class='ident'>strings</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;#define {}  {}\n&quot;</span>, <span class='ident'>ident</span>, <span class='ident'>val</span>)
-                        .<span class='ident'>into_bytes</span>())));
+        <span class="kw">for</span> <span class="ident">option</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">options</span> {
+            <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">option</span> {
+                <span class="ident">BuildOpt</span>::<span class="ident">IncludeDefine</span> { <span class="kw-2">ref</span> <span class="ident">ident</span>, <span class="kw-2">ref</span> <span class="ident">val</span> } <span class="op">=&gt;</span> {
+                    <span class="ident">strings</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;#define {}  {}\n&quot;</span>, <span class="ident">ident</span>, <span class="ident">val</span>)
+                        .<span class="ident">into_bytes</span>())));
                 },
-                <span class='ident'>BuildOpt</span>::<span class='ident'>IncludeRaw</span>(<span class='kw-2'>ref</span> <span class='ident'>text</span>) <span class='op'>=&gt;</span> {
-                    <span class='ident'>strings</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>text</span>.<span class='ident'>clone</span>().<span class='ident'>into_bytes</span>())));
+                <span class="ident">BuildOpt</span>::<span class="ident">IncludeRaw</span>(<span class="kw-2">ref</span> <span class="ident">text</span>) <span class="op">=&gt;</span> {
+                    <span class="ident">strings</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">text</span>.<span class="ident">clone</span>().<span class="ident">into_bytes</span>())));
                 },
-                _ <span class='op'>=&gt;</span> (),
+                _ <span class="op">=&gt;</span> (),
             };
 
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>strings</span>)
+        <span class="ident">strings</span>.<span class="ident">shrink_to_fit</span>();
+        <span class="prelude-val">Ok</span>(<span class="ident">strings</span>)
     }
 
-    <span class='doccomment'>/// Parses `self.options` for options intended for inclusion at the end of</span>
-    <span class='doccomment'>/// the final program source and returns them as a list of strings.</span>
-    <span class='kw'>fn</span> <span class='ident'>get_includes_eof</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>CString</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>strings</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>64</span>);
-        <span class='ident'>strings</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='string'>&quot;\n&quot;</span>.<span class='ident'>as_bytes</span>())));
+    <span class="doccomment">/// Parses `self.options` for options intended for inclusion at the end of</span>
+    <span class="doccomment">/// the final program source and returns them as a list of strings.</span>
+    <span class="kw">fn</span> <span class="ident">get_includes_eof</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">strings</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">64</span>);
+        <span class="ident">strings</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;\n&quot;</span>.<span class="ident">as_bytes</span>())));
 
-        <span class='kw'>for</span> <span class='ident'>option</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>options</span> {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>BuildOpt</span>::<span class='ident'>IncludeRawEof</span>(<span class='kw-2'>ref</span> <span class='ident'>text</span>) <span class='op'>=</span> <span class='op'>*</span><span class='ident'>option</span> {
-                <span class='ident'>strings</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>text</span>.<span class='ident'>clone</span>().<span class='ident'>into_bytes</span>())));
+        <span class="kw">for</span> <span class="ident">option</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">options</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">BuildOpt</span>::<span class="ident">IncludeRawEof</span>(<span class="kw-2">ref</span> <span class="ident">text</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">option</span> {
+                <span class="ident">strings</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">text</span>.<span class="ident">clone</span>().<span class="ident">into_bytes</span>())));
             }
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>strings</span>)
+        <span class="ident">strings</span>.<span class="ident">shrink_to_fit</span>();
+        <span class="prelude-val">Ok</span>(<span class="ident">strings</span>)
     }
 }
 
-
-
-
-<span class='doccomment'>/// A program from which kernels can be created from.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// To use with multiple devices, create manually with `::from_parts()`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ## Destruction</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Handled automatically. Feel free to store, clone, and share among threads</span>
-<span class='doccomment'>/// as you please.</span>
-<span class='doccomment'>///</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Program</span> {
-    <span class='ident'>obj_core</span>: <span class='ident'>ProgramCore</span>,
-    <span class='ident'>devices</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span>,
-}
-
-<span class='kw'>impl</span> <span class='ident'>Program</span> {
-    <span class='doccomment'>/// Returns a new `ProgramBuilder`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>builder</span>() <span class='op'>-&gt;</span> <span class='ident'>ProgramBuilder</span> {
-        <span class='ident'>ProgramBuilder</span>::<span class='ident'>new</span>()
-    }
-
-    <span class='doccomment'>/// Returns a new program built from pre-created build components and device</span>
-    <span class='doccomment'>/// list.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Prefer `::builder` to create a new `Program`.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>src_strings</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>CString</span><span class='op'>&gt;</span>, <span class='ident'>cmplr_opts</span>: <span class='ident'>CString</span>, <span class='ident'>context_obj_core</span>: <span class='kw-2'>&amp;</span><span class='ident'>ContextCore</span>,
-                <span class='ident'>device_ids</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Device</span>]) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Program</span><span class='op'>&gt;</span>
-    {
-        <span class='kw'>let</span> <span class='ident'>obj_core</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>core</span>::<span class='ident'>create_build_program</span>(<span class='ident'>context_obj_core</span>, <span class='kw-2'>&amp;</span><span class='ident'>src_strings</span>, <span class='kw-2'>&amp;</span><span class='ident'>cmplr_opts</span>,
-             <span class='ident'>device_ids</span>).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>to_string</span>()));
-
-        <span class='prelude-val'>Ok</span>(<span class='ident'>Program</span> {
-            <span class='ident'>obj_core</span>: <span class='ident'>obj_core</span>,
-            <span class='ident'>devices</span>: <span class='ident'>Vec</span>::<span class='ident'>from</span>(<span class='ident'>device_ids</span>),
-        })
-    }
-
-    <span class='doccomment'>/// Returns a reference to the core pointer wrapper, usable by functions in</span>
-    <span class='doccomment'>/// the `core` module.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>core_as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>ProgramCore</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>obj_core</span>
-    }
-
-    <span class='doccomment'>/// Returns the list of devices associated with this program.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>devices</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>Device</span>] {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>devices</span>
-    }
-
-    <span class='doccomment'>/// Returns info about this program.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info_kind</span>: <span class='ident'>ProgramInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>ProgramInfoResult</span> {
-        <span class='comment'>// match core::get_program_info(&amp;self.obj_core, info_kind) {</span>
-        <span class='comment'>//     Ok(res) =&gt; res,</span>
-        <span class='comment'>//     Err(err) =&gt; ProgramInfoResult::Error(Box::new(err)),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_program_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>obj_core</span>, <span class='ident'>info_kind</span>)
-    }
-
-    <span class='doccomment'>/// Returns info about this program&#39;s build.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// TODO: Check that device is valid.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>device</span>: <span class='ident'>Device</span>, <span class='ident'>info_kind</span>: <span class='ident'>ProgramBuildInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>ProgramBuildInfoResult</span> {
-        <span class='comment'>// match core::get_program_build_info(&amp;self.obj_core, &amp;device, info_kind) {</span>
-        <span class='comment'>//     Ok(res) =&gt; res,</span>
-        <span class='comment'>//     Err(err) =&gt; ProgramBuildInfoResult::Error(Box::new(err)),</span>
-        <span class='comment'>// }</span>
-        <span class='ident'>core</span>::<span class='ident'>get_program_build_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>obj_core</span>, <span class='kw-2'>&amp;</span><span class='ident'>device</span>, <span class='ident'>info_kind</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>fmt_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='ident'>f</span>.<span class='ident'>debug_struct</span>(<span class='string'>&quot;Program&quot;</span>)
-            .<span class='ident'>field</span>(<span class='string'>&quot;ReferenceCount&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>ReferenceCount</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Context&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>Context</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NumDevices&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>NumDevices</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Devices&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>Devices</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Source&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>Source</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;BinarySizes&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>BinarySizes</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Binaries&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>Binaries</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NumKernels&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>NumKernels</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;KernelNames&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>ProgramInfo</span>::<span class='ident'>KernelNames</span>))
-            .<span class='ident'>finish</span>()
-    }
-}
-
-
-<span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Program</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='self'>self</span>.<span class='ident'>fmt_info</span>(<span class='ident'>f</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>Program</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>ProgramCore</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>ProgramCore</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>obj_core</span>
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>Program</span> {
-    <span class='kw'>fn</span> <span class='ident'>deref_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ProgramCore</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>obj_core</span>
-    }
-}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -852,11 +1035,9 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

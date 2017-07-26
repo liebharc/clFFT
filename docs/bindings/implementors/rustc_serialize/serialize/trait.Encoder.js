@@ -1,5 +1,8 @@
 (function() {var implementors = {};
-implementors["num"] = [];implementors["ocl"] = [];implementors["clfft"] = [];
+implementors["clfft"] = [];
+implementors["num"] = [];
+implementors["ocl"] = [];
+implementors["ocl_core"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

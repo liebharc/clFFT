@@ -9,6 +9,7 @@
 
     <title>ocl_core::util - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,151 +43,175 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>ocl_core</a>::<wbr><a class='mod' href=''>util</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>ocl_core</a>::<wbr><a class="mod" href=''>util</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2778' class='srclink' href='../../src/ocl_core/util.rs.html#1-569' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/ocl_core/util.rs.html#1-585' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Utility and debugging functions.</p>
-
-<h2 id='stability' class='section-header'><a href='#stability'>Stability</a></h2>
+<h2 id="stability" class="section-header"><a href="#stability">Stability</a></h2>
 <p>Printing functions may be moved/renamed/removed at any time.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='colors/index.html'
-                                  title='ocl_core::util::colors'>colors</a></td>
+                           <td><a class="mod" href="colors/index.html"
+                                  title='mod ocl_core::util::colors'>colors</a></td>
                            <td class='docblock-short'>
                                 <p>ASCII Color Palette</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.bytes_into.html'
-                                  title='ocl_core::util::bytes_into'>bytes_into</a></td>
+                           <td><a class="fn" href="fn.bytes_into.html"
+                                  title='fn ocl_core::util::bytes_into'>bytes_into</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Converts a vector of bytes into a value of arbitrary type.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.bytes_into_string.html'
-                                  title='ocl_core::util::bytes_into_string'>bytes_into_string</a></td>
+                           <td><a class="fn" href="fn.bytes_into_string.html"
+                                  title='fn ocl_core::util::bytes_into_string'>bytes_into_string</a></td>
                            <td class='docblock-short'>
                                 <p>Converts a byte Vec into a string, removing the trailing null byte if it
 exists.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.bytes_into_vec.html'
-                                  title='ocl_core::util::bytes_into_vec'>bytes_into_vec</a></td>
+                           <td><a class="fn" href="fn.bytes_into_trimmed_string.html"
+                                  title='fn ocl_core::util::bytes_into_trimmed_string'>bytes_into_trimmed_string</a></td>
+                           <td class='docblock-short'>
+                                <p>Converts a byte Vec into a string, removing the trailing null byte if it
+exists, then removes leading and trailing whitespace.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.bytes_into_vec.html"
+                                  title='fn ocl_core::util::bytes_into_vec'>bytes_into_vec</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Converts a vector of bytes into a vector of arbitrary type.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.bytes_to.html'
-                                  title='ocl_core::util::bytes_to'>bytes_to</a></td>
+                           <td><a class="fn" href="fn.bytes_to.html"
+                                  title='fn ocl_core::util::bytes_to'>bytes_to</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Copies a slice of bytes to a new value of arbitrary type.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.bytes_to_u32.html'
-                                  title='ocl_core::util::bytes_to_u32'>bytes_to_u32</a></td>
+                           <td><a class="fn" href="fn.bytes_to_u32.html"
+                                  title='fn ocl_core::util::bytes_to_u32'>bytes_to_u32</a></td>
                            <td class='docblock-short'>
                                 <p>Copies a byte slice to a new <code>u32</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.bytes_to_vec.html'
-                                  title='ocl_core::util::bytes_to_vec'>bytes_to_vec</a></td>
+                           <td><a class="fn" href="fn.bytes_to_vec.html"
+                                  title='fn ocl_core::util::bytes_to_vec'>bytes_to_vec</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Copies a slice of bytes into a vector of arbitrary type.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.into_bytes.html'
-                                  title='ocl_core::util::into_bytes'>into_bytes</a></td>
+                           <td><a class="fn" href="fn.into_bytes.html"
+                                  title='fn ocl_core::util::into_bytes'>into_bytes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>[UNTESTED] Copies an arbitrary primitive or struct into core bytes.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.padded_len.html'
-                                  title='ocl_core::util::padded_len'>padded_len</a></td>
+                           <td><a class="fn" href="fn.padded_len.html"
+                                  title='fn ocl_core::util::padded_len'>padded_len</a></td>
                            <td class='docblock-short'>
                                 <p>Pads <code>len</code> to make it evenly divisible by <code>incr</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.print_bytes_as_hex.html'
-                                  title='ocl_core::util::print_bytes_as_hex'>print_bytes_as_hex</a></td>
+                           <td><a class="fn" href="fn.print_bytes_as_hex.html"
+                                  title='fn ocl_core::util::print_bytes_as_hex'>print_bytes_as_hex</a></td>
                            <td class='docblock-short'>
-                                <p>Does what is says it&#39;s gonna.</p>
+                                <p>Does what is says it's gonna.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.print_simple.html'
-                                  title='ocl_core::util::print_simple'>print_simple</a></td>
+                           <td><a class="fn" href="fn.print_simple.html"
+                                  title='fn ocl_core::util::print_simple'>print_simple</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.print_slice.html'
-                                  title='ocl_core::util::print_slice'>print_slice</a></td>
+                           <td><a class="fn" href="fn.print_slice.html"
+                                  title='fn ocl_core::util::print_slice'>print_slice</a></td>
                            <td class='docblock-short'>
                                 <p>[UNSTABLE]: MAY BE REMOVED AT ANY TIME
 Prints a vector to stdout. Used for debugging.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.print_val_range.html'
-                                  title='ocl_core::util::print_val_range'>print_val_range</a></td>
+                           <td><a class="fn" href="fn.print_val_range.html"
+                                  title='fn ocl_core::util::print_val_range'>print_val_range</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.scrambled_vec.html'
-                                  title='ocl_core::util::scrambled_vec'>scrambled_vec</a></td>
+                           <td><a class="fn" href="fn.scrambled_vec.html"
+                                  title='fn ocl_core::util::scrambled_vec'>scrambled_vec</a></td>
                            <td class='docblock-short'>
                                 <p>Returns a vector with length <code>size</code> containing random values in the (half-open)
 range <code>[vals.0, vals.1)</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.shuffle.html'
-                                  title='ocl_core::util::shuffle'>shuffle</a></td>
+                           <td><a class="fn" href="fn.shuffle.html"
+                                  title='fn ocl_core::util::shuffle'>shuffle</a></td>
                            <td class='docblock-short'>
                                 <p>Shuffles the values in a vector using a single pass of Fisher-Yates with a
 weak (not cryptographically secure) random number generator.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.shuffled_vec.html'
-                                  title='ocl_core::util::shuffled_vec'>shuffled_vec</a></td>
+                           <td><a class="fn" href="fn.shuffled_vec.html"
+                                  title='fn ocl_core::util::shuffled_vec'>shuffled_vec</a></td>
                            <td class='docblock-short'>
                                 <p>Returns a vector with length <code>size</code> which is first filled with each integer value
 in the (inclusive) range <code>[vals.0, vals.1]</code>. If <code>size</code> is greater than the
 number of integers in the aforementioned range, the integers will repeat. After
 being filled with <code>size</code> values, the vector is shuffled and the order of its
 values is randomized.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.vec_remove_rebuild.html'
-                                  title='ocl_core::util::vec_remove_rebuild'>vec_remove_rebuild</a></td>
+                           <td><a class="fn" href="fn.vec_remove_rebuild.html"
+                                  title='fn ocl_core::util::vec_remove_rebuild'>vec_remove_rebuild</a></td>
                            <td class='docblock-short'>
                                 <p>Batch removes elements from a vector using a list of indices to remove.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.wrap_vals.html'
-                                  title='ocl_core::util::wrap_vals'>wrap_vals</a></td>
+                           <td><a class="fn" href="fn.wrap_vals.html"
+                                  title='fn ocl_core::util::wrap_vals'>wrap_vals</a></td>
                            <td class='docblock-short'>
                                 <p>Wraps (<code>%</code>) each value in the list <code>vals</code> if it equals or exceeds <code>val_n</code>.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -244,11 +269,9 @@ values is randomized.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

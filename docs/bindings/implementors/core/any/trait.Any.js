@@ -1,5 +1,11 @@
 (function() {var implementors = {};
-implementors["lazy_static"] = [];implementors["libc"] = [];implementors["enum_primitive"] = [];implementors["num"] = [];implementors["ocl"] = [];implementors["clfft"] = [];
+implementors["cl_sys"] = [];
+implementors["clfft"] = [];
+implementors["enum_primitive"] = [];
+implementors["libc"] = [];
+implementors["num"] = [];
+implementors["ocl"] = [];
+implementors["ocl_core"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

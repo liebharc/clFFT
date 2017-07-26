@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `BufferMapCmd` struct in crate `ocl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, BufferMapCmd">
+
+    <title>ocl::builders::BufferMapCmd - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a></p><script>window.sidebarCurrent = {name: 'BufferMapCmd', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class="struct" href=''>BufferMapCmd</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/ocl/standard/buffer.rs.html#1216-1220' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[must_use = "commands do nothing unless enqueued"]
+</div>pub struct BufferMapCmd&lt;'c, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'c,&nbsp;</span> { /* fields omitted */ }</pre><div class='docblock'><p>A command builder used to enqueue a map command.</p>
+<p>See <a href="https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/clEnqueueMapBuffer.html">SDK</a> docs for more details.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'c, T&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="../../ocl/traits/trait.OclPrm.html" title="trait ocl::traits::OclPrm">OclPrm</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/ocl/standard/buffer.rs.html#1222-1431' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.flags' class="method"><span id='flags.v' class='invisible'><code>fn <a href='#method.flags' class='fnname'>flags</a>(self, flags: <a class="struct" href="../../ocl/flags/struct.MapFlags.html" title="struct ocl::flags::MapFlags">MapFlags</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt;</code></span></h4>
+<div class='docblock'><p>Specifies the flags to be used for this map command.</p>
+<p>Flags can also be specified using the <code>::read</code>, <code>::write</code>, and
+<code>::write_invalidate</code> methods instead.</p>
+<p>See <a href="https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/clEnqueueMapBuffer.html">SDK</a> docs for more details.</p>
+</div><h4 id='method.read' class="method"><span id='read.v' class='invisible'><code>fn <a href='#method.read' class='fnname'>read</a>(self) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt;</code></span></h4>
+<div class='docblock'><p>Specifies that the memory object is being mapped for reading.</p>
+<p>Sets the flag to be used for this map command to <code>[CL_]MAP_READ</code>.</p>
+<p>This is the fastest way to move data from device to host for many use
+cases when used with buffers created with the <code>MEM_ALLOC_HOST_PTR</code> or
+<code>MEM_USE_HOST_PTR</code> flags.</p>
+</div><h4 id='method.write' class="method"><span id='write.v' class='invisible'><code>fn <a href='#method.write' class='fnname'>write</a>(self) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt;</code></span></h4>
+<div class='docblock'><p>Specifies that the memory object is being mapped for writing.</p>
+<p>Sets the flag to be used for this map command to <code>[CL_]MAP_WRITE</code>.</p>
+<p>This is not the most efficient method of transferring data from host
+to device due to the memory being synchronized beforehand. Prefer
+<code>::write_invalidate</code> unless you need the memory region to be updated
+(e.g. if you are only writing to particular portions of the data, and
+will not be overwriting the entire contents, etc.). Use this with
+buffers created with the <code>MEM_ALLOC_HOST_PTR</code> or <code>MEM_USE_HOST_PTR</code>
+flags for best performance.</p>
+</div><h4 id='method.write_invalidate' class="method"><span id='write_invalidate.v' class='invisible'><code>fn <a href='#method.write_invalidate' class='fnname'>write_invalidate</a>(self) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt;</code></span></h4>
+<div class='docblock'><p>Specifies that the memory object is being mapped for writing and that
+the local (host) memory region may contain stale data that must be
+completely overwritten before unmapping.</p>
+<p>Sets the flag to be used for this map command to
+<code>[CL_]MAP_WRITE_INVALIDATE_REGION</code>.</p>
+<p>This option may provide a substantial performance improvement when
+writing and is the fastest method for moving data in bulk from host to
+device memory when used with buffers created with the
+<code>MEM_ALLOC_HOST_PTR</code> or <code>MEM_USE_HOST_PTR</code> flags. Only use this when
+you will be overwriting the entire contents of the mapped region
+otherwise you will send stale or junk data to the device.</p>
+</div><h4 id='method.len' class="method"><span id='len.v' class='invisible'><code>fn <a href='#method.len' class='fnname'>len</a>(self, len: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt;</code></span></h4>
+<div class='docblock'><p>Specifies the length of the region to map.</p>
+<p>If unspecified the entire buffer will be mapped.</p>
+</div><h4 id='method.queue' class="method"><span id='queue.v' class='invisible'><code>fn <a href='#method.queue' class='fnname'>queue</a>(self, queue: &amp;'c <a class="struct" href="../../ocl/struct.Queue.html" title="struct ocl::Queue">Queue</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt;</code></span></h4>
+<div class='docblock'><p>Specifies a queue to use for this call only.</p>
+</div><h4 id='method.offset' class="method"><span id='offset.v' class='invisible'><code>fn <a href='#method.offset' class='fnname'>offset</a>(self, offset: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt;</code></span></h4>
+<div class='docblock'><p>Sets the linear offset for an operation.</p>
+<h2 id="panics" class="section-header"><a href="#panics">Panics</a></h2>
+<p>The 'shape' may not have already been set to rectangular by the
+<code>::rect</code> function.</p>
+</div><h4 id='method.ewait' class="method"><span id='ewait.v' class='invisible'><code>fn <a href='#method.ewait' class='fnname'>ewait</a>&lt;'e, Ewl&gt;(self, ewait: Ewl) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'c,<br>&nbsp;&nbsp;&nbsp;&nbsp;Ewl: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClWaitListPtrEnum.html" title="enum ocl::builders::ClWaitListPtrEnum">ClWaitListPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Specifies a list of events to wait on before the command will run.</p>
+</div><h4 id='method.ewait_opt' class="method"><span id='ewait_opt.v' class='invisible'><code>fn <a href='#method.ewait_opt' class='fnname'>ewait_opt</a>&lt;'e, Ewl&gt;(self, ewait: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Ewl&gt;) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'c,<br>&nbsp;&nbsp;&nbsp;&nbsp;Ewl: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClWaitListPtrEnum.html" title="enum ocl::builders::ClWaitListPtrEnum">ClWaitListPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Specifies a list of events to wait on before the command will run or
+resets it to <code>None</code>.</p>
+</div><h4 id='method.enew' class="method"><span id='enew.v' class='invisible'><code>fn <a href='#method.enew' class='fnname'>enew</a>&lt;'e, En&gt;(self, enew: En) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'c,<br>&nbsp;&nbsp;&nbsp;&nbsp;En: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClNullEventPtrEnum.html" title="enum ocl::builders::ClNullEventPtrEnum">ClNullEventPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Specifies the destination for a new, optionally created event
+associated with this command.</p>
+</div><h4 id='method.enew_opt' class="method"><span id='enew_opt.v' class='invisible'><code>fn <a href='#method.enew_opt' class='fnname'>enew_opt</a>&lt;'e, En&gt;(self, enew: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;En&gt;) -&gt; <a class="struct" href="../../ocl/builders/struct.BufferMapCmd.html" title="struct ocl::builders::BufferMapCmd">BufferMapCmd</a>&lt;'c, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'e: 'c,<br>&nbsp;&nbsp;&nbsp;&nbsp;En: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/builders/enum.ClNullEventPtrEnum.html" title="enum ocl::builders::ClNullEventPtrEnum">ClNullEventPtrEnum</a>&lt;'e&gt;&gt;,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Specifies a destination for a new, optionally created event
+associated with this command or resets it to <code>None</code>.</p>
+</div><h4 id='method.enq' class="method"><span id='enq.v' class='invisible'><code>fn <a href='#method.enq' class='fnname'>enq</a>(self) -&gt; <a class="type" href="../../ocl/type.Result.html" title="type ocl::Result">OclResult</a>&lt;<a class="struct" href="../../ocl/struct.MemMap.html" title="struct ocl::MemMap">MemMap</a>&lt;T&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Enqueues a map command.</p>
+</div><h4 id='method.enq_async' class="method"><span id='enq_async.v' class='invisible'><code>fn <a href='#method.enq_async' class='fnname'>enq_async</a>(self) -&gt; <a class="type" href="../../ocl/type.Result.html" title="type ocl::Result">OclResult</a>&lt;<a class="struct" href="../../ocl/struct.FutureMemMap.html" title="struct ocl::FutureMemMap">FutureMemMap</a>&lt;T&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Enqueues a map command and returns a future representing the
+completion of that map command and containing a reference to the
+mapped memory.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "ocl";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@
 
     <title>ocl_core::OclPrm - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,73 +43,93 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>ocl_core</a>::<wbr><a class='trait' href=''>OclPrm</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>ocl_core</a>::<wbr><a class="trait" href=''>OclPrm</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2955' class='srclink' href='../src/ocl_core/lib.rs.html#207' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub unsafe trait OclPrm: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> { }</pre><div class='docblock'><p>A type usable within <code>OpenCL</code> kernels.</p>
-
+               </span><a class='srclink' href='../src/ocl_core/lib.rs.html#234' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub unsafe trait OclPrm: <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + 'static { }</pre><div class='docblock'><p>A primitive type usable within <code>OpenCL</code> kernels.</p>
 <p>Includes all of the signed, unsigned, and floating point 8 bit - 64 bit
 scalar primitives (ex.: cl_char, cl_uint, cl_double) (exception: cl_half)
 and their vector counterparts (ex.: cl_int4, cl_float3, cl_short16);</p>
+<p>Can also be implemented for custom types as long as layout and
+alignment are conserved between Rust and OpenCL (repr &quot;C&quot;).</p>
 </div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClChar2.html' title='ocl_core::types::vectors::ClChar2'>ClChar2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClChar3.html' title='ocl_core::types::vectors::ClChar3'>ClChar3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClChar4.html' title='ocl_core::types::vectors::ClChar4'>ClChar4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClChar8.html' title='ocl_core::types::vectors::ClChar8'>ClChar8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClChar16.html' title='ocl_core::types::vectors::ClChar16'>ClChar16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUchar2.html' title='ocl_core::types::vectors::ClUchar2'>ClUchar2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUchar3.html' title='ocl_core::types::vectors::ClUchar3'>ClUchar3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUchar4.html' title='ocl_core::types::vectors::ClUchar4'>ClUchar4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUchar8.html' title='ocl_core::types::vectors::ClUchar8'>ClUchar8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUchar16.html' title='ocl_core::types::vectors::ClUchar16'>ClUchar16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClShort2.html' title='ocl_core::types::vectors::ClShort2'>ClShort2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClShort3.html' title='ocl_core::types::vectors::ClShort3'>ClShort3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClShort4.html' title='ocl_core::types::vectors::ClShort4'>ClShort4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClShort8.html' title='ocl_core::types::vectors::ClShort8'>ClShort8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClShort16.html' title='ocl_core::types::vectors::ClShort16'>ClShort16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUshort2.html' title='ocl_core::types::vectors::ClUshort2'>ClUshort2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUshort3.html' title='ocl_core::types::vectors::ClUshort3'>ClUshort3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUshort4.html' title='ocl_core::types::vectors::ClUshort4'>ClUshort4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUshort8.html' title='ocl_core::types::vectors::ClUshort8'>ClUshort8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUshort16.html' title='ocl_core::types::vectors::ClUshort16'>ClUshort16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClInt2.html' title='ocl_core::types::vectors::ClInt2'>ClInt2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClInt3.html' title='ocl_core::types::vectors::ClInt3'>ClInt3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClInt4.html' title='ocl_core::types::vectors::ClInt4'>ClInt4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClInt8.html' title='ocl_core::types::vectors::ClInt8'>ClInt8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClInt16.html' title='ocl_core::types::vectors::ClInt16'>ClInt16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUint2.html' title='ocl_core::types::vectors::ClUint2'>ClUint2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUint3.html' title='ocl_core::types::vectors::ClUint3'>ClUint3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUint4.html' title='ocl_core::types::vectors::ClUint4'>ClUint4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUint8.html' title='ocl_core::types::vectors::ClUint8'>ClUint8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUint16.html' title='ocl_core::types::vectors::ClUint16'>ClUint16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClLong1.html' title='ocl_core::types::vectors::ClLong1'>ClLong1</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClLong2.html' title='ocl_core::types::vectors::ClLong2'>ClLong2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClLong3.html' title='ocl_core::types::vectors::ClLong3'>ClLong3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClLong4.html' title='ocl_core::types::vectors::ClLong4'>ClLong4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClLong8.html' title='ocl_core::types::vectors::ClLong8'>ClLong8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClLong16.html' title='ocl_core::types::vectors::ClLong16'>ClLong16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUlong1.html' title='ocl_core::types::vectors::ClUlong1'>ClUlong1</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUlong2.html' title='ocl_core::types::vectors::ClUlong2'>ClUlong2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUlong3.html' title='ocl_core::types::vectors::ClUlong3'>ClUlong3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUlong4.html' title='ocl_core::types::vectors::ClUlong4'>ClUlong4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUlong8.html' title='ocl_core::types::vectors::ClUlong8'>ClUlong8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClUlong16.html' title='ocl_core::types::vectors::ClUlong16'>ClUlong16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClFloat2.html' title='ocl_core::types::vectors::ClFloat2'>ClFloat2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClFloat3.html' title='ocl_core::types::vectors::ClFloat3'>ClFloat3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClFloat4.html' title='ocl_core::types::vectors::ClFloat4'>ClFloat4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClFloat8.html' title='ocl_core::types::vectors::ClFloat8'>ClFloat8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClFloat16.html' title='ocl_core::types::vectors::ClFloat16'>ClFloat16</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClDouble2.html' title='ocl_core::types::vectors::ClDouble2'>ClDouble2</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClDouble3.html' title='ocl_core::types::vectors::ClDouble3'>ClDouble3</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClDouble4.html' title='ocl_core::types::vectors::ClDouble4'>ClDouble4</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClDouble8.html' title='ocl_core::types::vectors::ClDouble8'>ClDouble8</a></code></li>
-<li><code>impl OclPrm for <a class='struct' href='../ocl_core/types/vectors/struct.ClDouble16.html' title='ocl_core::types::vectors::ClDouble16'>ClDouble16</a></code></li>
-<li><code>impl&lt;S&gt; OclPrm for S <span class='where'>where S: <a class='trait' href='../ocl_core/trait.OclScl.html' title='ocl_core::OclScl'>OclScl</a></span></code></li>
+    <li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Char.html" title="struct ocl_core::Char">Char</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Char2.html" title="struct ocl_core::Char2">Char2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Char3.html" title="struct ocl_core::Char3">Char3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Char4.html" title="struct ocl_core::Char4">Char4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Char8.html" title="struct ocl_core::Char8">Char8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Char16.html" title="struct ocl_core::Char16">Char16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uchar.html" title="struct ocl_core::Uchar">Uchar</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uchar2.html" title="struct ocl_core::Uchar2">Uchar2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uchar3.html" title="struct ocl_core::Uchar3">Uchar3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uchar4.html" title="struct ocl_core::Uchar4">Uchar4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uchar8.html" title="struct ocl_core::Uchar8">Uchar8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uchar16.html" title="struct ocl_core::Uchar16">Uchar16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Short.html" title="struct ocl_core::Short">Short</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Short2.html" title="struct ocl_core::Short2">Short2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Short3.html" title="struct ocl_core::Short3">Short3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Short4.html" title="struct ocl_core::Short4">Short4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Short8.html" title="struct ocl_core::Short8">Short8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Short16.html" title="struct ocl_core::Short16">Short16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ushort.html" title="struct ocl_core::Ushort">Ushort</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ushort2.html" title="struct ocl_core::Ushort2">Ushort2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ushort3.html" title="struct ocl_core::Ushort3">Ushort3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ushort4.html" title="struct ocl_core::Ushort4">Ushort4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ushort8.html" title="struct ocl_core::Ushort8">Ushort8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ushort16.html" title="struct ocl_core::Ushort16">Ushort16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Int.html" title="struct ocl_core::Int">Int</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Int2.html" title="struct ocl_core::Int2">Int2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Int3.html" title="struct ocl_core::Int3">Int3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Int4.html" title="struct ocl_core::Int4">Int4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Int8.html" title="struct ocl_core::Int8">Int8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Int16.html" title="struct ocl_core::Int16">Int16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uint.html" title="struct ocl_core::Uint">Uint</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uint2.html" title="struct ocl_core::Uint2">Uint2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uint3.html" title="struct ocl_core::Uint3">Uint3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uint4.html" title="struct ocl_core::Uint4">Uint4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uint8.html" title="struct ocl_core::Uint8">Uint8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Uint16.html" title="struct ocl_core::Uint16">Uint16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Long.html" title="struct ocl_core::Long">Long</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Long2.html" title="struct ocl_core::Long2">Long2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Long3.html" title="struct ocl_core::Long3">Long3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Long4.html" title="struct ocl_core::Long4">Long4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Long8.html" title="struct ocl_core::Long8">Long8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Long16.html" title="struct ocl_core::Long16">Long16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ulong.html" title="struct ocl_core::Ulong">Ulong</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ulong2.html" title="struct ocl_core::Ulong2">Ulong2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ulong3.html" title="struct ocl_core::Ulong3">Ulong3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ulong4.html" title="struct ocl_core::Ulong4">Ulong4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ulong8.html" title="struct ocl_core::Ulong8">Ulong8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Ulong16.html" title="struct ocl_core::Ulong16">Ulong16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Float.html" title="struct ocl_core::Float">Float</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Float2.html" title="struct ocl_core::Float2">Float2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Float3.html" title="struct ocl_core::Float3">Float3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Float4.html" title="struct ocl_core::Float4">Float4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Float8.html" title="struct ocl_core::Float8">Float8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Float16.html" title="struct ocl_core::Float16">Float16</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Double.html" title="struct ocl_core::Double">Double</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Double2.html" title="struct ocl_core::Double2">Double2</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Double3.html" title="struct ocl_core::Double3">Double3</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Double4.html" title="struct ocl_core::Double4">Double4</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Double8.html" title="struct ocl_core::Double8">Double8</a></code></li>
+<li><code>impl OclPrm for <a class="struct" href="../ocl_core/struct.Double16.html" title="struct ocl_core::Double16">Double16</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i8.html">i8</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i16.html">i16</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i64.html">i64</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.isize.html">isize</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f32.html">f32</a></code></li>
+<li><code>impl OclPrm for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a></code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/ocl_core/trait.OclPrm.js">
                  </script></section>
@@ -167,11 +188,9 @@ and their vector counterparts (ex.: cl_int4, cl_float3, cl_short16);</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    <script src="../extra.js"></script>
     <script defer src="../search-index.js"></script>
 </body>
 </html>

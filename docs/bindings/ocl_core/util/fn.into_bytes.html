@@ -9,6 +9,7 @@
 
     <title>ocl_core::util::into_bytes - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,26 +43,22 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>ocl_core</a>::<wbr><a href='index.html'>util</a>::<wbr><a class='fn' href=''>into_bytes</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>ocl_core</a>::<wbr><a href='index.html'>util</a>::<wbr><a class="fn" href=''>into_bytes</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2837' class='srclink' href='../../src/ocl_core/util.rs.html#205-217' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub unsafe fn into_bytes&lt;T&gt;(val: T) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</pre><div class='docblock'><p>[UNTESTED] Copies an arbitrary primitive or struct into core bytes.</p>
-
-<h3 id='depth' class='section-header'><a href='#depth'>Depth</a></h3>
+               </span><a class='srclink' href='../../src/ocl_core/util.rs.html#218-230' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub unsafe fn into_bytes&lt;T&gt;(val: T) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</pre><div class='docblock'><p>[UNTESTED] Copies an arbitrary primitive or struct into core bytes.</p>
+<h3 id="depth" class="section-header"><a href="#depth">Depth</a></h3>
 <p>This is not a deep copy, will only copy the surface of primitives, structs,
 etc. Not 100% sure about what happens with other types but should copy
 everything zero levels deep.</p>
-
-<h3 id='endianness' class='section-header'><a href='#endianness'>Endianness</a></h3>
+<h3 id="endianness" class="section-header"><a href="#endianness">Endianness</a></h3>
 <p>98% sure (speculative) this will always be correct due to the driver
 automatically taking it into account.</p>
-
-<h3 id='safety' class='section-header'><a href='#safety'>Safety</a></h3>
-<p>Don&#39;t ask.</p>
-
+<h3 id="safety" class="section-header"><a href="#safety">Safety</a></h3>
+<p>Don't ask.</p>
 <p>[FIXME]: Evaluate the ins and outs of this and lock this down a bit.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
@@ -119,11 +116,9 @@ automatically taking it into account.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

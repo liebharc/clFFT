@@ -9,6 +9,7 @@
 
     <title>ocl_core::types::abs::Kernel - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,44 +43,54 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>abs</a>::<wbr><a class='struct' href=''>Kernel</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>abs</a>::<wbr><a class="struct" href=''>Kernel</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3265' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#550' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Kernel(_);</pre><div class='docblock'><p>cl_kernel</p>
-
-<h3 id='thread-safety' class='section-header'><a href='#thread-safety'>Thread Safety</a></h3>
-<p>Not thread safe: do not implement <code>Send</code> or <code>Sync</code>.</p>
-
-<p>It&#39;s possible to do with some work but it&#39;s not worth the bother, just
-make another identical kernel in the other thread and call it good.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1159' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#552-572' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.from_fresh_ptr' class='method'><span id='from_fresh_ptr.v' class='invisible'><code>unsafe fn <a href='#method.from_fresh_ptr' class='fnname'>from_fresh_ptr</a>(ptr: <a class='type' href='../../../cl_sys/cl_h/type.cl_kernel.html' title='cl_sys::cl_h::cl_kernel'>cl_kernel</a>) -&gt; <a class='struct' href='../../../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a></code></span></h4>
-<div class='docblock'><p>Only call this when passing a newly created pointer directly from
-<code>clCreate...</code>. Do not use this to clone or copy.</p>
-</div><h4 id='method.as_ptr' class='method'><span id='as_ptr.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='type' href='../../../cl_sys/cl_h/type.cl_kernel.html' title='cl_sys::cl_h::cl_kernel'>cl_kernel</a></code></span></h4>
+               </span><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#852' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct Kernel(_);</pre><div class='docblock'><p>cl_kernel</p>
+<h3 id="thread-safety" class="section-header"><a href="#thread-safety">Thread Safety</a></h3>
+<p>Currently not thread safe: does not implement <code>Send</code> or <code>Sync</code>. It's
+probably possible to implement one or both with some work but it's
+potentially problematic on certain (all?) platforms due to issues while
+setting arguments. If you need to transfer a kernel you're better off
+creating another one in the other thread or using some other mechanism
+such as channels to manipulate kernels in other threads. This issue will
+be revisited in the future (please provide input by filing an issue if you
+have any thoughts on the matter).</p>
+<p>[UPDATE]: Enabling <code>Send</code> for a while to test.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#854-891' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from_raw_create_ptr' class="method"><span id='from_raw_create_ptr.v' class='invisible'><code>unsafe fn <a href='#method.from_raw_create_ptr' class='fnname'>from_raw_create_ptr</a>(ptr: <a class="type" href="../../../cl_sys/cl_h/type.cl_kernel.html" title="type cl_sys::cl_h::cl_kernel">cl_kernel</a>) -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span></h4>
+<div class='docblock'><p>Only call this when passing <strong>the original</strong> newly created pointer
+directly from <code>clCreate...</code>. Do not use this to clone or copy.</p>
+</div><h4 id='method.from_raw_copied_ptr' class="method"><span id='from_raw_copied_ptr.v' class='invisible'><code>unsafe fn <a href='#method.from_raw_copied_ptr' class='fnname'>from_raw_copied_ptr</a>(ptr: <a class="type" href="../../../cl_sys/cl_h/type.cl_kernel.html" title="type cl_sys::cl_h::cl_kernel">cl_kernel</a>) -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span></h4>
+<div class='docblock'><p>Only call this when passing a copied pointer such as from an
+<code>clGet*****Info</code> function.</p>
+</div><h4 id='method.as_ptr' class="method"><span id='as_ptr.v' class='invisible'><code>fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class="type" href="../../../cl_sys/cl_h/type.cl_kernel.html" title="type cl_sys::cl_h::cl_kernel">cl_kernel</a></code></span></h4>
 <div class='docblock'><p>Returns a pointer, do not store it.</p>
-</div><h4 id='method.program' class='method'><span id='program.v' class='invisible'><code>fn <a href='#method.program' class='fnname'>program</a>(&amp;self) -&gt; <a class='type' href='../../../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='struct' href='../../../ocl_core/types/abs/struct.Program.html' title='ocl_core::types::abs::Program'>Program</a>&gt;</code></span></h4>
+</div><h4 id='method.program' class="method"><span id='program.v' class='invisible'><code>fn <a href='#method.program' class='fnname'>program</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="../../../ocl_core/types/abs/struct.Program.html" title="struct ocl_core::types::abs::Program">Program</a>&gt;</code></span></h4>
 <div class='docblock'><p>Returns the program associated with this kernel.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3268' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#549' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+</div><h4 id='method.devices' class="method"><span id='devices.v' class='invisible'><code>fn <a href='#method.devices' class='fnname'>devices</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="../../../ocl_core/types/abs/struct.DeviceId.html" title="struct ocl_core::types::abs::DeviceId">DeviceId</a>&gt;&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#851' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1168' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#574-579' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a></code></span></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#893-898' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1171' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#581-585' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.drop' class='method'><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html" title="trait core::ops::Drop">Drop</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#900-904' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
 <div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../ocl_core/types/abs/trait.ClVersions.html' title='ocl_core::types::abs::ClVersions'>ClVersions</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1174' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#587-597' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.device_versions' class='method'><span id='device_versions.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#tymethod.device_versions' class='fnname'>device_versions</a>(&amp;self) -&gt; <a class='type' href='../../../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../../ocl_core/types/structs/struct.OpenclVersion.html' title='ocl_core::types::structs::OpenclVersion'>OpenclVersion</a>&gt;&gt;</code></span></h4>
-<h4 id='method.platform_version' class='method'><span id='platform_version.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#tymethod.platform_version' class='fnname'>platform_version</a>(&amp;self) -&gt; <a class='type' href='../../../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='struct' href='../../../ocl_core/types/structs/struct.OpenclVersion.html' title='ocl_core::types::structs::OpenclVersion'>OpenclVersion</a>&gt;</code></span></h4>
-<h4 id='method.verify_device_versions' class='method'><span id='verify_device_versions.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#method.verify_device_versions' class='fnname'>verify_device_versions</a>(&amp;self, required_version: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 2]</a>) -&gt; <a class='type' href='../../../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
-<h4 id='method.verify_platform_version' class='method'><span id='verify_platform_version.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#method.verify_platform_version' class='fnname'>verify_platform_version</a>(&amp;self, required_version: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 2]</a>) -&gt; <a class='type' href='../../../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
-</div></section>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../../../ocl_core/types/abs/trait.ClVersions.html" title="trait ocl_core::types::abs::ClVersions">ClVersions</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#906-916' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.device_versions' class="method"><span id='device_versions.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#tymethod.device_versions' class='fnname'>device_versions</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="../../../ocl_core/types/structs/struct.OpenclVersion.html" title="struct ocl_core::types::structs::OpenclVersion">OpenclVersion</a>&gt;&gt;</code></span></h4>
+<h4 id='method.platform_version' class="method"><span id='platform_version.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#tymethod.platform_version' class='fnname'>platform_version</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="../../../ocl_core/types/structs/struct.OpenclVersion.html" title="struct ocl_core::types::structs::OpenclVersion">OpenclVersion</a>&gt;</code></span></h4>
+<h4 id='method.verify_device_versions' class="method"><span id='verify_device_versions.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#method.verify_device_versions' class='fnname'>verify_device_versions</a>(&amp;self, required_version: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 2]</a>) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<h4 id='method.verify_platform_version' class="method"><span id='verify_platform_version.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClVersions.html#method.verify_platform_version' class='fnname'>verify_platform_version</a>(&amp;self, required_version: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 2]</a>) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+</div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#918' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -135,11 +146,9 @@ make another identical kernel in the other thread and call it good.</p>
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

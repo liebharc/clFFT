@@ -9,6 +9,7 @@
 
     <title>ocl_core::types::enums::KernelArg - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,39 +43,35 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>enums</a>::<wbr><a class='enum' href=''>KernelArg</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>enums</a>::<wbr><a class="enum" href=''>KernelArg</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3332' class='srclink' href='../../../src/ocl_core/types/enums.rs.html#71-86' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum KernelArg&lt;'a, T:&nbsp;'a + <a class='trait' href='../../../ocl_core/trait.OclPrm.html' title='ocl_core::OclPrm'>OclPrm</a>&gt; {
-    Mem(&amp;'a <a class='struct' href='../../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>Mem</a>),
+               </span><a class='srclink' href='../../../src/ocl_core/types/enums.rs.html#123-138' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum KernelArg&lt;'a, T:&nbsp;'a + <a class="trait" href="../../../ocl_core/trait.OclPrm.html" title="trait ocl_core::OclPrm">OclPrm</a>&gt; {
+    Mem(&amp;'a <a class="struct" href="../../../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">Mem</a>),
     MemNull,
-    Sampler(&amp;'a <a class='struct' href='../../../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>Sampler</a>),
+    Sampler(&amp;'a <a class="struct" href="../../../ocl_core/types/abs/struct.Sampler.html" title="struct ocl_core::types::abs::Sampler">Sampler</a>),
     SamplerNull,
     Scalar(T),
     Vector(T),
-    Local(&amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>),
+    Local(&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>),
     UnsafePointer {
-        size: <a class='type' href='../../../libc/type.size_t.html' title='libc::size_t'>size_t</a>,
-        value: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='enum' href='../../../libc/enum.c_void.html' title='libc::c_void'>c_void</a>,
+        size: <a class="type" href="../../../libc/type.size_t.html" title="type libc::size_t">size_t</a>,
+        value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*const </a><a class="enum" href="../../../libc/enum.c_void.html" title="enum libc::c_void">c_void</a>,
     },
 }</pre><div class='docblock'><p>[UNSAFE] Kernel argument option type.</p>
-
 <p>The type argument <code>T</code> is ignored for <code>Mem</code>, <code>Sampler</code>, and <code>UnsafePointer</code>
 (just put <code>usize</code> or anything).</p>
-
-<h2 id='safety' class='section-header'><a href='#safety'>Safety</a></h2>
+<h2 id="safety" class="section-header"><a href="#safety">Safety</a></h2>
 <p>If there was some way for this enum to be marked unsafe it would be.</p>
-
 <p>The <code>Mem</code>, <code>Sampler</code>, <code>Scalar</code>, and <code>Local</code> variants are tested and will
 work perfectly well.</p>
-
 <ul>
 <li><code>Vector</code>: The <code>Vector</code> variant is poorly tested and probably a bit
 platform dependent. Use at your own risk.</li>
-<li><code>UnsafePointer</code>: Really know what you&#39;re doing when using the
+<li><code>UnsafePointer</code>: Really know what you're doing when using the
 <code>UnsafePointer</code> variant. Setting its properties, <code>size</code> and <code>value</code>,
 incorrectly can cause bugs, crashes, and data integrity issues that are
 very hard to track down. This is due to the fact that the pointer value
@@ -85,16 +82,16 @@ complicated by the fact that the pointer can also be a pointer to a
 scalar (ex: <code>*const u32</code>, etc.). See the <a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clSetKernelArg.html">SDK docs</a> for more details.</li>
 </ul>
 </div><h2 class='variants'>Variants</h2>
-<span id='variant.Mem' class='variant'><span id='Mem.v' class='invisible'><code>Mem(&amp;'a <a class='struct' href='../../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>Mem</a>)</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
+<span id='variant.Mem' class='variant'><span id='Mem.v' class='invisible'><code>Mem(&amp;'a <a class="struct" href="../../../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">Mem</a>)</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
 </div><span id='variant.MemNull' class='variant'><span id='MemNull.v' class='invisible'><code>MemNull</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
-</div><span id='variant.Sampler' class='variant'><span id='Sampler.v' class='invisible'><code>Sampler(&amp;'a <a class='struct' href='../../../ocl_core/types/abs/struct.Sampler.html' title='ocl_core::types::abs::Sampler'>Sampler</a>)</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
+</div><span id='variant.Sampler' class='variant'><span id='Sampler.v' class='invisible'><code>Sampler(&amp;'a <a class="struct" href="../../../ocl_core/types/abs/struct.Sampler.html" title="struct ocl_core::types::abs::Sampler">Sampler</a>)</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
 </div><span id='variant.SamplerNull' class='variant'><span id='SamplerNull.v' class='invisible'><code>SamplerNull</code></span></span><div class='docblock'><p>Type <code>T</code> is ignored.</p>
-</div><span id='variant.Scalar' class='variant'><span id='Scalar.v' class='invisible'><code>Scalar(T)</code></span></span><span id='variant.Vector' class='variant'><span id='Vector.v' class='invisible'><code>Vector(T)</code></span></span><span id='variant.Local' class='variant'><span id='Local.v' class='invisible'><code>Local(&amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></span><div class='docblock'><p>Length in multiples of T (not bytes).</p>
+</div><span id='variant.Scalar' class='variant'><span id='Scalar.v' class='invisible'><code>Scalar(T)</code></span></span><span id='variant.Vector' class='variant'><span id='Vector.v' class='invisible'><code>Vector(T)</code></span></span><span id='variant.Local' class='variant'><span id='Local.v' class='invisible'><code>Local(&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span></span><div class='docblock'><p>Length in multiples of T (not bytes).</p>
 </div><span id='variant.UnsafePointer' class='variant'><span id='UnsafePointer.v' class='invisible'><code>UnsafePointer</code></span></span><div class='docblock'><p><code>size</code>: size in bytes. Type <code>T</code> is ignored.</p>
-</div><h3 class='fields'>Fields</h3>
+</div><span class='docblock autohide sub-variant' id='variant.UnsafePointer.fields'><h3 class='fields'>Fields of <code>UnsafePointer</code></h3>
 
-                           <table><tr><td id='variant.UnsafePointer.field.size'><span id='UnsafePointer.v.size.v' class='invisible'><code>size:&nbsp;<a class='type' href='../../../libc/type.size_t.html' title='libc::size_t'>size_t</a></code></span></td><td></td></tr><tr><td id='variant.UnsafePointer.field.value'><span id='UnsafePointer.v.value.v' class='invisible'><code>value:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='enum' href='../../../libc/enum.c_void.html' title='libc::c_void'>c_void</a></code></span></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> + 'a + <a class='trait' href='../../../ocl_core/trait.OclPrm.html' title='ocl_core::OclPrm'>OclPrm</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../../ocl_core/types/enums/enum.KernelArg.html' title='ocl_core::types::enums::KernelArg'>KernelArg</a>&lt;'a, T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3350' class='srclink' href='../../../src/ocl_core/types/enums.rs.html#70' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+                           <table><tr><td id='variant.UnsafePointer.field.size'><span id='UnsafePointer.v.size.v' class='invisible'><code>size:&nbsp;<a class="type" href="../../../libc/type.size_t.html" title="type libc::size_t">size_t</a></code></span></td><td></td></tr><tr><td id='variant.UnsafePointer.field.value'><span id='UnsafePointer.v.value.v' class='invisible'><code>value:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*const </a><a class="enum" href="../../../libc/enum.c_void.html" title="enum libc::c_void">c_void</a></code></span></td><td></td></tr></table></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> + 'a + <a class="trait" href="../../../ocl_core/trait.OclPrm.html" title="trait ocl_core::OclPrm">OclPrm</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../../ocl_core/types/enums/enum.KernelArg.html" title="enum ocl_core::types::enums::KernelArg">KernelArg</a>&lt;'a, T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/enums.rs.html#122' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -152,11 +149,9 @@ scalar (ex: <code>*const u32</code>, etc.). See the <a href="https://www.khronos
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

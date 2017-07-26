@@ -9,6 +9,7 @@
 
     <title>clfft::FftPlan - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,37 +43,37 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>clfft</a>::<wbr><a class='trait' href=''>FftPlan</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>clfft</a>::<wbr><a class="trait" href=''>FftPlan</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-340' class='srclink' href='../src/clfft/src/clfft.rs.html#522-539' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/clfft/clfft.rs.html#501-518' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait FftPlan {
-    fn <a href='#tymethod.precision' class='fnname'>precision</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Precision.html' title='clfft::Precision'>Precision</a>;
-    fn <a href='#tymethod.dims' class='fnname'>dims</a>(&amp;self) -&gt; <a class='enum' href='../ocl/standard/spatial_dims/enum.SpatialDims.html' title='ocl::standard::spatial_dims::SpatialDims'>SpatialDims</a>;
-    fn <a href='#tymethod.input_layout' class='fnname'>input_layout</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Layout.html' title='clfft::Layout'>Layout</a>;
-    fn <a href='#tymethod.output_layout' class='fnname'>output_layout</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Layout.html' title='clfft::Layout'>Layout</a>;
-    fn <a href='#tymethod.forward_scale' class='fnname'>forward_scale</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>;
-    fn <a href='#tymethod.backward_scale' class='fnname'>backward_scale</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>;
-    fn <a href='#tymethod.batch_size' class='fnname'>batch_size</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>;
-    fn <a href='#tymethod.result_location' class='fnname'>result_location</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Location.html' title='clfft::Location'>Location</a>;
+    fn <a href='#tymethod.precision' class='fnname'>precision</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Precision.html" title="enum clfft::Precision">Precision</a>;
+    fn <a href='#tymethod.dims' class='fnname'>dims</a>(&amp;self) -&gt; <a class="enum" href="../ocl/standard/spatial_dims/enum.SpatialDims.html" title="enum ocl::standard::spatial_dims::SpatialDims">SpatialDims</a>;
+    fn <a href='#tymethod.input_layout' class='fnname'>input_layout</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Layout.html" title="enum clfft::Layout">Layout</a>;
+    fn <a href='#tymethod.output_layout' class='fnname'>output_layout</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Layout.html" title="enum clfft::Layout">Layout</a>;
+    fn <a href='#tymethod.forward_scale' class='fnname'>forward_scale</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f32.html">f32</a>;
+    fn <a href='#tymethod.backward_scale' class='fnname'>backward_scale</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f32.html">f32</a>;
+    fn <a href='#tymethod.batch_size' class='fnname'>batch_size</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>;
+    fn <a href='#tymethod.result_location' class='fnname'>result_location</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Location.html" title="enum clfft::Location">Location</a>;
 }</pre><div class='docblock'><p>Getters for a FFT plan.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.precision' class='method stab '><span id='precision.v' class='invisible'><code>fn <a href='#tymethod.precision' class='fnname'>precision</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Precision.html' title='clfft::Precision'>Precision</a></code></span></h3><div class='docblock'><p>Gets expected precision of each FFT.</p>
-</div><h3 id='tymethod.dims' class='method stab '><span id='dims.v' class='invisible'><code>fn <a href='#tymethod.dims' class='fnname'>dims</a>(&amp;self) -&gt; <a class='enum' href='../ocl/standard/spatial_dims/enum.SpatialDims.html' title='ocl::standard::spatial_dims::SpatialDims'>SpatialDims</a></code></span></h3><div class='docblock'><p>Gets the FFT dimensions.</p>
-</div><h3 id='tymethod.input_layout' class='method stab '><span id='input_layout.v' class='invisible'><code>fn <a href='#tymethod.input_layout' class='fnname'>input_layout</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Layout.html' title='clfft::Layout'>Layout</a></code></span></h3><div class='docblock'><p>the expected layouts of the input buffers.</p>
-</div><h3 id='tymethod.output_layout' class='method stab '><span id='output_layout.v' class='invisible'><code>fn <a href='#tymethod.output_layout' class='fnname'>output_layout</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Layout.html' title='clfft::Layout'>Layout</a></code></span></h3><div class='docblock'><p>the expected layouts of the output buffers.</p>
-</div><h3 id='tymethod.forward_scale' class='method stab '><span id='forward_scale.v' class='invisible'><code>fn <a href='#tymethod.forward_scale' class='fnname'>forward_scale</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></span></h3><div class='docblock'><p>Gets the scaling factors for FFTs.</p>
-</div><h3 id='tymethod.backward_scale' class='method stab '><span id='backward_scale.v' class='invisible'><code>fn <a href='#tymethod.backward_scale' class='fnname'>backward_scale</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></span></h3><div class='docblock'><p>Gets the scaling factors for IFFTs.</p>
-</div><h3 id='tymethod.batch_size' class='method stab '><span id='batch_size.v' class='invisible'><code>fn <a href='#tymethod.batch_size' class='fnname'>batch_size</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h3><div class='docblock'><p>Gets the patch size.</p>
-</div><h3 id='tymethod.result_location' class='method stab '><span id='result_location.v' class='invisible'><code>fn <a href='#tymethod.result_location' class='fnname'>result_location</a>(&amp;self) -&gt; <a class='enum' href='../clfft/enum.Location.html' title='clfft::Location'>Location</a></code></span></h3><div class='docblock'><p>Gets whether the input buffers are overwritten with results.</p>
+        <h3 id='tymethod.precision' class='method'><span id='precision.v' class='invisible'><code>fn <a href='#tymethod.precision' class='fnname'>precision</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Precision.html" title="enum clfft::Precision">Precision</a></code></span></h3><div class='docblock'><p>Gets expected precision of each FFT.</p>
+</div><h3 id='tymethod.dims' class='method'><span id='dims.v' class='invisible'><code>fn <a href='#tymethod.dims' class='fnname'>dims</a>(&amp;self) -&gt; <a class="enum" href="../ocl/standard/spatial_dims/enum.SpatialDims.html" title="enum ocl::standard::spatial_dims::SpatialDims">SpatialDims</a></code></span></h3><div class='docblock'><p>Gets the FFT dimensions.</p>
+</div><h3 id='tymethod.input_layout' class='method'><span id='input_layout.v' class='invisible'><code>fn <a href='#tymethod.input_layout' class='fnname'>input_layout</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Layout.html" title="enum clfft::Layout">Layout</a></code></span></h3><div class='docblock'><p>the expected layouts of the input buffers.</p>
+</div><h3 id='tymethod.output_layout' class='method'><span id='output_layout.v' class='invisible'><code>fn <a href='#tymethod.output_layout' class='fnname'>output_layout</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Layout.html" title="enum clfft::Layout">Layout</a></code></span></h3><div class='docblock'><p>the expected layouts of the output buffers.</p>
+</div><h3 id='tymethod.forward_scale' class='method'><span id='forward_scale.v' class='invisible'><code>fn <a href='#tymethod.forward_scale' class='fnname'>forward_scale</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f32.html">f32</a></code></span></h3><div class='docblock'><p>Gets the scaling factors for FFTs.</p>
+</div><h3 id='tymethod.backward_scale' class='method'><span id='backward_scale.v' class='invisible'><code>fn <a href='#tymethod.backward_scale' class='fnname'>backward_scale</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f32.html">f32</a></code></span></h3><div class='docblock'><p>Gets the scaling factors for IFFTs.</p>
+</div><h3 id='tymethod.batch_size' class='method'><span id='batch_size.v' class='invisible'><code>fn <a href='#tymethod.batch_size' class='fnname'>batch_size</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></h3><div class='docblock'><p>Gets the patch size.</p>
+</div><h3 id='tymethod.result_location' class='method'><span id='result_location.v' class='invisible'><code>fn <a href='#tymethod.result_location' class='fnname'>result_location</a>(&amp;self) -&gt; <a class="enum" href="../clfft/enum.Location.html" title="enum clfft::Location">Location</a></code></span></h3><div class='docblock'><p>Gets whether the input buffers are overwritten with results.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;T:&nbsp;<a class='trait' href='../clfft/trait.AsClFftPlanHandle.html' title='clfft::AsClFftPlanHandle'>AsClFftPlanHandle</a>&gt; FftPlan for T</code></li>
+    <li><code>impl&lt;T:&nbsp;<a class="trait" href="../clfft/trait.AsClFftPlanHandle.html" title="trait clfft::AsClFftPlanHandle">AsClFftPlanHandle</a>&gt; FftPlan for T</code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/clfft/trait.FftPlan.js">
                  </script></section>
@@ -131,11 +132,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "clfft";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    <script src="../extra.js"></script>
     <script defer src="../search-index.js"></script>
 </body>
 </html>

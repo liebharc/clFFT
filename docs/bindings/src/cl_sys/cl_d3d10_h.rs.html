@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.2.1\src\cl_d3d10_h.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.3.0\src\cl_d3d10_h.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>cl_d3d10_h.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -184,149 +185,149 @@
 <span id="140">140</span>
 <span id="141">141</span>
 <span id="142">142</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! OpenCL / DirectX 10 sharing.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! OpenCL / DirectX 10 sharing.</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
 
-<span class='kw'>use</span> <span class='ident'>cl_h</span>::<span class='ident'>cl_uint</span>;
+<span class="kw">use</span> <span class="ident">cl_h</span>::<span class="ident">cl_uint</span>;
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_CONTEXT_D3D10_DEVICE_KHR</span>: <span class='ident'>cl_uint</span> <span class='op'>=</span> <span class='number'>0x4014</span>;
-<span class='comment'>// typedef cl_uint cl_d3d10_device_source_khr;</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cl_d3d10_device_source_khr</span> <span class='op'>=</span> <span class='ident'>cl_uint</span>;
-<span class='comment'>// typedef cl_uint cl_d3d10_device_set_khr;</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cl_d3d10_device_set_khr</span> <span class='op'>=</span> <span class='ident'>cl_uint</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_CONTEXT_D3D10_DEVICE_KHR</span>: <span class="ident">cl_uint</span> <span class="op">=</span> <span class="number">0x4014</span>;
+<span class="comment">// typedef cl_uint cl_d3d10_device_source_khr;</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cl_d3d10_device_source_khr</span> <span class="op">=</span> <span class="ident">cl_uint</span>;
+<span class="comment">// typedef cl_uint cl_d3d10_device_set_khr;</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cl_d3d10_device_set_khr</span> <span class="op">=</span> <span class="ident">cl_uint</span>;
 
-<span class='comment'>// /**********************************************************************************</span>
-<span class='comment'>//  * Copyright (c) 2008-2015 The Khronos Group Inc.</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * Permission is hereby granted, free of charge, to any person obtaining a</span>
-<span class='comment'>//  * copy of this software and/or associated documentation files (the</span>
-<span class='comment'>//  * &quot;Materials&quot;), to deal in the Materials without restriction, including</span>
-<span class='comment'>//  * without limitation the rights to use, copy, modify, merge, publish,</span>
-<span class='comment'>//  * distribute, sublicense, and/or sell copies of the Materials, and to</span>
-<span class='comment'>//  * permit persons to whom the Materials are furnished to do so, subject to</span>
-<span class='comment'>//  * the following conditions:</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * The above copyright notice and this permission notice shall be included</span>
-<span class='comment'>//  * in all copies or substantial portions of the Materials.</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * MODIFICATIONS TO THIS FILE MAY MEAN IT NO LONGER ACCURATELY REFLECTS</span>
-<span class='comment'>//  * KHRONOS STANDARDS. THE UNMODIFIED, NORMATIVE VERSIONS OF KHRONOS</span>
-<span class='comment'>//  * SPECIFICATIONS AND HEADER INFORMATION ARE LOCATED AT</span>
-<span class='comment'>//  *    https://www.khronos.org/registry/</span>
-<span class='comment'>//  *</span>
-<span class='comment'>//  * THE MATERIALS ARE PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,</span>
-<span class='comment'>//  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span>
-<span class='comment'>//  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span>
-<span class='comment'>//  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span>
-<span class='comment'>//  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span>
-<span class='comment'>//  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span>
-<span class='comment'>//  * MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.</span>
-<span class='comment'>//  **********************************************************************************/</span>
+<span class="comment">// /**********************************************************************************</span>
+<span class="comment">//  * Copyright (c) 2008-2015 The Khronos Group Inc.</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * Permission is hereby granted, free of charge, to any person obtaining a</span>
+<span class="comment">//  * copy of this software and/or associated documentation files (the</span>
+<span class="comment">//  * &quot;Materials&quot;), to deal in the Materials without restriction, including</span>
+<span class="comment">//  * without limitation the rights to use, copy, modify, merge, publish,</span>
+<span class="comment">//  * distribute, sublicense, and/or sell copies of the Materials, and to</span>
+<span class="comment">//  * permit persons to whom the Materials are furnished to do so, subject to</span>
+<span class="comment">//  * the following conditions:</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * The above copyright notice and this permission notice shall be included</span>
+<span class="comment">//  * in all copies or substantial portions of the Materials.</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * MODIFICATIONS TO THIS FILE MAY MEAN IT NO LONGER ACCURATELY REFLECTS</span>
+<span class="comment">//  * KHRONOS STANDARDS. THE UNMODIFIED, NORMATIVE VERSIONS OF KHRONOS</span>
+<span class="comment">//  * SPECIFICATIONS AND HEADER INFORMATION ARE LOCATED AT</span>
+<span class="comment">//  *    https://www.khronos.org/registry/</span>
+<span class="comment">//  *</span>
+<span class="comment">//  * THE MATERIALS ARE PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,</span>
+<span class="comment">//  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span>
+<span class="comment">//  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span>
+<span class="comment">//  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span>
+<span class="comment">//  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span>
+<span class="comment">//  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span>
+<span class="comment">//  * MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.</span>
+<span class="comment">//  **********************************************************************************/</span>
 
-<span class='comment'>// /* $Revision: 11708 $ on $Date: 2010-06-13 23:36:24 -0700 (Sun, 13 Jun 2010) $ */</span>
+<span class="comment">// /* $Revision: 11708 $ on $Date: 2010-06-13 23:36:24 -0700 (Sun, 13 Jun 2010) $ */</span>
 
-<span class='comment'>// #ifndef __OPENCL_CL_D3D10_H</span>
-<span class='comment'>// #define __OPENCL_CL_D3D10_H</span>
+<span class="comment">// #ifndef __OPENCL_CL_D3D10_H</span>
+<span class="comment">// #define __OPENCL_CL_D3D10_H</span>
 
-<span class='comment'>// #include &lt;d3d10.h&gt;</span>
-<span class='comment'>// #include &lt;CL/cl.h&gt;</span>
-<span class='comment'>// #include &lt;CL/cl_platform.h&gt;</span>
+<span class="comment">// #include &lt;d3d10.h&gt;</span>
+<span class="comment">// #include &lt;CL/cl.h&gt;</span>
+<span class="comment">// #include &lt;CL/cl_platform.h&gt;</span>
 
-<span class='comment'>// #ifdef __cplusplus</span>
-<span class='comment'>// extern &quot;C&quot; {</span>
-<span class='comment'>// #endif</span>
+<span class="comment">// #ifdef __cplusplus</span>
+<span class="comment">// extern &quot;C&quot; {</span>
+<span class="comment">// #endif</span>
 
-<span class='comment'>// /******************************************************************************</span>
-<span class='comment'>//  * cl_khr_d3d10_sharing                                                       */</span>
-<span class='comment'>// #define cl_khr_d3d10_sharing 1</span>
+<span class="comment">// /******************************************************************************</span>
+<span class="comment">//  * cl_khr_d3d10_sharing                                                       */</span>
+<span class="comment">// #define cl_khr_d3d10_sharing 1</span>
 
-<span class='comment'>// typedef cl_uint cl_d3d10_device_source_khr;</span>
-<span class='comment'>// typedef cl_uint cl_d3d10_device_set_khr;</span>
+<span class="comment">// typedef cl_uint cl_d3d10_device_source_khr;</span>
+<span class="comment">// typedef cl_uint cl_d3d10_device_set_khr;</span>
 
-<span class='comment'>// /******************************************************************************/</span>
+<span class="comment">// /******************************************************************************/</span>
 
-<span class='comment'>// /* Error Codes */</span>
-<span class='comment'>// #define CL_INVALID_D3D10_DEVICE_KHR                  -1002</span>
-<span class='comment'>// #define CL_INVALID_D3D10_RESOURCE_KHR                -1003</span>
-<span class='comment'>// #define CL_D3D10_RESOURCE_ALREADY_ACQUIRED_KHR       -1004</span>
-<span class='comment'>// #define CL_D3D10_RESOURCE_NOT_ACQUIRED_KHR           -1005</span>
+<span class="comment">// /* Error Codes */</span>
+<span class="comment">// #define CL_INVALID_D3D10_DEVICE_KHR                  -1002</span>
+<span class="comment">// #define CL_INVALID_D3D10_RESOURCE_KHR                -1003</span>
+<span class="comment">// #define CL_D3D10_RESOURCE_ALREADY_ACQUIRED_KHR       -1004</span>
+<span class="comment">// #define CL_D3D10_RESOURCE_NOT_ACQUIRED_KHR           -1005</span>
 
-<span class='comment'>// /* cl_d3d10_device_source_nv */</span>
-<span class='comment'>// #define CL_D3D10_DEVICE_KHR                          0x4010</span>
-<span class='comment'>// #define CL_D3D10_DXGI_ADAPTER_KHR                    0x4011</span>
+<span class="comment">// /* cl_d3d10_device_source_nv */</span>
+<span class="comment">// #define CL_D3D10_DEVICE_KHR                          0x4010</span>
+<span class="comment">// #define CL_D3D10_DXGI_ADAPTER_KHR                    0x4011</span>
 
-<span class='comment'>// /* cl_d3d10_device_set_nv */</span>
-<span class='comment'>// #define CL_PREFERRED_DEVICES_FOR_D3D10_KHR           0x4012</span>
-<span class='comment'>// #define CL_ALL_DEVICES_FOR_D3D10_KHR                 0x4013</span>
+<span class="comment">// /* cl_d3d10_device_set_nv */</span>
+<span class="comment">// #define CL_PREFERRED_DEVICES_FOR_D3D10_KHR           0x4012</span>
+<span class="comment">// #define CL_ALL_DEVICES_FOR_D3D10_KHR                 0x4013</span>
 
-<span class='comment'>// /* cl_context_info */</span>
-<span class='comment'>// #define CL_CONTEXT_D3D10_DEVICE_KHR                  0x4014</span>
-<span class='comment'>// #define CL_CONTEXT_D3D10_PREFER_SHARED_RESOURCES_KHR 0x402C</span>
+<span class="comment">// /* cl_context_info */</span>
+<span class="comment">// #define CL_CONTEXT_D3D10_DEVICE_KHR                  0x4014</span>
+<span class="comment">// #define CL_CONTEXT_D3D10_PREFER_SHARED_RESOURCES_KHR 0x402C</span>
 
-<span class='comment'>// /* cl_mem_info */</span>
-<span class='comment'>// #define CL_MEM_D3D10_RESOURCE_KHR                    0x4015</span>
+<span class="comment">// /* cl_mem_info */</span>
+<span class="comment">// #define CL_MEM_D3D10_RESOURCE_KHR                    0x4015</span>
 
-<span class='comment'>// /* cl_image_info */</span>
-<span class='comment'>// #define CL_IMAGE_D3D10_SUBRESOURCE_KHR               0x4016</span>
+<span class="comment">// /* cl_image_info */</span>
+<span class="comment">// #define CL_IMAGE_D3D10_SUBRESOURCE_KHR               0x4016</span>
 
-<span class='comment'>// /* cl_command_type */</span>
-<span class='comment'>// #define CL_COMMAND_ACQUIRE_D3D10_OBJECTS_KHR         0x4017</span>
-<span class='comment'>// #define CL_COMMAND_RELEASE_D3D10_OBJECTS_KHR         0x4018</span>
+<span class="comment">// /* cl_command_type */</span>
+<span class="comment">// #define CL_COMMAND_ACQUIRE_D3D10_OBJECTS_KHR         0x4017</span>
+<span class="comment">// #define CL_COMMAND_RELEASE_D3D10_OBJECTS_KHR         0x4018</span>
 
-<span class='comment'>// /******************************************************************************/</span>
+<span class="comment">// /******************************************************************************/</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_int (CL_API_CALL *clGetDeviceIDsFromD3D10KHR_fn)(</span>
-<span class='comment'>//     cl_platform_id             platform,</span>
-<span class='comment'>//     cl_d3d10_device_source_khr d3d_device_source,</span>
-<span class='comment'>//     void *                     d3d_object,</span>
-<span class='comment'>//     cl_d3d10_device_set_khr    d3d_device_set,</span>
-<span class='comment'>//     cl_uint                    num_entries,</span>
-<span class='comment'>//     cl_device_id *             devices,</span>
-<span class='comment'>//     cl_uint *                  num_devices) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// typedef CL_API_ENTRY cl_int (CL_API_CALL *clGetDeviceIDsFromD3D10KHR_fn)(</span>
+<span class="comment">//     cl_platform_id             platform,</span>
+<span class="comment">//     cl_d3d10_device_source_khr d3d_device_source,</span>
+<span class="comment">//     void *                     d3d_object,</span>
+<span class="comment">//     cl_d3d10_device_set_khr    d3d_device_set,</span>
+<span class="comment">//     cl_uint                    num_entries,</span>
+<span class="comment">//     cl_device_id *             devices,</span>
+<span class="comment">//     cl_uint *                  num_devices) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromD3D10BufferKHR_fn)(</span>
-<span class='comment'>//     cl_context     context,</span>
-<span class='comment'>//     cl_mem_flags   flags,</span>
-<span class='comment'>//     ID3D10Buffer * resource,</span>
-<span class='comment'>//     cl_int *       errcode_ret) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromD3D10BufferKHR_fn)(</span>
+<span class="comment">//     cl_context     context,</span>
+<span class="comment">//     cl_mem_flags   flags,</span>
+<span class="comment">//     ID3D10Buffer * resource,</span>
+<span class="comment">//     cl_int *       errcode_ret) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromD3D10Texture2DKHR_fn)(</span>
-<span class='comment'>//     cl_context        context,</span>
-<span class='comment'>//     cl_mem_flags      flags,</span>
-<span class='comment'>//     ID3D10Texture2D * resource,</span>
-<span class='comment'>//     UINT              subresource,</span>
-<span class='comment'>//     cl_int *          errcode_ret) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromD3D10Texture2DKHR_fn)(</span>
+<span class="comment">//     cl_context        context,</span>
+<span class="comment">//     cl_mem_flags      flags,</span>
+<span class="comment">//     ID3D10Texture2D * resource,</span>
+<span class="comment">//     UINT              subresource,</span>
+<span class="comment">//     cl_int *          errcode_ret) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromD3D10Texture3DKHR_fn)(</span>
-<span class='comment'>//     cl_context        context,</span>
-<span class='comment'>//     cl_mem_flags      flags,</span>
-<span class='comment'>//     ID3D10Texture3D * resource,</span>
-<span class='comment'>//     UINT              subresource,</span>
-<span class='comment'>//     cl_int *          errcode_ret) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// typedef CL_API_ENTRY cl_mem (CL_API_CALL *clCreateFromD3D10Texture3DKHR_fn)(</span>
+<span class="comment">//     cl_context        context,</span>
+<span class="comment">//     cl_mem_flags      flags,</span>
+<span class="comment">//     ID3D10Texture3D * resource,</span>
+<span class="comment">//     UINT              subresource,</span>
+<span class="comment">//     cl_int *          errcode_ret) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueAcquireD3D10ObjectsKHR_fn)(</span>
-<span class='comment'>//     cl_command_queue command_queue,</span>
-<span class='comment'>//     cl_uint          num_objects,</span>
-<span class='comment'>//     const cl_mem *   mem_objects,</span>
-<span class='comment'>//     cl_uint          num_events_in_wait_list,</span>
-<span class='comment'>//     const cl_event * event_wait_list,</span>
-<span class='comment'>//     cl_event *       event) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueAcquireD3D10ObjectsKHR_fn)(</span>
+<span class="comment">//     cl_command_queue command_queue,</span>
+<span class="comment">//     cl_uint          num_objects,</span>
+<span class="comment">//     const cl_mem *   mem_objects,</span>
+<span class="comment">//     cl_uint          num_events_in_wait_list,</span>
+<span class="comment">//     const cl_event * event_wait_list,</span>
+<span class="comment">//     cl_event *       event) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueReleaseD3D10ObjectsKHR_fn)(</span>
-<span class='comment'>//     cl_command_queue command_queue,</span>
-<span class='comment'>//     cl_uint          num_objects,</span>
-<span class='comment'>//     const cl_mem *   mem_objects,</span>
-<span class='comment'>//     cl_uint          num_events_in_wait_list,</span>
-<span class='comment'>//     const cl_event * event_wait_list,</span>
-<span class='comment'>//     cl_event *       event) CL_API_SUFFIX__VERSION_1_0;</span>
+<span class="comment">// typedef CL_API_ENTRY cl_int (CL_API_CALL *clEnqueueReleaseD3D10ObjectsKHR_fn)(</span>
+<span class="comment">//     cl_command_queue command_queue,</span>
+<span class="comment">//     cl_uint          num_objects,</span>
+<span class="comment">//     const cl_mem *   mem_objects,</span>
+<span class="comment">//     cl_uint          num_events_in_wait_list,</span>
+<span class="comment">//     const cl_event * event_wait_list,</span>
+<span class="comment">//     cl_event *       event) CL_API_SUFFIX__VERSION_1_0;</span>
 
-<span class='comment'>// #ifdef __cplusplus</span>
-<span class='comment'>// }</span>
-<span class='comment'>// #endif</span>
+<span class="comment">// #ifdef __cplusplus</span>
+<span class="comment">// }</span>
+<span class="comment">// #endif</span>
 
-<span class='comment'>// #endif  /* __OPENCL_CL_D3D10_H */</span>
+<span class="comment">// #endif  /* __OPENCL_CL_D3D10_H */</span>
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -384,11 +385,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "cl_sys";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

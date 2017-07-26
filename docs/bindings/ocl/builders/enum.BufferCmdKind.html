@@ -9,6 +9,7 @@
 
     <title>ocl::builders::BufferCmdKind - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,49 +43,42 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class='enum' href=''>BufferCmdKind</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class="enum" href=''>BufferCmdKind</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-739' class='srclink' href='../../src/ocl/standard/buffer.rs.html#25-34' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum BufferCmdKind&lt;'b, T:&nbsp;'b&gt; {
+               </span><a class='srclink' href='../../src/ocl/standard/buffer.rs.html#72-82' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum BufferCmdKind&lt;'c, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'c,&nbsp;</span> {
     Unspecified,
-    Read {
-        data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'b mut [</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,
-    },
-    Write {
-        data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'b [</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,
-    },
+    Read,
+    Write,
+    Map,
     Copy {
-        dst_buffer: &amp;'b <a class='struct' href='../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>MemCore</a>,
-        dst_offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
-        len: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
+        dst_buffer: &amp;'c <a class="struct" href="../../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">MemCore</a>,
+        dst_offset: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;,
+        len: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;,
     },
     Fill {
         pattern: T,
-        len: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;,
+        len: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;,
     },
     CopyToImage {
-        image: &amp;'b <a class='struct' href='../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>MemCore</a>,
-        dst_origin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>,
-        region: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>,
+        image: &amp;'c <a class="struct" href="../../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">MemCore</a>,
+        dst_origin: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a>,
+        region: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a>,
     },
     GLAcquire,
     GLRelease,
 }</pre><div class='docblock'><p>The type of operation to be performed by a command.</p>
 </div><h2 class='variants'>Variants</h2>
-<span id='variant.Unspecified' class='variant'><span id='Unspecified.v' class='invisible'><code>Unspecified</code></span></span><span id='variant.Read' class='variant'><span id='Read.v' class='invisible'><code>Read</code></span></span><h3 class='fields'>Fields</h3>
+<span id='variant.Unspecified' class='variant'><span id='Unspecified.v' class='invisible'><code>Unspecified</code></span></span><span id='variant.Read' class='variant'><span id='Read.v' class='invisible'><code>Read</code></span></span><span id='variant.Write' class='variant'><span id='Write.v' class='invisible'><code>Write</code></span></span><span id='variant.Map' class='variant'><span id='Map.v' class='invisible'><code>Map</code></span></span><span id='variant.Copy' class='variant'><span id='Copy.v' class='invisible'><code>Copy</code></span></span><span class='docblock autohide sub-variant' id='variant.Copy.fields'><h3 class='fields'>Fields of <code>Copy</code></h3>
 
-                           <table><tr><td id='variant.Read.field.data'><span id='Read.v.data.v' class='invisible'><code>data:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'b mut [</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></td><td></td></tr></table><span id='variant.Write' class='variant'><span id='Write.v' class='invisible'><code>Write</code></span></span><h3 class='fields'>Fields</h3>
+                           <table><tr><td id='variant.Copy.field.dst_buffer'><span id='Copy.v.dst_buffer.v' class='invisible'><code>dst_buffer:&nbsp;&amp;'c <a class="struct" href="../../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">MemCore</a></code></span></td><td></td></tr><tr><td id='variant.Copy.field.dst_offset'><span id='Copy.v.dst_offset.v' class='invisible'><code>dst_offset:&nbsp;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span></td><td></td></tr><tr><td id='variant.Copy.field.len'><span id='Copy.v.len.v' class='invisible'><code>len:&nbsp;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span></td><td></td></tr></table></span><span id='variant.Fill' class='variant'><span id='Fill.v' class='invisible'><code>Fill</code></span></span><span class='docblock autohide sub-variant' id='variant.Fill.fields'><h3 class='fields'>Fields of <code>Fill</code></h3>
 
-                           <table><tr><td id='variant.Write.field.data'><span id='Write.v.data.v' class='invisible'><code>data:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'b [</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></td><td></td></tr></table><span id='variant.Copy' class='variant'><span id='Copy.v' class='invisible'><code>Copy</code></span></span><h3 class='fields'>Fields</h3>
+                           <table><tr><td id='variant.Fill.field.pattern'><span id='Fill.v.pattern.v' class='invisible'><code>pattern:&nbsp;T</code></span></td><td></td></tr><tr><td id='variant.Fill.field.len'><span id='Fill.v.len.v' class='invisible'><code>len:&nbsp;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span></td><td></td></tr></table></span><span id='variant.CopyToImage' class='variant'><span id='CopyToImage.v' class='invisible'><code>CopyToImage</code></span></span><span class='docblock autohide sub-variant' id='variant.CopyToImage.fields'><h3 class='fields'>Fields of <code>CopyToImage</code></h3>
 
-                           <table><tr><td id='variant.Copy.field.dst_buffer'><span id='Copy.v.dst_buffer.v' class='invisible'><code>dst_buffer:&nbsp;&amp;'b <a class='struct' href='../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>MemCore</a></code></span></td><td></td></tr><tr><td id='variant.Copy.field.dst_offset'><span id='Copy.v.dst_offset.v' class='invisible'><code>dst_offset:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr><tr><td id='variant.Copy.field.len'><span id='Copy.v.len.v' class='invisible'><code>len:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr></table><span id='variant.Fill' class='variant'><span id='Fill.v' class='invisible'><code>Fill</code></span></span><h3 class='fields'>Fields</h3>
-
-                           <table><tr><td id='variant.Fill.field.pattern'><span id='Fill.v.pattern.v' class='invisible'><code>pattern:&nbsp;T</code></span></td><td></td></tr><tr><td id='variant.Fill.field.len'><span id='Fill.v.len.v' class='invisible'><code>len:&nbsp;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></span></td><td></td></tr></table><span id='variant.CopyToImage' class='variant'><span id='CopyToImage.v' class='invisible'><code>CopyToImage</code></span></span><h3 class='fields'>Fields</h3>
-
-                           <table><tr><td id='variant.CopyToImage.field.image'><span id='CopyToImage.v.image.v' class='invisible'><code>image:&nbsp;&amp;'b <a class='struct' href='../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>MemCore</a></code></span></td><td></td></tr><tr><td id='variant.CopyToImage.field.dst_origin'><span id='CopyToImage.v.dst_origin.v' class='invisible'><code>dst_origin:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a></code></span></td><td></td></tr><tr><td id='variant.CopyToImage.field.region'><span id='CopyToImage.v.region.v' class='invisible'><code>region:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a></code></span></td><td></td></tr></table><span id='variant.GLAcquire' class='variant'><span id='GLAcquire.v' class='invisible'><code>GLAcquire</code></span></span><span id='variant.GLRelease' class='variant'><span id='GLRelease.v' class='invisible'><code>GLRelease</code></span></span></section>
+                           <table><tr><td id='variant.CopyToImage.field.image'><span id='CopyToImage.v.image.v' class='invisible'><code>image:&nbsp;&amp;'c <a class="struct" href="../../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">MemCore</a></code></span></td><td></td></tr><tr><td id='variant.CopyToImage.field.dst_origin'><span id='CopyToImage.v.dst_origin.v' class='invisible'><code>dst_origin:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a></code></span></td><td></td></tr><tr><td id='variant.CopyToImage.field.region'><span id='CopyToImage.v.region.v' class='invisible'><code>region:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a></code></span></td><td></td></tr></table></span><span id='variant.GLAcquire' class='variant'><span id='GLAcquire.v' class='invisible'><code>GLAcquire</code></span></span><span id='variant.GLRelease' class='variant'><span id='GLRelease.v' class='invisible'><code>GLRelease</code></span></span></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -140,11 +134,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

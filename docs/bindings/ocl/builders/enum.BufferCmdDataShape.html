@@ -9,6 +9,7 @@
 
     <title>ocl::builders::BufferCmdDataShape - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,34 +43,33 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class='enum' href=''>BufferCmdDataShape</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class="enum" href=''>BufferCmdDataShape</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-767' class='srclink' href='../../src/ocl/standard/buffer.rs.html#50-61' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/ocl/standard/buffer.rs.html#98-109' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum BufferCmdDataShape {
     Lin {
-        offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
+        offset: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>,
     },
     Rect {
-        src_origin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>,
-        dst_origin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>,
-        region: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>,
-        src_row_pitch: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
-        src_slc_pitch: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
-        dst_row_pitch: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
-        dst_slc_pitch: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
+        src_origin: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a>,
+        dst_origin: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a>,
+        region: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a>,
+        src_row_pitch_bytes: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>,
+        src_slc_pitch_bytes: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>,
+        dst_row_pitch_bytes: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>,
+        dst_slc_pitch_bytes: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>,
     },
-}</pre><div class='docblock'><p>The &#39;shape&#39; of the data to be processed, whether one or multi-dimensional.</p>
-
+}</pre><div class='docblock'><p>The 'shape' of the data to be processed, whether one or multi-dimensional.</p>
 <p>Should really be called dimensionality or something.</p>
 </div><h2 class='variants'>Variants</h2>
-<span id='variant.Lin' class='variant'><span id='Lin.v' class='invisible'><code>Lin</code></span></span><h3 class='fields'>Fields</h3>
+<span id='variant.Lin' class='variant'><span id='Lin.v' class='invisible'><code>Lin</code></span></span><span class='docblock autohide sub-variant' id='variant.Lin.fields'><h3 class='fields'>Fields of <code>Lin</code></h3>
 
-                           <table><tr><td id='variant.Lin.field.offset'><span id='Lin.v.offset.v' class='invisible'><code>offset:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr></table><span id='variant.Rect' class='variant'><span id='Rect.v' class='invisible'><code>Rect</code></span></span><h3 class='fields'>Fields</h3>
+                           <table><tr><td id='variant.Lin.field.offset'><span id='Lin.v.offset.v' class='invisible'><code>offset:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></td><td></td></tr></table></span><span id='variant.Rect' class='variant'><span id='Rect.v' class='invisible'><code>Rect</code></span></span><span class='docblock autohide sub-variant' id='variant.Rect.fields'><h3 class='fields'>Fields of <code>Rect</code></h3>
 
-                           <table><tr><td id='variant.Rect.field.src_origin'><span id='Rect.v.src_origin.v' class='invisible'><code>src_origin:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.dst_origin'><span id='Rect.v.dst_origin.v' class='invisible'><code>dst_origin:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.region'><span id='Rect.v.region.v' class='invisible'><code>region:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.src_row_pitch'><span id='Rect.v.src_row_pitch.v' class='invisible'><code>src_row_pitch:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.src_slc_pitch'><span id='Rect.v.src_slc_pitch.v' class='invisible'><code>src_slc_pitch:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.dst_row_pitch'><span id='Rect.v.dst_row_pitch.v' class='invisible'><code>dst_row_pitch:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.dst_slc_pitch'><span id='Rect.v.dst_slc_pitch.v' class='invisible'><code>dst_slc_pitch:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></td><td></td></tr></table></section>
+                           <table><tr><td id='variant.Rect.field.src_origin'><span id='Rect.v.src_origin.v' class='invisible'><code>src_origin:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.dst_origin'><span id='Rect.v.dst_origin.v' class='invisible'><code>dst_origin:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.region'><span id='Rect.v.region.v' class='invisible'><code>region:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.src_row_pitch_bytes'><span id='Rect.v.src_row_pitch_bytes.v' class='invisible'><code>src_row_pitch_bytes:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.src_slc_pitch_bytes'><span id='Rect.v.src_slc_pitch_bytes.v' class='invisible'><code>src_slc_pitch_bytes:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.dst_row_pitch_bytes'><span id='Rect.v.dst_row_pitch_bytes.v' class='invisible'><code>dst_row_pitch_bytes:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></td><td></td></tr><tr><td id='variant.Rect.field.dst_slc_pitch_bytes'><span id='Rect.v.dst_slc_pitch_bytes.v' class='invisible'><code>dst_slc_pitch_bytes:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></td><td></td></tr></table></span></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -125,11 +125,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

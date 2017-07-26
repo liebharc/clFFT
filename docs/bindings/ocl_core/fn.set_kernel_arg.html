@@ -9,6 +9,7 @@
 
     <title>ocl_core::set_kernel_arg - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,18 +43,15 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>ocl_core</a>::<wbr><a class='fn' href=''>set_kernel_arg</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>ocl_core</a>::<wbr><a class="fn" href=''>set_kernel_arg</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-404' class='srclink' href='../src/ocl_core/functions.rs.html#1501-1554' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn set_kernel_arg&lt;T:&nbsp;<a class='trait' href='../ocl_core/trait.OclPrm.html' title='ocl_core::OclPrm'>OclPrm</a>&gt;(kernel: &amp;<a class='struct' href='../ocl_core/types/abs/struct.Kernel.html' title='ocl_core::types::abs::Kernel'>Kernel</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; arg_index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; arg: <a class='enum' href='../ocl_core/types/enums/enum.KernelArg.html' title='ocl_core::types::enums::KernelArg'>KernelArg</a>&lt;T&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</pre><div class='docblock'><p>Sets the argument value for a specific argument of a kernel.</p>
-
+               </span><a class='srclink' href='../src/ocl_core/functions.rs.html#1684-1738' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn set_kernel_arg&lt;T:&nbsp;<a class="trait" href="../ocl_core/trait.OclPrm.html" title="trait ocl_core::OclPrm">OclPrm</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;kernel: &amp;<a class="struct" href="../ocl_core/types/abs/struct.Kernel.html" title="struct ocl_core::types::abs::Kernel">Kernel</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;arg_index: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;arg: <a class="enum" href="../ocl_core/types/enums/enum.KernelArg.html" title="enum ocl_core::types::enums::KernelArg">KernelArg</a>&lt;T&gt;<br>) -&gt; <a class="type" href="../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</pre><div class='docblock'><p>Sets the argument value for a specific argument of a kernel.</p>
 <p><a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clSetKernelArg.html">SDK Documentation</a></p>
-
 <p>[FIXME: Remove] <code>kernel_name</code> is for error reporting and is optional but highly recommended.</p>
-
 <p>TODO: Remove <code>name</code> parameter and lookup name with <code>get_kernel_info</code> instead.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
@@ -111,11 +109,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    <script src="../extra.js"></script>
     <script defer src="../search-index.js"></script>
 </body>
 </html>

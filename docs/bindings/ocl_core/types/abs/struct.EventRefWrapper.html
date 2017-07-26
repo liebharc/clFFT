@@ -9,6 +9,7 @@
 
     <title>ocl_core::types::abs::EventRefWrapper - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,16 +43,19 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>abs</a>::<wbr><a class='struct' href=''>EventRefWrapper</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>abs</a>::<wbr><a class="struct" href=''>EventRefWrapper</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-991' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#141' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct EventRefWrapper&lt;'e&gt;(_, _);</pre><div class='docblock'><p>Wrapper used by <code>EventList</code> to send event pointers to core functions
+               </span><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#310' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct EventRefWrapper(_);</pre><div class='docblock'><p>Wrapper used by <code>EventList</code> to send event pointers to core functions
 cheaply.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'e&gt; <a class='trait' href='../../../ocl_core/types/abs/trait.ClEventRef.html' title='ocl_core::types::abs::ClEventRef'>ClEventRef</a>&lt;'e&gt; for <a class='struct' href='../../../ocl_core/types/abs/struct.EventRefWrapper.html' title='ocl_core::types::abs::EventRefWrapper'>EventRefWrapper</a>&lt;'e&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-996' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#143-147' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.as_ptr_ref' class='method'><span id='as_ptr_ref.v' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClEventRef.html#tymethod.as_ptr_ref' class='fnname'>as_ptr_ref</a>(&amp;'e self) -&gt; &amp;'e <a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a></code></span></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../ocl_core/types/abs/struct.EventRefWrapper.html" title="struct ocl_core::types::abs::EventRefWrapper">EventRefWrapper</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#312-316' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>unsafe fn <a href='#method.new' class='fnname'>new</a>(ptr: <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a>) -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.EventRefWrapper.html" title="struct ocl_core::types::abs::EventRefWrapper">EventRefWrapper</a></code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'e&gt; <a class="trait" href="../../../ocl_core/types/abs/trait.ClEventPtrRef.html" title="trait ocl_core::types::abs::ClEventPtrRef">ClEventPtrRef</a>&lt;'e&gt; for <a class="struct" href="../../../ocl_core/types/abs/struct.EventRefWrapper.html" title="struct ocl_core::types::abs::EventRefWrapper">EventRefWrapper</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#318-322' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_ptr_ref' class="method"><span id='as_ptr_ref.v' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClEventPtrRef.html#tymethod.as_ptr_ref' class='fnname'>as_ptr_ref</a>(&amp;'e self) -&gt; &amp;'e <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -108,11 +112,9 @@ cheaply.</p>
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

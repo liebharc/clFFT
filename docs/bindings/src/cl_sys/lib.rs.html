@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.2.1\src\lib.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.3.0\src\lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -281,246 +282,273 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! FFI bindings for OpenCL.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! For low level API access with Rust&#39;s safety and convenience, use the</span>
-<span class='doccomment'>//! extremely lightweight functions and types in the [ocl-core] crate.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! See [ocl-core] for usage examples.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! [ocl-core]: https://github.com/cogciprocate/ocl-core</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! FFI bindings for OpenCL.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For low level API access with Rust&#39;s safety and convenience, use the</span>
+<span class="doccomment">//! extremely lightweight functions and types in the [ocl-core] crate.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! See [ocl-core] for usage examples.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [ocl-core]: https://github.com/cogciprocate/ocl-core</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+<span class="kw">pub</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 
-<span class='kw'>mod</span> <span class='ident'>platform_h</span>;
-<span class='kw'>mod</span> <span class='ident'>glcorearb_h</span>;
-<span class='kw'>mod</span> <span class='ident'>cl_gl_h</span>;
-<span class='kw'>mod</span> <span class='ident'>cl_egl_h</span>;
-<span class='kw'>mod</span> <span class='ident'>cl_gl_ext_h</span>;
-<span class='kw'>mod</span> <span class='ident'>cl_dx9_media_sharing_h</span>;
-<span class='kw'>mod</span> <span class='ident'>cl_d3d10_h</span>;
-<span class='kw'>mod</span> <span class='ident'>cl_d3d11_h</span>;
-<span class='kw'>mod</span> <span class='ident'>cl_h</span>;
+<span class="kw">mod</span> <span class="ident">platform_h</span>;
+<span class="kw">mod</span> <span class="ident">glcorearb_h</span>;
+<span class="kw">mod</span> <span class="ident">cl_gl_h</span>;
+<span class="kw">mod</span> <span class="ident">cl_egl_h</span>;
+<span class="kw">mod</span> <span class="ident">cl_gl_ext_h</span>;
+<span class="kw">mod</span> <span class="ident">cl_dx9_media_sharing_h</span>;
+<span class="kw">mod</span> <span class="ident">cl_d3d10_h</span>;
+<span class="kw">mod</span> <span class="ident">cl_d3d11_h</span>;
+<span class="kw">mod</span> <span class="ident">cl_h</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>platform_h</span>::{<span class='ident'>cl_GLuint</span>, <span class='ident'>cl_GLint</span>, <span class='ident'>cl_GLenum</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_void</span>, <span class="ident">size_t</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>glcorearb_h</span>::{<span class='ident'>GL_TEXTURE_1D</span>, <span class='ident'>GL_TEXTURE_1D_ARRAY</span>, <span class='ident'>GL_TEXTURE_BUFFER</span>,
-    <span class='ident'>GL_TEXTURE_2D</span>, <span class='ident'>GL_TEXTURE_2D_ARRAY</span>, <span class='ident'>GL_TEXTURE_3D</span>, <span class='ident'>GL_TEXTURE_CUBE_MAP_POSITIVE_X</span>,
-    <span class='ident'>GL_TEXTURE_CUBE_MAP_NEGATIVE_X</span>, <span class='ident'>GL_TEXTURE_CUBE_MAP_POSITIVE_Y</span>,
-    <span class='ident'>GL_TEXTURE_CUBE_MAP_NEGATIVE_Y</span>, <span class='ident'>GL_TEXTURE_CUBE_MAP_POSITIVE_Z</span>,
-    <span class='ident'>GL_TEXTURE_CUBE_MAP_NEGATIVE_Z</span>, <span class='ident'>GL_TEXTURE_RECTANGLE</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">platform_h</span>::{<span class="ident">cl_GLuint</span>, <span class="ident">cl_GLint</span>, <span class="ident">cl_GLenum</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_gl_h</span>::{<span class='ident'>cl_gl_object_type</span>, <span class='ident'>cl_gl_texture_info</span>,
-    <span class='ident'>cl_gl_platform_info</span>, <span class='ident'>cl_gl_context_info</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">glcorearb_h</span>::{<span class="ident">GL_TEXTURE_1D</span>, <span class="ident">GL_TEXTURE_1D_ARRAY</span>, <span class="ident">GL_TEXTURE_BUFFER</span>,
+    <span class="ident">GL_TEXTURE_2D</span>, <span class="ident">GL_TEXTURE_2D_ARRAY</span>, <span class="ident">GL_TEXTURE_3D</span>, <span class="ident">GL_TEXTURE_CUBE_MAP_POSITIVE_X</span>,
+    <span class="ident">GL_TEXTURE_CUBE_MAP_NEGATIVE_X</span>, <span class="ident">GL_TEXTURE_CUBE_MAP_POSITIVE_Y</span>,
+    <span class="ident">GL_TEXTURE_CUBE_MAP_NEGATIVE_Y</span>, <span class="ident">GL_TEXTURE_CUBE_MAP_POSITIVE_Z</span>,
+    <span class="ident">GL_TEXTURE_CUBE_MAP_NEGATIVE_Z</span>, <span class="ident">GL_TEXTURE_RECTANGLE</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_gl_h</span>::{<span class='ident'>CL_GL_OBJECT_BUFFER</span>, <span class='ident'>CL_GL_OBJECT_TEXTURE2D</span>, <span class='ident'>CL_GL_OBJECT_TEXTURE3D</span>,
-    <span class='ident'>CL_GL_OBJECT_RENDERBUFFER</span>, <span class='ident'>CL_GL_OBJECT_TEXTURE2D_ARRAY</span>, <span class='ident'>CL_GL_OBJECT_TEXTURE1D</span>,
-    <span class='ident'>CL_GL_OBJECT_TEXTURE1D_ARRAY</span>, <span class='ident'>CL_GL_OBJECT_TEXTURE_BUFFER</span>, <span class='ident'>CL_GL_TEXTURE_TARGET</span>,
-    <span class='ident'>CL_GL_MIPMAP_LEVEL</span>, <span class='ident'>CL_GL_NUM_SAMPLES</span>, <span class='ident'>CL_KHR_GL_SHARING</span>, <span class='ident'>CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR</span>,
-    <span class='ident'>CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR</span>, <span class='ident'>CL_DEVICES_FOR_GL_CONTEXT_KHR</span>, <span class='ident'>CL_GL_CONTEXT_KHR</span>,
-    <span class='ident'>CL_EGL_DISPLAY_KHR</span>, <span class='ident'>CL_GLX_DISPLAY_KHR</span>, <span class='ident'>CL_WGL_HDC_KHR</span>, <span class='ident'>CL_CGL_SHAREGROUP_KHR</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_gl_h</span>::{<span class="ident">cl_gl_object_type</span>, <span class="ident">cl_gl_texture_info</span>,
+    <span class="ident">cl_gl_platform_info</span>, <span class="ident">cl_gl_context_info</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_gl_h</span>::{<span class='ident'>clCreateFromGLBuffer</span>, <span class='ident'>clCreateFromGLTexture</span>,
-    <span class='ident'>clGetGLObjectInfo</span>, <span class='ident'>clGetGLTextureInfo</span>, <span class='ident'>clCreateFromGLRenderbuffer</span>,
-    <span class='ident'>clEnqueueAcquireGLObjects</span>, <span class='ident'>clEnqueueReleaseGLObjects</span>, <span class='ident'>clCreateFromGLTexture2D</span>,
-    <span class='ident'>clCreateFromGLTexture3D</span>, <span class='ident'>clGetGLContextInfoKHR</span>,};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_gl_h</span>::{<span class="ident">CL_GL_OBJECT_BUFFER</span>, <span class="ident">CL_GL_OBJECT_TEXTURE2D</span>, <span class="ident">CL_GL_OBJECT_TEXTURE3D</span>,
+    <span class="ident">CL_GL_OBJECT_RENDERBUFFER</span>, <span class="ident">CL_GL_OBJECT_TEXTURE2D_ARRAY</span>, <span class="ident">CL_GL_OBJECT_TEXTURE1D</span>,
+    <span class="ident">CL_GL_OBJECT_TEXTURE1D_ARRAY</span>, <span class="ident">CL_GL_OBJECT_TEXTURE_BUFFER</span>, <span class="ident">CL_GL_TEXTURE_TARGET</span>,
+    <span class="ident">CL_GL_MIPMAP_LEVEL</span>, <span class="ident">CL_GL_NUM_SAMPLES</span>, <span class="ident">CL_KHR_GL_SHARING</span>, <span class="ident">CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR</span>,
+    <span class="ident">CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR</span>, <span class="ident">CL_DEVICES_FOR_GL_CONTEXT_KHR</span>, <span class="ident">CL_GL_CONTEXT_KHR</span>,
+    <span class="ident">CL_EGL_DISPLAY_KHR</span>, <span class="ident">CL_GLX_DISPLAY_KHR</span>, <span class="ident">CL_WGL_HDC_KHR</span>, <span class="ident">CL_CGL_SHAREGROUP_KHR</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_egl_h</span>::{<span class='ident'>CLeglImageKHR</span>, <span class='ident'>CLeglDisplayKHR</span>, <span class='ident'>CLeglSyncKHR</span>, <span class='ident'>cl_egl_image_properties_khr</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_gl_h</span>::{<span class="ident">clCreateFromGLBuffer</span>, <span class="ident">clCreateFromGLTexture</span>,
+    <span class="ident">clGetGLObjectInfo</span>, <span class="ident">clGetGLTextureInfo</span>, <span class="ident">clCreateFromGLRenderbuffer</span>,
+    <span class="ident">clEnqueueAcquireGLObjects</span>, <span class="ident">clEnqueueReleaseGLObjects</span>, <span class="ident">clCreateFromGLTexture2D</span>,
+    <span class="ident">clCreateFromGLTexture3D</span>, <span class="ident">clGetGLContextInfoKHR</span>,};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_gl_ext_h</span>::{<span class='ident'>CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_egl_h</span>::{<span class="ident">CLeglImageKHR</span>, <span class="ident">CLeglDisplayKHR</span>, <span class="ident">CLeglSyncKHR</span>, <span class="ident">cl_egl_image_properties_khr</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_d3d10_h</span>::{<span class='ident'>CL_CONTEXT_D3D10_DEVICE_KHR</span>, <span class='ident'>cl_d3d10_device_source_khr</span>,
-    <span class='ident'>cl_d3d10_device_set_khr</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_gl_ext_h</span>::{<span class="ident">CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_dx9_media_sharing_h</span>::{<span class='ident'>CL_CONTEXT_ADAPTER_D3D9_KHR</span>, <span class='ident'>CL_CONTEXT_ADAPTER_D3D9EX_KHR</span>,
-    <span class='ident'>CL_CONTEXT_ADAPTER_DXVA_KHR</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_d3d10_h</span>::{<span class="ident">CL_CONTEXT_D3D10_DEVICE_KHR</span>, <span class="ident">cl_d3d10_device_source_khr</span>,
+    <span class="ident">cl_d3d10_device_set_khr</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_d3d11_h</span>::<span class='ident'>CL_CONTEXT_D3D11_DEVICE_KHR</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_dx9_media_sharing_h</span>::{<span class="ident">CL_CONTEXT_ADAPTER_D3D9_KHR</span>, <span class="ident">CL_CONTEXT_ADAPTER_D3D9EX_KHR</span>,
+    <span class="ident">CL_CONTEXT_ADAPTER_DXVA_KHR</span>};
 
-<span class='comment'>// Types:</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_h</span>::{<span class='ident'>cl_platform_id</span>, <span class='ident'>cl_device_id</span>, <span class='ident'>cl_context</span>, <span class='ident'>cl_command_queue</span>, <span class='ident'>cl_mem</span>,
-    <span class='ident'>cl_program</span>, <span class='ident'>cl_kernel</span>, <span class='ident'>cl_event</span>, <span class='ident'>cl_sampler</span>, <span class='ident'>cl_char</span>, <span class='ident'>cl_uchar</span>, <span class='ident'>cl_short</span>, <span class='ident'>cl_ushort</span>, <span class='ident'>cl_int</span>,
-    <span class='ident'>cl_uint</span>, <span class='ident'>cl_long</span>, <span class='ident'>cl_ulong</span>, <span class='ident'>cl_half</span>, <span class='ident'>cl_float</span>, <span class='ident'>cl_double</span>, <span class='ident'>cl_bool</span>, <span class='ident'>cl_bitfield</span>, <span class='ident'>cl_device_type</span>,
-    <span class='ident'>cl_platform_info</span>, <span class='ident'>cl_device_info</span>, <span class='ident'>cl_device_fp_config</span>, <span class='ident'>cl_device_mem_cache_type</span>,
-    <span class='ident'>cl_device_local_mem_type</span>, <span class='ident'>cl_device_exec_capabilities</span>, <span class='ident'>cl_device_svm_capabilities</span>,
-    <span class='ident'>cl_command_queue_properties</span>, <span class='ident'>cl_device_partition_property</span>, <span class='ident'>cl_device_affinity_domain</span>,
-    <span class='ident'>cl_context_properties</span>, <span class='ident'>cl_context_info</span>, <span class='ident'>cl_queue_properties</span>, <span class='ident'>cl_command_queue_info</span>,
-    <span class='ident'>cl_channel_order</span>, <span class='ident'>cl_channel_type</span>, <span class='ident'>cl_mem_flags</span>, <span class='ident'>cl_svm_mem_flags</span>, <span class='ident'>cl_mem_object_type</span>,
-    <span class='ident'>cl_mem_info</span>, <span class='ident'>cl_mem_migration_flags</span>, <span class='ident'>cl_image_info</span>, <span class='ident'>cl_buffer_create_type</span>, <span class='ident'>cl_addressing_mode</span>,
-    <span class='ident'>cl_filter_mode</span>, <span class='ident'>cl_sampler_info</span>, <span class='ident'>cl_map_flags</span>, <span class='ident'>cl_pipe_properties</span>, <span class='ident'>cl_pipe_info</span>,
-    <span class='ident'>cl_program_info</span>, <span class='ident'>cl_program_build_info</span>, <span class='ident'>cl_program_binary_type</span>, <span class='ident'>cl_build_status</span>,
-    <span class='ident'>cl_kernel_info</span>, <span class='ident'>cl_kernel_arg_info</span>, <span class='ident'>cl_kernel_arg_address_qualifier</span>,
-    <span class='ident'>cl_kernel_arg_access_qualifier</span>, <span class='ident'>cl_kernel_arg_type_qualifier</span>, <span class='ident'>cl_kernel_work_group_info</span>,
-    <span class='ident'>cl_kernel_sub_group_info</span>, <span class='ident'>cl_event_info</span>, <span class='ident'>cl_command_type</span>, <span class='ident'>cl_profiling_info</span>,
-    <span class='ident'>cl_sampler_properties</span>, <span class='ident'>cl_kernel_exec_info</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_d3d11_h</span>::<span class="ident">CL_CONTEXT_D3D11_DEVICE_KHR</span>;
 
-<span class='comment'>// Structs:</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_h</span>::{<span class='ident'>cl_image_format</span>, <span class='ident'>cl_image_desc</span>, <span class='ident'>cl_buffer_region</span>};
+<span class="comment">// Types:</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">cl_platform_id</span>, <span class="ident">cl_device_id</span>, <span class="ident">cl_context</span>, <span class="ident">cl_command_queue</span>, <span class="ident">cl_mem</span>,
+    <span class="ident">cl_program</span>, <span class="ident">cl_kernel</span>, <span class="ident">cl_event</span>, <span class="ident">cl_sampler</span>, <span class="ident">cl_char</span>, <span class="ident">cl_uchar</span>, <span class="ident">cl_short</span>, <span class="ident">cl_ushort</span>, <span class="ident">cl_int</span>,
+    <span class="ident">cl_uint</span>, <span class="ident">cl_long</span>, <span class="ident">cl_ulong</span>, <span class="ident">cl_half</span>, <span class="ident">cl_float</span>, <span class="ident">cl_double</span>, <span class="ident">cl_bool</span>, <span class="ident">cl_bitfield</span>, <span class="ident">cl_device_type</span>,
+    <span class="ident">cl_platform_info</span>, <span class="ident">cl_device_info</span>, <span class="ident">cl_device_fp_config</span>, <span class="ident">cl_device_mem_cache_type</span>,
+    <span class="ident">cl_device_local_mem_type</span>, <span class="ident">cl_device_exec_capabilities</span>, <span class="ident">cl_device_svm_capabilities</span>,
+    <span class="ident">cl_command_queue_properties</span>, <span class="ident">cl_device_partition_property</span>, <span class="ident">cl_device_affinity_domain</span>,
+    <span class="ident">cl_context_properties</span>, <span class="ident">cl_context_info</span>, <span class="ident">cl_queue_properties</span>, <span class="ident">cl_command_queue_info</span>,
+    <span class="ident">cl_channel_order</span>, <span class="ident">cl_channel_type</span>, <span class="ident">cl_mem_flags</span>, <span class="ident">cl_svm_mem_flags</span>, <span class="ident">cl_mem_object_type</span>,
+    <span class="ident">cl_mem_info</span>, <span class="ident">cl_mem_migration_flags</span>, <span class="ident">cl_image_info</span>, <span class="ident">cl_buffer_create_type</span>, <span class="ident">cl_addressing_mode</span>,
+    <span class="ident">cl_filter_mode</span>, <span class="ident">cl_sampler_info</span>, <span class="ident">cl_map_flags</span>, <span class="ident">cl_pipe_properties</span>, <span class="ident">cl_pipe_info</span>,
+    <span class="ident">cl_program_info</span>, <span class="ident">cl_program_build_info</span>, <span class="ident">cl_program_binary_type</span>, <span class="ident">cl_build_status</span>,
+    <span class="ident">cl_kernel_info</span>, <span class="ident">cl_kernel_arg_info</span>, <span class="ident">cl_kernel_arg_address_qualifier</span>,
+    <span class="ident">cl_kernel_arg_access_qualifier</span>, <span class="ident">cl_kernel_arg_type_qualifier</span>, <span class="ident">cl_kernel_work_group_info</span>,
+    <span class="ident">cl_kernel_sub_group_info</span>, <span class="ident">cl_event_info</span>, <span class="ident">cl_command_type</span>, <span class="ident">cl_profiling_info</span>,
+    <span class="ident">cl_sampler_properties</span>, <span class="ident">cl_kernel_exec_info</span>};
 
-<span class='comment'>// Consts:</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_h</span>::{<span class='ident'>CL_SUCCESS</span>, <span class='ident'>CL_DEVICE_NOT_FOUND</span>, <span class='ident'>CL_DEVICE_NOT_AVAILABLE</span>,
-    <span class='ident'>CL_COMPILER_NOT_AVAILABLE</span>, <span class='ident'>CL_MEM_OBJECT_ALLOCATION_FAILURE</span>, <span class='ident'>CL_OUT_OF_RESOURCES</span>,
-    <span class='ident'>CL_OUT_OF_HOST_MEMORY</span>, <span class='ident'>CL_PROFILING_INFO_NOT_AVAILABLE</span>, <span class='ident'>CL_MEM_COPY_OVERLAP</span>,
-    <span class='ident'>CL_IMAGE_FORMAT_MISMATCH</span>, <span class='ident'>CL_IMAGE_FORMAT_NOT_SUPPORTED</span>, <span class='ident'>CL_BUILD_PROGRAM_FAILURE</span>,
-    <span class='ident'>CL_MAP_FAILURE</span>, <span class='ident'>CL_MISALIGNED_SUB_BUFFER_OFFSET</span>, <span class='ident'>CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST</span>,
-    <span class='ident'>CL_COMPILE_PROGRAM_FAILURE</span>, <span class='ident'>CL_LINKER_NOT_AVAILABLE</span>, <span class='ident'>CL_LINK_PROGRAM_FAILURE</span>,
-    <span class='ident'>CL_DEVICE_PARTITION_FAILED</span>, <span class='ident'>CL_KERNEL_ARG_INFO_NOT_AVAILABLE</span>, <span class='ident'>CL_INVALID_VALUE</span>,
-    <span class='ident'>CL_INVALID_DEVICE_TYPE</span>, <span class='ident'>CL_INVALID_PLATFORM</span>, <span class='ident'>CL_INVALID_DEVICE</span>, <span class='ident'>CL_INVALID_CONTEXT</span>,
-    <span class='ident'>CL_INVALID_QUEUE_PROPERTIES</span>, <span class='ident'>CL_INVALID_COMMAND_QUEUE</span>, <span class='ident'>CL_INVALID_HOST_PTR</span>,
-    <span class='ident'>CL_INVALID_MEM_OBJECT</span>, <span class='ident'>CL_INVALID_IMAGE_FORMAT_DESCRIPTOR</span>, <span class='ident'>CL_INVALID_IMAGE_SIZE</span>,
-    <span class='ident'>CL_INVALID_SAMPLER</span>, <span class='ident'>CL_INVALID_BINARY</span>, <span class='ident'>CL_INVALID_BUILD_OPTIONS</span>, <span class='ident'>CL_INVALID_PROGRAM</span>,
-    <span class='ident'>CL_INVALID_PROGRAM_EXECUTABLE</span>, <span class='ident'>CL_INVALID_KERNEL_NAME</span>, <span class='ident'>CL_INVALID_KERNEL_DEFINITION</span>,
-    <span class='ident'>CL_INVALID_KERNEL</span>, <span class='ident'>CL_INVALID_ARG_INDEX</span>, <span class='ident'>CL_INVALID_ARG_VALUE</span>, <span class='ident'>CL_INVALID_ARG_SIZE</span>,
-    <span class='ident'>CL_INVALID_KERNEL_ARGS</span>, <span class='ident'>CL_INVALID_WORK_DIMENSION</span>, <span class='ident'>CL_INVALID_WORK_GROUP_SIZE</span>,
-    <span class='ident'>CL_INVALID_WORK_ITEM_SIZE</span>, <span class='ident'>CL_INVALID_GLOBAL_OFFSET</span>, <span class='ident'>CL_INVALID_EVENT_WAIT_LIST</span>,
-    <span class='ident'>CL_INVALID_EVENT</span>, <span class='ident'>CL_INVALID_OPERATION</span>, <span class='ident'>CL_INVALID_GL_OBJECT</span>, <span class='ident'>CL_INVALID_BUFFER_SIZE</span>,
-    <span class='ident'>CL_INVALID_MIP_LEVEL</span>, <span class='ident'>CL_INVALID_GLOBAL_WORK_SIZE</span>, <span class='ident'>CL_INVALID_PROPERTY</span>,
-    <span class='ident'>CL_INVALID_IMAGE_DESCRIPTOR</span>, <span class='ident'>CL_INVALID_COMPILER_OPTIONS</span>, <span class='ident'>CL_INVALID_LINKER_OPTIONS</span>,
-    <span class='ident'>CL_INVALID_DEVICE_PARTITION_COUNT</span>, <span class='ident'>CL_INVALID_PIPE_SIZE</span>, <span class='ident'>CL_INVALID_DEVICE_QUEUE</span>,
-    <span class='ident'>CL_PLATFORM_NOT_FOUND_KHR</span>,};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_h</span>::{<span class='ident'>CL_VERSION_1_0</span>, <span class='ident'>CL_VERSION_1_1</span>, <span class='ident'>CL_VERSION_1_2</span>, <span class='ident'>CL_VERSION_2_0</span>,
-    <span class='ident'>CL_VERSION_2_1</span>, <span class='ident'>CL_FALSE</span>, <span class='ident'>CL_TRUE</span>, <span class='ident'>CL_BLOCKING</span>, <span class='ident'>CL_NON_BLOCKING</span>, <span class='ident'>CL_PLATFORM_PROFILE</span>,
-    <span class='ident'>CL_PLATFORM_VERSION</span>, <span class='ident'>CL_PLATFORM_NAME</span>, <span class='ident'>CL_PLATFORM_VENDOR</span>, <span class='ident'>CL_PLATFORM_EXTENSIONS</span>,
-    <span class='ident'>CL_PLATFORM_HOST_TIMER_RESOLUTION</span>, <span class='ident'>CL_DEVICE_TYPE_DEFAULT</span>, <span class='ident'>CL_DEVICE_TYPE_CPU</span>,
-    <span class='ident'>CL_DEVICE_TYPE_GPU</span>, <span class='ident'>CL_DEVICE_TYPE_ACCELERATOR</span>, <span class='ident'>CL_DEVICE_TYPE_CUSTOM</span>, <span class='ident'>CL_DEVICE_TYPE_ALL</span>,
-    <span class='ident'>CL_DEVICE_TYPE</span>, <span class='ident'>CL_DEVICE_VENDOR_ID</span>, <span class='ident'>CL_DEVICE_MAX_COMPUTE_UNITS</span>,
-    <span class='ident'>CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS</span>, <span class='ident'>CL_DEVICE_MAX_WORK_GROUP_SIZE</span>,
-    <span class='ident'>CL_DEVICE_MAX_WORK_ITEM_SIZES</span>, <span class='ident'>CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR</span>,
-    <span class='ident'>CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT</span>, <span class='ident'>CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT</span>,
-    <span class='ident'>CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG</span>, <span class='ident'>CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT</span>,
-    <span class='ident'>CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE</span>, <span class='ident'>CL_DEVICE_MAX_CLOCK_FREQUENCY</span>, <span class='ident'>CL_DEVICE_ADDRESS_BITS</span>,
-    <span class='ident'>CL_DEVICE_MAX_READ_IMAGE_ARGS</span>, <span class='ident'>CL_DEVICE_MAX_WRITE_IMAGE_ARGS</span>,
-    <span class='ident'>CL_DEVICE_MAX_MEM_ALLOC_SIZE</span>, <span class='ident'>CL_DEVICE_IMAGE2D_MAX_WIDTH</span>, <span class='ident'>CL_DEVICE_IMAGE2D_MAX_HEIGHT</span>,
-    <span class='ident'>CL_DEVICE_IMAGE3D_MAX_WIDTH</span>, <span class='ident'>CL_DEVICE_IMAGE3D_MAX_HEIGHT</span>, <span class='ident'>CL_DEVICE_IMAGE3D_MAX_DEPTH</span>,
-    <span class='ident'>CL_DEVICE_IMAGE_SUPPORT</span>, <span class='ident'>CL_DEVICE_MAX_PARAMETER_SIZE</span>, <span class='ident'>CL_DEVICE_MAX_SAMPLERS</span>,
-    <span class='ident'>CL_DEVICE_MEM_BASE_ADDR_ALIGN</span>, <span class='ident'>CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</span>, <span class='ident'>CL_DEVICE_SINGLE_FP_CONFIG</span>,
-    <span class='ident'>CL_DEVICE_GLOBAL_MEM_CACHE_TYPE</span>, <span class='ident'>CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE</span>,
-    <span class='ident'>CL_DEVICE_GLOBAL_MEM_CACHE_SIZE</span>, <span class='ident'>CL_DEVICE_GLOBAL_MEM_SIZE</span>,
-    <span class='ident'>CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE</span>, <span class='ident'>CL_DEVICE_MAX_CONSTANT_ARGS</span>, <span class='ident'>CL_DEVICE_LOCAL_MEM_TYPE</span>,
-    <span class='ident'>CL_DEVICE_LOCAL_MEM_SIZE</span>, <span class='ident'>CL_DEVICE_ERROR_CORRECTION_SUPPORT</span>,
-    <span class='ident'>CL_DEVICE_PROFILING_TIMER_RESOLUTION</span>, <span class='ident'>CL_DEVICE_ENDIAN_LITTLE</span>, <span class='ident'>CL_DEVICE_AVAILABLE</span>,
-    <span class='ident'>CL_DEVICE_COMPILER_AVAILABLE</span>, <span class='ident'>CL_DEVICE_EXECUTION_CAPABILITIES</span>, <span class='ident'>CL_DEVICE_QUEUE_PROPERTIES</span>,
-    <span class='ident'>CL_DEVICE_QUEUE_ON_HOST_PROPERTIES</span>, <span class='ident'>CL_DEVICE_NAME</span>, <span class='ident'>CL_DEVICE_VENDOR</span>, <span class='ident'>CL_DRIVER_VERSION</span>,
-    <span class='ident'>CL_DEVICE_PROFILE</span>, <span class='ident'>CL_DEVICE_VERSION</span>, <span class='ident'>CL_DEVICE_EXTENSIONS</span>, <span class='ident'>CL_DEVICE_PLATFORM</span>,
-    <span class='ident'>CL_DEVICE_DOUBLE_FP_CONFIG</span>, <span class='ident'>CL_DEVICE_HALF_FP_CONFIG</span>, <span class='ident'>CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF</span>,
-    <span class='ident'>CL_DEVICE_HOST_UNIFIED_MEMORY</span>, <span class='ident'>CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR</span>,
-    <span class='ident'>CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT</span>, <span class='ident'>CL_DEVICE_NATIVE_VECTOR_WIDTH_INT</span>,
-    <span class='ident'>CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG</span>, <span class='ident'>CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT</span>,
-    <span class='ident'>CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE</span>, <span class='ident'>CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF</span>,
-    <span class='ident'>CL_DEVICE_OPENCL_C_VERSION</span>, <span class='ident'>CL_DEVICE_LINKER_AVAILABLE</span>, <span class='ident'>CL_DEVICE_BUILT_IN_KERNELS</span>,
-    <span class='ident'>CL_DEVICE_IMAGE_MAX_BUFFER_SIZE</span>, <span class='ident'>CL_DEVICE_IMAGE_MAX_ARRAY_SIZE</span>, <span class='ident'>CL_DEVICE_PARENT_DEVICE</span>,
-    <span class='ident'>CL_DEVICE_PARTITION_MAX_SUB_DEVICES</span>, <span class='ident'>CL_DEVICE_PARTITION_PROPERTIES</span>,
-    <span class='ident'>CL_DEVICE_PARTITION_AFFINITY_DOMAIN</span>, <span class='ident'>CL_DEVICE_PARTITION_TYPE</span>, <span class='ident'>CL_DEVICE_REFERENCE_COUNT</span>,
-    <span class='ident'>CL_DEVICE_PREFERRED_INTEROP_USER_SYNC</span>, <span class='ident'>CL_DEVICE_PRINTF_BUFFER_SIZE</span>,
-    <span class='ident'>CL_DEVICE_IMAGE_PITCH_ALIGNMENT</span>, <span class='ident'>CL_DEVICE_IMAGE_BASE_ADDRESS_ALIGNMENT</span>,
-    <span class='ident'>CL_DEVICE_MAX_READ_WRITE_IMAGE_ARGS</span>, <span class='ident'>CL_DEVICE_MAX_GLOBAL_VARIABLE_SIZE</span>,
-    <span class='ident'>CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES</span>, <span class='ident'>CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE</span>,
-    <span class='ident'>CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE</span>, <span class='ident'>CL_DEVICE_MAX_ON_DEVICE_QUEUES</span>,
-    <span class='ident'>CL_DEVICE_MAX_ON_DEVICE_EVENTS</span>, <span class='ident'>CL_DEVICE_SVM_CAPABILITIES</span>,
-    <span class='ident'>CL_DEVICE_GLOBAL_VARIABLE_PREFERRED_TOTAL_SIZE</span>, <span class='ident'>CL_DEVICE_MAX_PIPE_ARGS</span>,
-    <span class='ident'>CL_DEVICE_PIPE_MAX_ACTIVE_RESERVATIONS</span>, <span class='ident'>CL_DEVICE_PIPE_MAX_PACKET_SIZE</span>,
-    <span class='ident'>CL_DEVICE_PREFERRED_PLATFORM_ATOMIC_ALIGNMENT</span>, <span class='ident'>CL_DEVICE_PREFERRED_GLOBAL_ATOMIC_ALIGNMENT</span>,
-    <span class='ident'>CL_DEVICE_PREFERRED_LOCAL_ATOMIC_ALIGNMENT</span>, <span class='ident'>CL_DEVICE_IL_VERSION</span>, <span class='ident'>CL_DEVICE_MAX_NUM_SUB_GROUPS</span>,
-    <span class='ident'>CL_DEVICE_SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS</span>, <span class='ident'>CL_FP_DENORM</span>, <span class='ident'>CL_FP_INF_NAN</span>,
-    <span class='ident'>CL_FP_ROUND_TO_NEAREST</span>, <span class='ident'>CL_FP_ROUND_TO_ZERO</span>, <span class='ident'>CL_FP_ROUND_TO_INF</span>, <span class='ident'>CL_FP_FMA</span>, <span class='ident'>CL_FP_SOFT_FLOAT</span>,
-    <span class='ident'>CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT</span>, <span class='ident'>CL_NONE</span>, <span class='ident'>CL_READ_ONLY_CACHE</span>, <span class='ident'>CL_READ_WRITE_CACHE</span>,
-    <span class='ident'>CL_LOCAL</span>, <span class='ident'>CL_GLOBAL</span>, <span class='ident'>CL_EXEC_KERNEL</span>, <span class='ident'>CL_EXEC_NATIVE_KERNEL</span>,
-    <span class='ident'>CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE</span>, <span class='ident'>CL_QUEUE_PROFILING_ENABLE</span>, <span class='ident'>CL_QUEUE_ON_DEVICE</span>,
-    <span class='ident'>CL_QUEUE_ON_DEVICE_DEFAULT</span>, <span class='ident'>CL_CONTEXT_REFERENCE_COUNT</span>, <span class='ident'>CL_CONTEXT_DEVICES</span>,
-    <span class='ident'>CL_CONTEXT_PROPERTIES</span>, <span class='ident'>CL_CONTEXT_NUM_DEVICES</span>, <span class='ident'>CL_CONTEXT_PLATFORM</span>,
-    <span class='ident'>CL_CONTEXT_INTEROP_USER_SYNC</span>, <span class='ident'>CL_DEVICE_PARTITION_EQUALLY</span>, <span class='ident'>CL_DEVICE_PARTITION_BY_COUNTS</span>,
-    <span class='ident'>CL_DEVICE_PARTITION_BY_COUNTS_LIST_END</span>, <span class='ident'>CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN</span>,
-    <span class='ident'>CL_DEVICE_AFFINITY_DOMAIN_NUMA</span>, <span class='ident'>CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE</span>,
-    <span class='ident'>CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE</span>, <span class='ident'>CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE</span>,
-    <span class='ident'>CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE</span>, <span class='ident'>CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE</span>,
-    <span class='ident'>CL_DEVICE_SVM_COARSE_GRAIN_BUFFER</span>, <span class='ident'>CL_DEVICE_SVM_FINE_GRAIN_BUFFER</span>,
-    <span class='ident'>CL_DEVICE_SVM_FINE_GRAIN_SYSTEM</span>, <span class='ident'>CL_DEVICE_SVM_ATOMICS</span>, <span class='ident'>CL_QUEUE_CONTEXT</span>, <span class='ident'>CL_QUEUE_DEVICE</span>,
-    <span class='ident'>CL_QUEUE_REFERENCE_COUNT</span>, <span class='ident'>CL_QUEUE_PROPERTIES</span>, <span class='ident'>CL_QUEUE_SIZE</span>, <span class='ident'>CL_QUEUE_DEVICE_DEFAULT</span>,
-    <span class='ident'>CL_MEM_READ_WRITE</span>, <span class='ident'>CL_MEM_WRITE_ONLY</span>, <span class='ident'>CL_MEM_READ_ONLY</span>, <span class='ident'>CL_MEM_USE_HOST_PTR</span>,
-    <span class='ident'>CL_MEM_ALLOC_HOST_PTR</span>, <span class='ident'>CL_MEM_COPY_HOST_PTR</span>, <span class='ident'>CL_MEM_HOST_WRITE_ONLY</span>, <span class='ident'>CL_MEM_HOST_READ_ONLY</span>,
-    <span class='ident'>CL_MEM_HOST_NO_ACCESS</span>, <span class='ident'>CL_MEM_SVM_FINE_GRAIN_BUFFER</span>, <span class='ident'>CL_MEM_SVM_ATOMICS</span>,
-    <span class='ident'>CL_MEM_KERNEL_READ_AND_WRITE</span>, <span class='ident'>CL_MIGRATE_MEM_OBJECT_HOST</span>,
-    <span class='ident'>CL_MIGRATE_MEM_OBJECT_CONTENT_UNDEFINED</span>, <span class='ident'>CL_R</span>, <span class='ident'>CL_A</span>, <span class='ident'>CL_RG</span>, <span class='ident'>CL_RA</span>, <span class='ident'>CL_RGB</span>, <span class='ident'>CL_RGBA</span>, <span class='ident'>CL_BGRA</span>,
-    <span class='ident'>CL_ARGB</span>, <span class='ident'>CL_INTENSITY</span>, <span class='ident'>CL_LUMINANCE</span>, <span class='ident'>CL_Rx</span>, <span class='ident'>CL_RGx</span>, <span class='ident'>CL_RGBx</span>, <span class='ident'>CL_DEPTH</span>, <span class='ident'>CL_DEPTH_STENCIL</span>,
-    <span class='ident'>CL_sRGB</span>, <span class='ident'>CL_sRGBx</span>, <span class='ident'>CL_sRGBA</span>, <span class='ident'>CL_sBGRA</span>, <span class='ident'>CL_ABGR</span>, <span class='ident'>CL_SNORM_INT8</span>, <span class='ident'>CL_SNORM_INT16</span>, <span class='ident'>CL_UNORM_INT8</span>,
-    <span class='ident'>CL_UNORM_INT16</span>, <span class='ident'>CL_UNORM_SHORT_565</span>, <span class='ident'>CL_UNORM_SHORT_555</span>, <span class='ident'>CL_UNORM_INT_101010</span>, <span class='ident'>CL_SIGNED_INT8</span>,
-    <span class='ident'>CL_SIGNED_INT16</span>, <span class='ident'>CL_SIGNED_INT32</span>, <span class='ident'>CL_UNSIGNED_INT8</span>, <span class='ident'>CL_UNSIGNED_INT16</span>, <span class='ident'>CL_UNSIGNED_INT32</span>,
-    <span class='ident'>CL_HALF_FLOAT</span>, <span class='ident'>CL_FLOAT</span>, <span class='ident'>CL_UNORM_INT24</span>, <span class='ident'>CL_UNORM_INT_101010_2</span>, <span class='ident'>CL_MEM_OBJECT_BUFFER</span>,
-    <span class='ident'>CL_MEM_OBJECT_IMAGE2D</span>, <span class='ident'>CL_MEM_OBJECT_IMAGE3D</span>, <span class='ident'>CL_MEM_OBJECT_IMAGE2D_ARRAY</span>,
-    <span class='ident'>CL_MEM_OBJECT_IMAGE1D</span>, <span class='ident'>CL_MEM_OBJECT_IMAGE1D_ARRAY</span>, <span class='ident'>CL_MEM_OBJECT_IMAGE1D_BUFFER</span>,
-    <span class='ident'>CL_MEM_OBJECT_PIPE</span>, <span class='ident'>CL_MEM_TYPE</span>, <span class='ident'>CL_MEM_FLAGS</span>, <span class='ident'>CL_MEM_SIZE</span>, <span class='ident'>CL_MEM_HOST_PTR</span>, <span class='ident'>CL_MEM_MAP_COUNT</span>,
-    <span class='ident'>CL_MEM_REFERENCE_COUNT</span>, <span class='ident'>CL_MEM_CONTEXT</span>, <span class='ident'>CL_MEM_ASSOCIATED_MEMOBJECT</span>, <span class='ident'>CL_MEM_OFFSET</span>,
-    <span class='ident'>CL_MEM_USES_SVM_POINTER</span>, <span class='ident'>CL_IMAGE_FORMAT</span>, <span class='ident'>CL_IMAGE_ELEMENT_SIZE</span>, <span class='ident'>CL_IMAGE_ROW_PITCH</span>,
-    <span class='ident'>CL_IMAGE_SLICE_PITCH</span>, <span class='ident'>CL_IMAGE_WIDTH</span>, <span class='ident'>CL_IMAGE_HEIGHT</span>, <span class='ident'>CL_IMAGE_DEPTH</span>, <span class='ident'>CL_IMAGE_ARRAY_SIZE</span>,
-    <span class='ident'>CL_IMAGE_BUFFER</span>, <span class='ident'>CL_IMAGE_NUM_MIP_LEVELS</span>, <span class='ident'>CL_IMAGE_NUM_SAMPLES</span>, <span class='ident'>CL_PIPE_PACKET_SIZE</span>,
-    <span class='ident'>CL_PIPE_MAX_PACKETS</span>, <span class='ident'>CL_ADDRESS_NONE</span>, <span class='ident'>CL_ADDRESS_CLAMP_TO_EDGE</span>, <span class='ident'>CL_ADDRESS_CLAMP</span>,
-    <span class='ident'>CL_ADDRESS_REPEAT</span>, <span class='ident'>CL_ADDRESS_MIRRORED_REPEAT</span>, <span class='ident'>CL_FILTER_NEAREST</span>, <span class='ident'>CL_FILTER_LINEAR</span>,
-    <span class='ident'>CL_SAMPLER_REFERENCE_COUNT</span>, <span class='ident'>CL_SAMPLER_CONTEXT</span>, <span class='ident'>CL_SAMPLER_NORMALIZED_COORDS</span>,
-    <span class='ident'>CL_SAMPLER_ADDRESSING_MODE</span>, <span class='ident'>CL_SAMPLER_FILTER_MODE</span>, <span class='ident'>CL_SAMPLER_MIP_FILTER_MODE</span>,
-    <span class='ident'>CL_SAMPLER_LOD_MIN</span>, <span class='ident'>CL_SAMPLER_LOD_MAX</span>, <span class='ident'>CL_MAP_READ</span>, <span class='ident'>CL_MAP_WRITE</span>,
-    <span class='ident'>CL_MAP_WRITE_INVALIDATE_REGION</span>, <span class='ident'>CL_PROGRAM_REFERENCE_COUNT</span>, <span class='ident'>CL_PROGRAM_CONTEXT</span>,
-    <span class='ident'>CL_PROGRAM_NUM_DEVICES</span>, <span class='ident'>CL_PROGRAM_DEVICES</span>, <span class='ident'>CL_PROGRAM_SOURCE</span>, <span class='ident'>CL_PROGRAM_BINARY_SIZES</span>,
-    <span class='ident'>CL_PROGRAM_BINARIES</span>, <span class='ident'>CL_PROGRAM_NUM_KERNELS</span>, <span class='ident'>CL_PROGRAM_KERNEL_NAMES</span>, <span class='ident'>CL_PROGRAM_IL</span>,
-    <span class='ident'>CL_PROGRAM_BUILD_STATUS</span>, <span class='ident'>CL_PROGRAM_BUILD_OPTIONS</span>, <span class='ident'>CL_PROGRAM_BUILD_LOG</span>,
-    <span class='ident'>CL_PROGRAM_BINARY_TYPE</span>, <span class='ident'>CL_PROGRAM_BUILD_GLOBAL_VARIABLE_TOTAL_SIZE</span>,
-    <span class='ident'>CL_PROGRAM_BINARY_TYPE_NONE</span>, <span class='ident'>CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT</span>,
-    <span class='ident'>CL_PROGRAM_BINARY_TYPE_LIBRARY</span>, <span class='ident'>CL_PROGRAM_BINARY_TYPE_EXECUTABLE</span>, <span class='ident'>CL_BUILD_SUCCESS</span>,
-    <span class='ident'>CL_BUILD_NONE</span>, <span class='ident'>CL_BUILD_ERROR</span>, <span class='ident'>CL_BUILD_IN_PROGRESS</span>, <span class='ident'>CL_KERNEL_FUNCTION_NAME</span>,
-    <span class='ident'>CL_KERNEL_NUM_ARGS</span>, <span class='ident'>CL_KERNEL_REFERENCE_COUNT</span>, <span class='ident'>CL_KERNEL_CONTEXT</span>, <span class='ident'>CL_KERNEL_PROGRAM</span>,
-    <span class='ident'>CL_KERNEL_ATTRIBUTES</span>, <span class='ident'>CL_KERNEL_MAX_NUM_SUB_GROUPS</span>, <span class='ident'>CL_KERNEL_COMPILE_NUM_SUB_GROUPS</span>,
-    <span class='ident'>CL_KERNEL_ARG_ADDRESS_QUALIFIER</span>, <span class='ident'>CL_KERNEL_ARG_ACCESS_QUALIFIER</span>, <span class='ident'>CL_KERNEL_ARG_TYPE_NAME</span>,
-    <span class='ident'>CL_KERNEL_ARG_TYPE_QUALIFIER</span>, <span class='ident'>CL_KERNEL_ARG_NAME</span>, <span class='ident'>CL_KERNEL_ARG_ADDRESS_GLOBAL</span>,
-    <span class='ident'>CL_KERNEL_ARG_ADDRESS_LOCAL</span>, <span class='ident'>CL_KERNEL_ARG_ADDRESS_CONSTANT</span>, <span class='ident'>CL_KERNEL_ARG_ADDRESS_PRIVATE</span>,
-    <span class='ident'>CL_KERNEL_ARG_ACCESS_READ_ONLY</span>, <span class='ident'>CL_KERNEL_ARG_ACCESS_WRITE_ONLY</span>,
-    <span class='ident'>CL_KERNEL_ARG_ACCESS_READ_WRITE</span>, <span class='ident'>CL_KERNEL_ARG_ACCESS_NONE</span>, <span class='ident'>CL_KERNEL_ARG_TYPE_NONE</span>,
-    <span class='ident'>CL_KERNEL_ARG_TYPE_CONST</span>, <span class='ident'>CL_KERNEL_ARG_TYPE_RESTRICT</span>, <span class='ident'>CL_KERNEL_ARG_TYPE_VOLATILE</span>,
-    <span class='ident'>CL_KERNEL_ARG_TYPE_PIPE</span>, <span class='ident'>CL_KERNEL_WORK_GROUP_SIZE</span>, <span class='ident'>CL_KERNEL_COMPILE_WORK_GROUP_SIZE</span>,
-    <span class='ident'>CL_KERNEL_LOCAL_MEM_SIZE</span>, <span class='ident'>CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE</span>,
-    <span class='ident'>CL_KERNEL_PRIVATE_MEM_SIZE</span>, <span class='ident'>CL_KERNEL_GLOBAL_WORK_SIZE</span>,
-    <span class='ident'>CL_KERNEL_MAX_SUB_GROUP_SIZE_FOR_NDRANGE</span>, <span class='ident'>CL_KERNEL_SUB_GROUP_COUNT_FOR_NDRANGE</span>,
-    <span class='ident'>CL_KERNEL_LOCAL_SIZE_FOR_SUB_GROUP_COUNT</span>, <span class='ident'>CL_KERNEL_EXEC_INFO_SVM_PTRS</span>,
-    <span class='ident'>CL_KERNEL_EXEC_INFO_SVM_FINE_GRAIN_SYSTEM</span>, <span class='ident'>CL_EVENT_COMMAND_QUEUE</span>, <span class='ident'>CL_EVENT_COMMAND_TYPE</span>,
-    <span class='ident'>CL_EVENT_REFERENCE_COUNT</span>, <span class='ident'>CL_EVENT_COMMAND_EXECUTION_STATUS</span>, <span class='ident'>CL_EVENT_CONTEXT</span>,
-    <span class='ident'>CL_COMMAND_NDRANGE_KERNEL</span>, <span class='ident'>CL_COMMAND_TASK</span>, <span class='ident'>CL_COMMAND_NATIVE_KERNEL</span>, <span class='ident'>CL_COMMAND_READ_BUFFER</span>,
-    <span class='ident'>CL_COMMAND_WRITE_BUFFER</span>, <span class='ident'>CL_COMMAND_COPY_BUFFER</span>, <span class='ident'>CL_COMMAND_READ_IMAGE</span>, <span class='ident'>CL_COMMAND_WRITE_IMAGE</span>,
-    <span class='ident'>CL_COMMAND_COPY_IMAGE</span>, <span class='ident'>CL_COMMAND_COPY_IMAGE_TO_BUFFER</span>, <span class='ident'>CL_COMMAND_COPY_BUFFER_TO_IMAGE</span>,
-    <span class='ident'>CL_COMMAND_MAP_BUFFER</span>, <span class='ident'>CL_COMMAND_MAP_IMAGE</span>, <span class='ident'>CL_COMMAND_UNMAP_MEM_OBJECT</span>, <span class='ident'>CL_COMMAND_MARKER</span>,
-    <span class='ident'>CL_COMMAND_ACQUIRE_GL_OBJECTS</span>, <span class='ident'>CL_COMMAND_RELEASE_GL_OBJECTS</span>, <span class='ident'>CL_COMMAND_READ_BUFFER_RECT</span>,
-    <span class='ident'>CL_COMMAND_WRITE_BUFFER_RECT</span>, <span class='ident'>CL_COMMAND_COPY_BUFFER_RECT</span>, <span class='ident'>CL_COMMAND_USER</span>, <span class='ident'>CL_COMMAND_BARRIER</span>,
-    <span class='ident'>CL_COMMAND_MIGRATE_MEM_OBJECTS</span>, <span class='ident'>CL_COMMAND_FILL_BUFFER</span>, <span class='ident'>CL_COMMAND_FILL_IMAGE</span>,
-    <span class='ident'>CL_COMMAND_SVM_FREE</span>, <span class='ident'>CL_COMMAND_SVM_MEMCPY</span>, <span class='ident'>CL_COMMAND_SVM_MEMFILL</span>, <span class='ident'>CL_COMMAND_SVM_MAP</span>,
-    <span class='ident'>CL_COMMAND_SVM_UNMAP</span>, <span class='ident'>CL_COMPLETE</span>, <span class='ident'>CL_RUNNING</span>, <span class='ident'>CL_SUBMITTED</span>, <span class='ident'>CL_QUEUED</span>,
-    <span class='ident'>CL_BUFFER_CREATE_TYPE_REGION</span>, <span class='ident'>CL_PROFILING_COMMAND_QUEUED</span>, <span class='ident'>CL_PROFILING_COMMAND_SUBMIT</span>,
-    <span class='ident'>CL_PROFILING_COMMAND_START</span>, <span class='ident'>CL_PROFILING_COMMAND_END</span>, <span class='ident'>CL_PROFILING_COMMAND_COMPLETE</span>};
+<span class="comment">// Structs:</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">cl_image_format</span>, <span class="ident">cl_image_desc</span>, <span class="ident">cl_buffer_region</span>};
 
-<span class='comment'>// Functions:</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cl_h</span>::{<span class='ident'>clGetPlatformIDs</span>, <span class='ident'>clGetPlatformInfo</span>, <span class='ident'>clGetDeviceIDs</span>, <span class='ident'>clGetDeviceInfo</span>,
-    <span class='ident'>clCreateSubDevices</span>, <span class='ident'>clRetainDevice</span>, <span class='ident'>clReleaseDevice</span>, <span class='ident'>clSetDefaultDeviceCommandQueue</span>,
-    <span class='ident'>clGetDeviceAndHostTimer</span>, <span class='ident'>clGetHostTimer</span>, <span class='ident'>clCreateContext</span>, <span class='ident'>clCreateContextFromType</span>,
-    <span class='ident'>clRetainContext</span>, <span class='ident'>clReleaseContext</span>, <span class='ident'>clGetContextInfo</span>, <span class='ident'>clCreateCommandQueue</span>,
-    <span class='ident'>clCreateCommandQueueWithProperties</span>, <span class='ident'>clRetainCommandQueue</span>, <span class='ident'>clReleaseCommandQueue</span>,
-    <span class='ident'>clGetCommandQueueInfo</span>, <span class='ident'>clCreateBuffer</span>, <span class='ident'>clCreateSubBuffer</span>, <span class='ident'>clCreateImage2D</span>, <span class='ident'>clCreateImage3D</span>,
-    <span class='ident'>clCreateImage</span>, <span class='ident'>clCreatePipe</span>, <span class='ident'>clRetainMemObject</span>, <span class='ident'>clReleaseMemObject</span>, <span class='ident'>clGetSupportedImageFormats</span>,
-    <span class='ident'>clGetMemObjectInfo</span>, <span class='ident'>clGetImageInfo</span>, <span class='ident'>clGetPipeInfo</span>, <span class='ident'>clSetMemObjectDestructorCallback</span>,
-    <span class='ident'>clSVMAlloc</span>, <span class='ident'>clSVMFree</span>, <span class='ident'>clCreateSampler</span>, <span class='ident'>clCreateSamplerWithProperties</span>, <span class='ident'>clRetainSampler</span>,
-    <span class='ident'>clReleaseSampler</span>, <span class='ident'>clGetSamplerInfo</span>, <span class='ident'>clCreateProgramWithSource</span>, <span class='ident'>clCreateProgramWithBinary</span>,
-    <span class='ident'>clCreateProgramWithBuiltInKernels</span>, <span class='ident'>clRetainProgram</span>, <span class='ident'>clReleaseProgram</span>, <span class='ident'>clBuildProgram</span>,
-    <span class='ident'>clUnloadCompiler</span>, <span class='ident'>clCompileProgram</span>, <span class='ident'>clLinkProgram</span>, <span class='ident'>clGetProgramInfo</span>, <span class='ident'>clGetProgramBuildInfo</span>,
-    <span class='ident'>clCreateKernel</span>, <span class='ident'>clCreateKernelsInProgram</span>, <span class='ident'>clCloneKernel</span>, <span class='ident'>clRetainKernel</span>, <span class='ident'>clReleaseKernel</span>,
-    <span class='ident'>clSetKernelArg</span>, <span class='ident'>clSetKernelArgSVMPointer</span>, <span class='ident'>clSetKernelExecInfo</span>, <span class='ident'>clGetKernelInfo</span>,
-    <span class='ident'>clGetKernelArgInfo</span>, <span class='ident'>clGetKernelWorkGroupInfo</span>, <span class='ident'>clGetKernelSubGroupInfo</span>, <span class='ident'>clWaitForEvents</span>,
-    <span class='ident'>clGetEventInfo</span>, <span class='ident'>clCreateUserEvent</span>, <span class='ident'>clRetainEvent</span>, <span class='ident'>clReleaseEvent</span>, <span class='ident'>clSetUserEventStatus</span>,
-    <span class='ident'>clSetEventCallback</span>, <span class='ident'>clGetEventProfilingInfo</span>, <span class='ident'>clFlush</span>, <span class='ident'>clFinish</span>, <span class='ident'>clEnqueueReadBuffer</span>,
-    <span class='ident'>clEnqueueReadBufferRect</span>, <span class='ident'>clEnqueueWriteBuffer</span>, <span class='ident'>clEnqueueWriteBufferRect</span>, <span class='ident'>clEnqueueFillBuffer</span>,
-    <span class='ident'>clEnqueueCopyBuffer</span>, <span class='ident'>clEnqueueCopyBufferRect</span>, <span class='ident'>clEnqueueReadImage</span>, <span class='ident'>clEnqueueWriteImage</span>,
-    <span class='ident'>clEnqueueFillImage</span>, <span class='ident'>clEnqueueCopyImage</span>, <span class='ident'>clEnqueueCopyImageToBuffer</span>, <span class='ident'>clEnqueueCopyBufferToImage</span>,
-    <span class='ident'>clEnqueueMapBuffer</span>, <span class='ident'>clEnqueueMapImage</span>, <span class='ident'>clEnqueueUnmapMemObject</span>, <span class='ident'>clEnqueueMigrateMemObjects</span>,
-    <span class='ident'>clEnqueueNDRangeKernel</span>, <span class='ident'>clEnqueueTask</span>, <span class='ident'>clEnqueueNativeKernel</span>, <span class='ident'>clEnqueueMarker</span>,
-    <span class='ident'>clEnqueueMarkerWithWaitList</span>, <span class='ident'>clEnqueueWaitForEvents</span>, <span class='ident'>clEnqueueBarrierWithWaitList</span>,
-    <span class='ident'>clEnqueueSVMFree</span>, <span class='ident'>clEnqueueSVMMemcpy</span>, <span class='ident'>clEnqueueSVMMemFill</span>, <span class='ident'>clEnqueueSVMMap</span>, <span class='ident'>clEnqueueSVMUnmap</span>,
-    <span class='ident'>clEnqueueSVMMigrateMem</span>, <span class='ident'>clEnqueueBarrier</span>, <span class='ident'>clGetExtensionFunctionAddress</span>,
-    <span class='ident'>clGetExtensionFunctionAddressForPlatform</span>};</pre>
+<span class="comment">// Consts:</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">CL_SUCCESS</span>, <span class="ident">CL_DEVICE_NOT_FOUND</span>, <span class="ident">CL_DEVICE_NOT_AVAILABLE</span>,
+    <span class="ident">CL_COMPILER_NOT_AVAILABLE</span>, <span class="ident">CL_MEM_OBJECT_ALLOCATION_FAILURE</span>, <span class="ident">CL_OUT_OF_RESOURCES</span>,
+    <span class="ident">CL_OUT_OF_HOST_MEMORY</span>, <span class="ident">CL_PROFILING_INFO_NOT_AVAILABLE</span>, <span class="ident">CL_MEM_COPY_OVERLAP</span>,
+    <span class="ident">CL_IMAGE_FORMAT_MISMATCH</span>, <span class="ident">CL_IMAGE_FORMAT_NOT_SUPPORTED</span>, <span class="ident">CL_BUILD_PROGRAM_FAILURE</span>,
+    <span class="ident">CL_MAP_FAILURE</span>, <span class="ident">CL_MISALIGNED_SUB_BUFFER_OFFSET</span>, <span class="ident">CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST</span>,
+    <span class="ident">CL_COMPILE_PROGRAM_FAILURE</span>, <span class="ident">CL_LINKER_NOT_AVAILABLE</span>, <span class="ident">CL_LINK_PROGRAM_FAILURE</span>,
+    <span class="ident">CL_DEVICE_PARTITION_FAILED</span>, <span class="ident">CL_KERNEL_ARG_INFO_NOT_AVAILABLE</span>, <span class="ident">CL_INVALID_VALUE</span>,
+    <span class="ident">CL_INVALID_DEVICE_TYPE</span>, <span class="ident">CL_INVALID_PLATFORM</span>, <span class="ident">CL_INVALID_DEVICE</span>, <span class="ident">CL_INVALID_CONTEXT</span>,
+    <span class="ident">CL_INVALID_QUEUE_PROPERTIES</span>, <span class="ident">CL_INVALID_COMMAND_QUEUE</span>, <span class="ident">CL_INVALID_HOST_PTR</span>,
+    <span class="ident">CL_INVALID_MEM_OBJECT</span>, <span class="ident">CL_INVALID_IMAGE_FORMAT_DESCRIPTOR</span>, <span class="ident">CL_INVALID_IMAGE_SIZE</span>,
+    <span class="ident">CL_INVALID_SAMPLER</span>, <span class="ident">CL_INVALID_BINARY</span>, <span class="ident">CL_INVALID_BUILD_OPTIONS</span>, <span class="ident">CL_INVALID_PROGRAM</span>,
+    <span class="ident">CL_INVALID_PROGRAM_EXECUTABLE</span>, <span class="ident">CL_INVALID_KERNEL_NAME</span>, <span class="ident">CL_INVALID_KERNEL_DEFINITION</span>,
+    <span class="ident">CL_INVALID_KERNEL</span>, <span class="ident">CL_INVALID_ARG_INDEX</span>, <span class="ident">CL_INVALID_ARG_VALUE</span>, <span class="ident">CL_INVALID_ARG_SIZE</span>,
+    <span class="ident">CL_INVALID_KERNEL_ARGS</span>, <span class="ident">CL_INVALID_WORK_DIMENSION</span>, <span class="ident">CL_INVALID_WORK_GROUP_SIZE</span>,
+    <span class="ident">CL_INVALID_WORK_ITEM_SIZE</span>, <span class="ident">CL_INVALID_GLOBAL_OFFSET</span>, <span class="ident">CL_INVALID_EVENT_WAIT_LIST</span>,
+    <span class="ident">CL_INVALID_EVENT</span>, <span class="ident">CL_INVALID_OPERATION</span>, <span class="ident">CL_INVALID_GL_OBJECT</span>, <span class="ident">CL_INVALID_BUFFER_SIZE</span>,
+    <span class="ident">CL_INVALID_MIP_LEVEL</span>, <span class="ident">CL_INVALID_GLOBAL_WORK_SIZE</span>, <span class="ident">CL_INVALID_PROPERTY</span>,
+    <span class="ident">CL_INVALID_IMAGE_DESCRIPTOR</span>, <span class="ident">CL_INVALID_COMPILER_OPTIONS</span>, <span class="ident">CL_INVALID_LINKER_OPTIONS</span>,
+    <span class="ident">CL_INVALID_DEVICE_PARTITION_COUNT</span>, <span class="ident">CL_INVALID_PIPE_SIZE</span>, <span class="ident">CL_INVALID_DEVICE_QUEUE</span>,
+    <span class="ident">CL_PLATFORM_NOT_FOUND_KHR</span>,};
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">CL_VERSION_1_0</span>, <span class="ident">CL_VERSION_1_1</span>, <span class="ident">CL_VERSION_1_2</span>, <span class="ident">CL_VERSION_2_0</span>,
+    <span class="ident">CL_VERSION_2_1</span>, <span class="ident">CL_FALSE</span>, <span class="ident">CL_TRUE</span>, <span class="ident">CL_BLOCKING</span>, <span class="ident">CL_NON_BLOCKING</span>, <span class="ident">CL_PLATFORM_PROFILE</span>,
+    <span class="ident">CL_PLATFORM_VERSION</span>, <span class="ident">CL_PLATFORM_NAME</span>, <span class="ident">CL_PLATFORM_VENDOR</span>, <span class="ident">CL_PLATFORM_EXTENSIONS</span>,
+    <span class="ident">CL_PLATFORM_HOST_TIMER_RESOLUTION</span>, <span class="ident">CL_DEVICE_TYPE_DEFAULT</span>, <span class="ident">CL_DEVICE_TYPE_CPU</span>,
+    <span class="ident">CL_DEVICE_TYPE_GPU</span>, <span class="ident">CL_DEVICE_TYPE_ACCELERATOR</span>, <span class="ident">CL_DEVICE_TYPE_CUSTOM</span>, <span class="ident">CL_DEVICE_TYPE_ALL</span>,
+    <span class="ident">CL_DEVICE_TYPE</span>, <span class="ident">CL_DEVICE_VENDOR_ID</span>, <span class="ident">CL_DEVICE_MAX_COMPUTE_UNITS</span>,
+    <span class="ident">CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS</span>, <span class="ident">CL_DEVICE_MAX_WORK_GROUP_SIZE</span>,
+    <span class="ident">CL_DEVICE_MAX_WORK_ITEM_SIZES</span>, <span class="ident">CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR</span>,
+    <span class="ident">CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT</span>, <span class="ident">CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT</span>,
+    <span class="ident">CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG</span>, <span class="ident">CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT</span>,
+    <span class="ident">CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE</span>, <span class="ident">CL_DEVICE_MAX_CLOCK_FREQUENCY</span>, <span class="ident">CL_DEVICE_ADDRESS_BITS</span>,
+    <span class="ident">CL_DEVICE_MAX_READ_IMAGE_ARGS</span>, <span class="ident">CL_DEVICE_MAX_WRITE_IMAGE_ARGS</span>, <span class="ident">CL_DEVICE_MAX_MEM_ALLOC_SIZE</span>,
+    <span class="ident">CL_DEVICE_IMAGE2D_MAX_WIDTH</span>, <span class="ident">CL_DEVICE_IMAGE2D_MAX_HEIGHT</span>, <span class="ident">CL_DEVICE_IMAGE3D_MAX_WIDTH</span>,
+    <span class="ident">CL_DEVICE_IMAGE3D_MAX_HEIGHT</span>, <span class="ident">CL_DEVICE_IMAGE3D_MAX_DEPTH</span>, <span class="ident">CL_DEVICE_IMAGE_SUPPORT</span>,
+    <span class="ident">CL_DEVICE_MAX_PARAMETER_SIZE</span>, <span class="ident">CL_DEVICE_MAX_SAMPLERS</span>, <span class="ident">CL_DEVICE_MEM_BASE_ADDR_ALIGN</span>,
+    <span class="ident">CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</span>, <span class="ident">CL_DEVICE_SINGLE_FP_CONFIG</span>,
+    <span class="ident">CL_DEVICE_GLOBAL_MEM_CACHE_TYPE</span>, <span class="ident">CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE</span>,
+    <span class="ident">CL_DEVICE_GLOBAL_MEM_CACHE_SIZE</span>, <span class="ident">CL_DEVICE_GLOBAL_MEM_SIZE</span>, <span class="ident">CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE</span>,
+    <span class="ident">CL_DEVICE_MAX_CONSTANT_ARGS</span>, <span class="ident">CL_DEVICE_LOCAL_MEM_TYPE</span>, <span class="ident">CL_DEVICE_LOCAL_MEM_SIZE</span>,
+    <span class="ident">CL_DEVICE_ERROR_CORRECTION_SUPPORT</span>, <span class="ident">CL_DEVICE_PROFILING_TIMER_RESOLUTION</span>,
+    <span class="ident">CL_DEVICE_ENDIAN_LITTLE</span>, <span class="ident">CL_DEVICE_AVAILABLE</span>, <span class="ident">CL_DEVICE_COMPILER_AVAILABLE</span>,
+    <span class="ident">CL_DEVICE_EXECUTION_CAPABILITIES</span>, <span class="ident">CL_DEVICE_QUEUE_PROPERTIES</span>,
+    <span class="ident">CL_DEVICE_QUEUE_ON_HOST_PROPERTIES</span>, <span class="ident">CL_DEVICE_NAME</span>, <span class="ident">CL_DEVICE_VENDOR</span>, <span class="ident">CL_DRIVER_VERSION</span>,
+    <span class="ident">CL_DEVICE_PROFILE</span>, <span class="ident">CL_DEVICE_VERSION</span>, <span class="ident">CL_DEVICE_EXTENSIONS</span>, <span class="ident">CL_DEVICE_PLATFORM</span>,
+    <span class="ident">CL_DEVICE_DOUBLE_FP_CONFIG</span>, <span class="ident">CL_DEVICE_HALF_FP_CONFIG</span>, <span class="ident">CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF</span>,
+    <span class="ident">CL_DEVICE_HOST_UNIFIED_MEMORY</span>, <span class="ident">CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR</span>,
+    <span class="ident">CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT</span>, <span class="ident">CL_DEVICE_NATIVE_VECTOR_WIDTH_INT</span>,
+    <span class="ident">CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG</span>, <span class="ident">CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT</span>,
+    <span class="ident">CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE</span>, <span class="ident">CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF</span>,
+    <span class="ident">CL_DEVICE_OPENCL_C_VERSION</span>, <span class="ident">CL_DEVICE_LINKER_AVAILABLE</span>, <span class="ident">CL_DEVICE_BUILT_IN_KERNELS</span>,
+    <span class="ident">CL_DEVICE_IMAGE_MAX_BUFFER_SIZE</span>, <span class="ident">CL_DEVICE_IMAGE_MAX_ARRAY_SIZE</span>, <span class="ident">CL_DEVICE_PARENT_DEVICE</span>,
+    <span class="ident">CL_DEVICE_PARTITION_MAX_SUB_DEVICES</span>, <span class="ident">CL_DEVICE_PARTITION_PROPERTIES</span>,
+    <span class="ident">CL_DEVICE_PARTITION_AFFINITY_DOMAIN</span>, <span class="ident">CL_DEVICE_PARTITION_TYPE</span>, <span class="ident">CL_DEVICE_REFERENCE_COUNT</span>,
+    <span class="ident">CL_DEVICE_PREFERRED_INTEROP_USER_SYNC</span>, <span class="ident">CL_DEVICE_PRINTF_BUFFER_SIZE</span>,
+    <span class="ident">CL_DEVICE_IMAGE_PITCH_ALIGNMENT</span>, <span class="ident">CL_DEVICE_IMAGE_BASE_ADDRESS_ALIGNMENT</span>,
+    <span class="ident">CL_DEVICE_MAX_READ_WRITE_IMAGE_ARGS</span>, <span class="ident">CL_DEVICE_MAX_GLOBAL_VARIABLE_SIZE</span>,
+    <span class="ident">CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES</span>, <span class="ident">CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE</span>,
+    <span class="ident">CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE</span>, <span class="ident">CL_DEVICE_MAX_ON_DEVICE_QUEUES</span>,
+    <span class="ident">CL_DEVICE_MAX_ON_DEVICE_EVENTS</span>, <span class="ident">CL_DEVICE_SVM_CAPABILITIES</span>,
+    <span class="ident">CL_DEVICE_GLOBAL_VARIABLE_PREFERRED_TOTAL_SIZE</span>, <span class="ident">CL_DEVICE_MAX_PIPE_ARGS</span>,
+    <span class="ident">CL_DEVICE_PIPE_MAX_ACTIVE_RESERVATIONS</span>, <span class="ident">CL_DEVICE_PIPE_MAX_PACKET_SIZE</span>,
+    <span class="ident">CL_DEVICE_PREFERRED_PLATFORM_ATOMIC_ALIGNMENT</span>, <span class="ident">CL_DEVICE_PREFERRED_GLOBAL_ATOMIC_ALIGNMENT</span>,
+    <span class="ident">CL_DEVICE_PREFERRED_LOCAL_ATOMIC_ALIGNMENT</span>, <span class="ident">CL_DEVICE_IL_VERSION</span>, <span class="ident">CL_DEVICE_MAX_NUM_SUB_GROUPS</span>,
+    <span class="ident">CL_DEVICE_SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS</span>, <span class="ident">CL_FP_DENORM</span>, <span class="ident">CL_FP_INF_NAN</span>,
+    <span class="ident">CL_FP_ROUND_TO_NEAREST</span>, <span class="ident">CL_FP_ROUND_TO_ZERO</span>, <span class="ident">CL_FP_ROUND_TO_INF</span>, <span class="ident">CL_FP_FMA</span>, <span class="ident">CL_FP_SOFT_FLOAT</span>,
+    <span class="ident">CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT</span>, <span class="ident">CL_NONE</span>, <span class="ident">CL_READ_ONLY_CACHE</span>, <span class="ident">CL_READ_WRITE_CACHE</span>,
+    <span class="ident">CL_LOCAL</span>, <span class="ident">CL_GLOBAL</span>, <span class="ident">CL_EXEC_KERNEL</span>, <span class="ident">CL_EXEC_NATIVE_KERNEL</span>,
+    <span class="ident">CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE</span>, <span class="ident">CL_QUEUE_PROFILING_ENABLE</span>, <span class="ident">CL_QUEUE_ON_DEVICE</span>,
+    <span class="ident">CL_QUEUE_ON_DEVICE_DEFAULT</span>, <span class="ident">CL_CONTEXT_REFERENCE_COUNT</span>, <span class="ident">CL_CONTEXT_DEVICES</span>,
+    <span class="ident">CL_CONTEXT_PROPERTIES</span>, <span class="ident">CL_CONTEXT_NUM_DEVICES</span>, <span class="ident">CL_CONTEXT_PLATFORM</span>,
+    <span class="ident">CL_CONTEXT_INTEROP_USER_SYNC</span>, <span class="ident">CL_DEVICE_PARTITION_EQUALLY</span>, <span class="ident">CL_DEVICE_PARTITION_BY_COUNTS</span>,
+    <span class="ident">CL_DEVICE_PARTITION_BY_COUNTS_LIST_END</span>, <span class="ident">CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN</span>,
+    <span class="ident">CL_DEVICE_AFFINITY_DOMAIN_NUMA</span>, <span class="ident">CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE</span>,
+    <span class="ident">CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE</span>, <span class="ident">CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE</span>,
+    <span class="ident">CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE</span>, <span class="ident">CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE</span>,
+    <span class="ident">CL_DEVICE_SVM_COARSE_GRAIN_BUFFER</span>, <span class="ident">CL_DEVICE_SVM_FINE_GRAIN_BUFFER</span>,
+    <span class="ident">CL_DEVICE_SVM_FINE_GRAIN_SYSTEM</span>, <span class="ident">CL_DEVICE_SVM_ATOMICS</span>, <span class="ident">CL_QUEUE_CONTEXT</span>, <span class="ident">CL_QUEUE_DEVICE</span>,
+    <span class="ident">CL_QUEUE_REFERENCE_COUNT</span>, <span class="ident">CL_QUEUE_PROPERTIES</span>, <span class="ident">CL_QUEUE_SIZE</span>, <span class="ident">CL_QUEUE_DEVICE_DEFAULT</span>,
+    <span class="ident">CL_MEM_READ_WRITE</span>, <span class="ident">CL_MEM_WRITE_ONLY</span>, <span class="ident">CL_MEM_READ_ONLY</span>, <span class="ident">CL_MEM_USE_HOST_PTR</span>,
+    <span class="ident">CL_MEM_ALLOC_HOST_PTR</span>, <span class="ident">CL_MEM_COPY_HOST_PTR</span>, <span class="ident">CL_MEM_HOST_WRITE_ONLY</span>, <span class="ident">CL_MEM_HOST_READ_ONLY</span>,
+    <span class="ident">CL_MEM_HOST_NO_ACCESS</span>, <span class="ident">CL_MEM_SVM_FINE_GRAIN_BUFFER</span>, <span class="ident">CL_MEM_SVM_ATOMICS</span>,
+    <span class="ident">CL_MEM_KERNEL_READ_AND_WRITE</span>, <span class="ident">CL_MIGRATE_MEM_OBJECT_HOST</span>,
+    <span class="ident">CL_MIGRATE_MEM_OBJECT_CONTENT_UNDEFINED</span>, <span class="ident">CL_R</span>, <span class="ident">CL_A</span>, <span class="ident">CL_RG</span>, <span class="ident">CL_RA</span>, <span class="ident">CL_RGB</span>, <span class="ident">CL_RGBA</span>, <span class="ident">CL_BGRA</span>,
+    <span class="ident">CL_ARGB</span>, <span class="ident">CL_INTENSITY</span>, <span class="ident">CL_LUMINANCE</span>, <span class="ident">CL_Rx</span>, <span class="ident">CL_RGx</span>, <span class="ident">CL_RGBx</span>, <span class="ident">CL_DEPTH</span>, <span class="ident">CL_DEPTH_STENCIL</span>,
+    <span class="ident">CL_sRGB</span>, <span class="ident">CL_sRGBx</span>, <span class="ident">CL_sRGBA</span>, <span class="ident">CL_sBGRA</span>, <span class="ident">CL_ABGR</span>, <span class="ident">CL_SNORM_INT8</span>, <span class="ident">CL_SNORM_INT16</span>, <span class="ident">CL_UNORM_INT8</span>,
+    <span class="ident">CL_UNORM_INT16</span>, <span class="ident">CL_UNORM_SHORT_565</span>, <span class="ident">CL_UNORM_SHORT_555</span>, <span class="ident">CL_UNORM_INT_101010</span>, <span class="ident">CL_SIGNED_INT8</span>,
+    <span class="ident">CL_SIGNED_INT16</span>, <span class="ident">CL_SIGNED_INT32</span>, <span class="ident">CL_UNSIGNED_INT8</span>, <span class="ident">CL_UNSIGNED_INT16</span>, <span class="ident">CL_UNSIGNED_INT32</span>,
+    <span class="ident">CL_HALF_FLOAT</span>, <span class="ident">CL_FLOAT</span>, <span class="ident">CL_UNORM_INT24</span>, <span class="ident">CL_UNORM_INT_101010_2</span>, <span class="ident">CL_MEM_OBJECT_BUFFER</span>,
+    <span class="ident">CL_MEM_OBJECT_IMAGE2D</span>, <span class="ident">CL_MEM_OBJECT_IMAGE3D</span>, <span class="ident">CL_MEM_OBJECT_IMAGE2D_ARRAY</span>,
+    <span class="ident">CL_MEM_OBJECT_IMAGE1D</span>, <span class="ident">CL_MEM_OBJECT_IMAGE1D_ARRAY</span>, <span class="ident">CL_MEM_OBJECT_IMAGE1D_BUFFER</span>,
+    <span class="ident">CL_MEM_OBJECT_PIPE</span>, <span class="ident">CL_MEM_TYPE</span>, <span class="ident">CL_MEM_FLAGS</span>, <span class="ident">CL_MEM_SIZE</span>, <span class="ident">CL_MEM_HOST_PTR</span>, <span class="ident">CL_MEM_MAP_COUNT</span>,
+    <span class="ident">CL_MEM_REFERENCE_COUNT</span>, <span class="ident">CL_MEM_CONTEXT</span>, <span class="ident">CL_MEM_ASSOCIATED_MEMOBJECT</span>, <span class="ident">CL_MEM_OFFSET</span>,
+    <span class="ident">CL_MEM_USES_SVM_POINTER</span>, <span class="ident">CL_IMAGE_FORMAT</span>, <span class="ident">CL_IMAGE_ELEMENT_SIZE</span>, <span class="ident">CL_IMAGE_ROW_PITCH</span>,
+    <span class="ident">CL_IMAGE_SLICE_PITCH</span>, <span class="ident">CL_IMAGE_WIDTH</span>, <span class="ident">CL_IMAGE_HEIGHT</span>, <span class="ident">CL_IMAGE_DEPTH</span>, <span class="ident">CL_IMAGE_ARRAY_SIZE</span>,
+    <span class="ident">CL_IMAGE_BUFFER</span>, <span class="ident">CL_IMAGE_NUM_MIP_LEVELS</span>, <span class="ident">CL_IMAGE_NUM_SAMPLES</span>, <span class="ident">CL_PIPE_PACKET_SIZE</span>,
+    <span class="ident">CL_PIPE_MAX_PACKETS</span>, <span class="ident">CL_ADDRESS_NONE</span>, <span class="ident">CL_ADDRESS_CLAMP_TO_EDGE</span>, <span class="ident">CL_ADDRESS_CLAMP</span>,
+    <span class="ident">CL_ADDRESS_REPEAT</span>, <span class="ident">CL_ADDRESS_MIRRORED_REPEAT</span>, <span class="ident">CL_FILTER_NEAREST</span>, <span class="ident">CL_FILTER_LINEAR</span>,
+    <span class="ident">CL_SAMPLER_REFERENCE_COUNT</span>, <span class="ident">CL_SAMPLER_CONTEXT</span>, <span class="ident">CL_SAMPLER_NORMALIZED_COORDS</span>,
+    <span class="ident">CL_SAMPLER_ADDRESSING_MODE</span>, <span class="ident">CL_SAMPLER_FILTER_MODE</span>, <span class="ident">CL_SAMPLER_MIP_FILTER_MODE</span>,
+    <span class="ident">CL_SAMPLER_LOD_MIN</span>, <span class="ident">CL_SAMPLER_LOD_MAX</span>, <span class="ident">CL_MAP_READ</span>, <span class="ident">CL_MAP_WRITE</span>,
+    <span class="ident">CL_MAP_WRITE_INVALIDATE_REGION</span>, <span class="ident">CL_PROGRAM_REFERENCE_COUNT</span>, <span class="ident">CL_PROGRAM_CONTEXT</span>,
+    <span class="ident">CL_PROGRAM_NUM_DEVICES</span>, <span class="ident">CL_PROGRAM_DEVICES</span>, <span class="ident">CL_PROGRAM_SOURCE</span>, <span class="ident">CL_PROGRAM_BINARY_SIZES</span>,
+    <span class="ident">CL_PROGRAM_BINARIES</span>, <span class="ident">CL_PROGRAM_NUM_KERNELS</span>, <span class="ident">CL_PROGRAM_KERNEL_NAMES</span>, <span class="ident">CL_PROGRAM_IL</span>,
+    <span class="ident">CL_PROGRAM_BUILD_STATUS</span>, <span class="ident">CL_PROGRAM_BUILD_OPTIONS</span>, <span class="ident">CL_PROGRAM_BUILD_LOG</span>,
+    <span class="ident">CL_PROGRAM_BINARY_TYPE</span>, <span class="ident">CL_PROGRAM_BUILD_GLOBAL_VARIABLE_TOTAL_SIZE</span>,
+    <span class="ident">CL_PROGRAM_BINARY_TYPE_NONE</span>, <span class="ident">CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT</span>,
+    <span class="ident">CL_PROGRAM_BINARY_TYPE_LIBRARY</span>, <span class="ident">CL_PROGRAM_BINARY_TYPE_EXECUTABLE</span>, <span class="ident">CL_BUILD_SUCCESS</span>,
+    <span class="ident">CL_BUILD_NONE</span>, <span class="ident">CL_BUILD_ERROR</span>, <span class="ident">CL_BUILD_IN_PROGRESS</span>, <span class="ident">CL_KERNEL_FUNCTION_NAME</span>,
+    <span class="ident">CL_KERNEL_NUM_ARGS</span>, <span class="ident">CL_KERNEL_REFERENCE_COUNT</span>, <span class="ident">CL_KERNEL_CONTEXT</span>, <span class="ident">CL_KERNEL_PROGRAM</span>,
+    <span class="ident">CL_KERNEL_ATTRIBUTES</span>, <span class="ident">CL_KERNEL_MAX_NUM_SUB_GROUPS</span>, <span class="ident">CL_KERNEL_COMPILE_NUM_SUB_GROUPS</span>,
+    <span class="ident">CL_KERNEL_ARG_ADDRESS_QUALIFIER</span>, <span class="ident">CL_KERNEL_ARG_ACCESS_QUALIFIER</span>, <span class="ident">CL_KERNEL_ARG_TYPE_NAME</span>,
+    <span class="ident">CL_KERNEL_ARG_TYPE_QUALIFIER</span>, <span class="ident">CL_KERNEL_ARG_NAME</span>, <span class="ident">CL_KERNEL_ARG_ADDRESS_GLOBAL</span>,
+    <span class="ident">CL_KERNEL_ARG_ADDRESS_LOCAL</span>, <span class="ident">CL_KERNEL_ARG_ADDRESS_CONSTANT</span>, <span class="ident">CL_KERNEL_ARG_ADDRESS_PRIVATE</span>,
+    <span class="ident">CL_KERNEL_ARG_ACCESS_READ_ONLY</span>, <span class="ident">CL_KERNEL_ARG_ACCESS_WRITE_ONLY</span>,
+    <span class="ident">CL_KERNEL_ARG_ACCESS_READ_WRITE</span>, <span class="ident">CL_KERNEL_ARG_ACCESS_NONE</span>, <span class="ident">CL_KERNEL_ARG_TYPE_NONE</span>,
+    <span class="ident">CL_KERNEL_ARG_TYPE_CONST</span>, <span class="ident">CL_KERNEL_ARG_TYPE_RESTRICT</span>, <span class="ident">CL_KERNEL_ARG_TYPE_VOLATILE</span>,
+    <span class="ident">CL_KERNEL_ARG_TYPE_PIPE</span>, <span class="ident">CL_KERNEL_WORK_GROUP_SIZE</span>, <span class="ident">CL_KERNEL_COMPILE_WORK_GROUP_SIZE</span>,
+    <span class="ident">CL_KERNEL_LOCAL_MEM_SIZE</span>, <span class="ident">CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE</span>,
+    <span class="ident">CL_KERNEL_PRIVATE_MEM_SIZE</span>, <span class="ident">CL_KERNEL_GLOBAL_WORK_SIZE</span>,
+    <span class="ident">CL_KERNEL_MAX_SUB_GROUP_SIZE_FOR_NDRANGE</span>, <span class="ident">CL_KERNEL_SUB_GROUP_COUNT_FOR_NDRANGE</span>,
+    <span class="ident">CL_KERNEL_LOCAL_SIZE_FOR_SUB_GROUP_COUNT</span>, <span class="ident">CL_KERNEL_EXEC_INFO_SVM_PTRS</span>,
+    <span class="ident">CL_KERNEL_EXEC_INFO_SVM_FINE_GRAIN_SYSTEM</span>, <span class="ident">CL_EVENT_COMMAND_QUEUE</span>, <span class="ident">CL_EVENT_COMMAND_TYPE</span>,
+    <span class="ident">CL_EVENT_REFERENCE_COUNT</span>, <span class="ident">CL_EVENT_COMMAND_EXECUTION_STATUS</span>, <span class="ident">CL_EVENT_CONTEXT</span>,
+    <span class="ident">CL_COMMAND_NDRANGE_KERNEL</span>, <span class="ident">CL_COMMAND_TASK</span>, <span class="ident">CL_COMMAND_NATIVE_KERNEL</span>, <span class="ident">CL_COMMAND_READ_BUFFER</span>,
+    <span class="ident">CL_COMMAND_WRITE_BUFFER</span>, <span class="ident">CL_COMMAND_COPY_BUFFER</span>, <span class="ident">CL_COMMAND_READ_IMAGE</span>, <span class="ident">CL_COMMAND_WRITE_IMAGE</span>,
+    <span class="ident">CL_COMMAND_COPY_IMAGE</span>, <span class="ident">CL_COMMAND_COPY_IMAGE_TO_BUFFER</span>, <span class="ident">CL_COMMAND_COPY_BUFFER_TO_IMAGE</span>,
+    <span class="ident">CL_COMMAND_MAP_BUFFER</span>, <span class="ident">CL_COMMAND_MAP_IMAGE</span>, <span class="ident">CL_COMMAND_UNMAP_MEM_OBJECT</span>, <span class="ident">CL_COMMAND_MARKER</span>,
+    <span class="ident">CL_COMMAND_ACQUIRE_GL_OBJECTS</span>, <span class="ident">CL_COMMAND_RELEASE_GL_OBJECTS</span>, <span class="ident">CL_COMMAND_READ_BUFFER_RECT</span>,
+    <span class="ident">CL_COMMAND_WRITE_BUFFER_RECT</span>, <span class="ident">CL_COMMAND_COPY_BUFFER_RECT</span>, <span class="ident">CL_COMMAND_USER</span>, <span class="ident">CL_COMMAND_BARRIER</span>,
+    <span class="ident">CL_COMMAND_MIGRATE_MEM_OBJECTS</span>, <span class="ident">CL_COMMAND_FILL_BUFFER</span>, <span class="ident">CL_COMMAND_FILL_IMAGE</span>,
+    <span class="ident">CL_COMMAND_SVM_FREE</span>, <span class="ident">CL_COMMAND_SVM_MEMCPY</span>, <span class="ident">CL_COMMAND_SVM_MEMFILL</span>, <span class="ident">CL_COMMAND_SVM_MAP</span>,
+    <span class="ident">CL_COMMAND_SVM_UNMAP</span>, <span class="ident">CL_COMPLETE</span>, <span class="ident">CL_RUNNING</span>, <span class="ident">CL_SUBMITTED</span>, <span class="ident">CL_QUEUED</span>,
+    <span class="ident">CL_BUFFER_CREATE_TYPE_REGION</span>, <span class="ident">CL_PROFILING_COMMAND_QUEUED</span>, <span class="ident">CL_PROFILING_COMMAND_SUBMIT</span>,
+    <span class="ident">CL_PROFILING_COMMAND_START</span>, <span class="ident">CL_PROFILING_COMMAND_END</span>, <span class="ident">CL_PROFILING_COMMAND_COMPLETE</span>};
+
+<span class="comment">// Functions:</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">clGetPlatformIDs</span>, <span class="ident">clGetPlatformInfo</span>, <span class="ident">clGetDeviceIDs</span>, <span class="ident">clGetDeviceInfo</span>,
+    <span class="ident">clCreateContext</span>, <span class="ident">clCreateContextFromType</span>, <span class="ident">clRetainContext</span>, <span class="ident">clReleaseContext</span>, <span class="ident">clGetContextInfo</span>,
+    <span class="ident">clCreateCommandQueue</span>, <span class="ident">clRetainCommandQueue</span>, <span class="ident">clReleaseCommandQueue</span>, <span class="ident">clGetCommandQueueInfo</span>,
+    <span class="ident">clCreateBuffer</span>, <span class="ident">clCreateSubBuffer</span>, <span class="ident">clCreateImage2D</span>, <span class="ident">clCreateImage3D</span>, <span class="ident">clRetainMemObject</span>,
+    <span class="ident">clReleaseMemObject</span>, <span class="ident">clGetSupportedImageFormats</span>, <span class="ident">clGetMemObjectInfo</span>, <span class="ident">clGetImageInfo</span>,
+    <span class="ident">clSetMemObjectDestructorCallback</span>, <span class="ident">clCreateSampler</span>, <span class="ident">clRetainSampler</span>, <span class="ident">clReleaseSampler</span>,
+    <span class="ident">clGetSamplerInfo</span>, <span class="ident">clCreateProgramWithSource</span>, <span class="ident">clCreateProgramWithBinary</span>, <span class="ident">clRetainProgram</span>,
+    <span class="ident">clReleaseProgram</span>, <span class="ident">clBuildProgram</span>, <span class="ident">clUnloadCompiler</span>, <span class="ident">clGetProgramInfo</span>, <span class="ident">clGetProgramBuildInfo</span>,
+    <span class="ident">clCreateKernel</span>, <span class="ident">clCreateKernelsInProgram</span>,  <span class="ident">clRetainKernel</span>, <span class="ident">clReleaseKernel</span>, <span class="ident">clSetKernelArg</span>,
+    <span class="ident">clGetKernelInfo</span>, <span class="ident">clGetKernelWorkGroupInfo</span>, <span class="ident">clWaitForEvents</span>, <span class="ident">clGetEventInfo</span>, <span class="ident">clCreateUserEvent</span>,
+    <span class="ident">clRetainEvent</span>, <span class="ident">clReleaseEvent</span>, <span class="ident">clSetUserEventStatus</span>, <span class="ident">clSetEventCallback</span>,
+    <span class="ident">clGetEventProfilingInfo</span>, <span class="ident">clFlush</span>, <span class="ident">clFinish</span>, <span class="ident">clEnqueueReadBuffer</span>, <span class="ident">clEnqueueReadBufferRect</span>,
+    <span class="ident">clEnqueueWriteBuffer</span>, <span class="ident">clEnqueueWriteBufferRect</span>, <span class="ident">clEnqueueCopyBuffer</span>, <span class="ident">clEnqueueCopyBufferRect</span>,
+    <span class="ident">clEnqueueReadImage</span>, <span class="ident">clEnqueueWriteImage</span>, <span class="ident">clEnqueueCopyImage</span>, <span class="ident">clEnqueueCopyImageToBuffer</span>,
+    <span class="ident">clEnqueueCopyBufferToImage</span>, <span class="ident">clEnqueueMapBuffer</span>, <span class="ident">clEnqueueMapImage</span>, <span class="ident">clEnqueueUnmapMemObject</span>,
+    <span class="ident">clEnqueueNDRangeKernel</span>, <span class="ident">clEnqueueTask</span>, <span class="ident">clEnqueueNativeKernel</span>, <span class="ident">clEnqueueMarker</span>,
+    <span class="ident">clEnqueueWaitForEvents</span>, <span class="ident">clEnqueueBarrier</span>, <span class="ident">clGetExtensionFunctionAddress</span>};
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_1_2&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">clCreateSubDevices</span>, <span class="ident">clRetainDevice</span>, <span class="ident">clReleaseDevice</span>, <span class="ident">clCreateImage</span>,
+    <span class="ident">clCreateProgramWithBuiltInKernels</span>, <span class="ident">clCompileProgram</span>, <span class="ident">clLinkProgram</span>, <span class="ident">clGetKernelArgInfo</span>,
+    <span class="ident">clEnqueueFillBuffer</span>, <span class="ident">clEnqueueFillImage</span>, <span class="ident">clEnqueueMigrateMemObjects</span>,
+    <span class="ident">clEnqueueMarkerWithWaitList</span>, <span class="ident">clEnqueueBarrierWithWaitList</span>,
+    <span class="ident">clGetExtensionFunctionAddressForPlatform</span>};
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_0&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">clCreateCommandQueueWithProperties</span>, <span class="ident">clCreatePipe</span>, <span class="ident">clGetPipeInfo</span>, <span class="ident">clSVMAlloc</span>,
+    <span class="ident">clSVMFree</span>, <span class="ident">clCreateSamplerWithProperties</span>, <span class="ident">clSetKernelArgSVMPointer</span>, <span class="ident">clSetKernelExecInfo</span>,
+    <span class="ident">clEnqueueSVMFree</span>, <span class="ident">clEnqueueSVMMemcpy</span>, <span class="ident">clEnqueueSVMMemFill</span>, <span class="ident">clEnqueueSVMMap</span>, <span class="ident">clEnqueueSVMUnmap</span>,
+    <span class="ident">clCreateCommandQueueWithProperties</span>, <span class="ident">clCreatePipe</span>, <span class="ident">clGetPipeInfo</span>, <span class="ident">clSVMAlloc</span>, <span class="ident">clSVMFree</span>,
+    <span class="ident">clCreateSamplerWithProperties</span>, <span class="ident">clSetKernelArgSVMPointer</span>, <span class="ident">clSetKernelExecInfo</span>, <span class="ident">clEnqueueSVMFree</span>,
+    <span class="ident">clEnqueueSVMMemcpy</span>, <span class="ident">clEnqueueSVMMemFill</span>, <span class="ident">clEnqueueSVMMap</span>, <span class="ident">clEnqueueSVMUnmap</span>};
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;opencl_version_2_1&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">cl_h</span>::{<span class="ident">clSetDefaultDeviceCommandQueue</span>, <span class="ident">clGetDeviceAndHostTimer</span>, <span class="ident">clGetHostTimer</span>,
+    <span class="ident">clCreateProgramWithIL</span>, <span class="ident">clCloneKernel</span>, <span class="ident">clGetKernelSubGroupInfo</span>, <span class="ident">clEnqueueSVMMigrateMem</span>};
+</pre>
 </section>
     <section id='search' class="content hidden"></section>
 
@@ -577,11 +605,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "cl_sys";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

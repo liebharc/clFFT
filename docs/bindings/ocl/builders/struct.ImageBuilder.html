@@ -9,6 +9,7 @@
 
     <title>ocl::builders::ImageBuilder - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,89 +43,118 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class='struct' href=''>ImageBuilder</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>builders</a>::<wbr><a class="struct" href=''>ImageBuilder</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-979' class='srclink' href='../../src/ocl/standard/image.rs.html#17-23' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct ImageBuilder&lt;S:&nbsp;<a class='trait' href='../../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A builder for <code>Image</code>.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;S:&nbsp;<a class='trait' href='../../ocl/traits/trait.OclPrm.html' title='ocl::traits::OclPrm'>OclPrm</a>&gt; <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-985' class='srclink' href='../../src/ocl/standard/image.rs.html#26-288' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+               </span><a class='srclink' href='../../src/ocl/standard/image.rs.html#960-968' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[must_use = "builders do nothing unless \'::build\' is called"]
+</div>pub struct ImageBuilder&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'a,&nbsp;</span> { /* fields omitted */ }</pre><div class='docblock'><p>A builder for <code>Image</code>.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'a + <a class="trait" href="../../ocl/traits/trait.OclPrm.html" title="trait ocl::traits::OclPrm">OclPrm</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/ocl/standard/image.rs.html#971-1297' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Returns a new <code>ImageBuilder</code> with very basic defaults.</p>
-
-<h2 id='defaults' class='section-header'><a href='#defaults'>Defaults</a></h2>
+<h2 id="defaults" class="section-header"><a href="#defaults">Defaults</a></h2>
 <ul>
 <li>Flags:</li>
 </ul>
-
 <pre><code class="language-text">ocl::MEM_READ_WRITE
 </code></pre>
-
 <ul>
 <li>Image Format:</li>
 </ul>
-
 <pre><code class="language-text">ocl::ImageFormat {
    channel_order: ocl::ImageChannelOrder::Rgba,
    channel_data_type: ocl::ImageChannelDataType::SnormInt8,
 }
 </code></pre>
-
 <ul>
 <li>Descriptor (stores everything else - width, height, pitch, etc.):</li>
 </ul>
-
 <pre><code class="language-text">ImageDescriptor::new(MemObjectType::Image1d, 0, 0, 0, 0, 0, 0, None)
 </code></pre>
-
-<h2 id='reference' class='section-header'><a href='#reference'>Reference</a></h2>
+<h2 id="reference" class="section-header"><a href="#reference">Reference</a></h2>
 <p>See the [official SDK documentation] for more information.</p>
-
 <p>Some descriptions here are adapted from various SDK docs.</p>
-</div><h4 id='method.build' class='method'><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>(&amp;self, queue: &amp;<a class='struct' href='../../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a>) -&gt; <a class='type' href='../../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../../ocl/struct.Image.html' title='ocl::Image'>Image</a>&lt;S&gt;&gt;</code></span></h4>
-<div class='docblock'><p>Builds with no host side image data memory specified and returns a
-new <code>Image</code>.</p>
-</div><h4 id='method.build_with_data' class='method'><span id='build_with_data.v' class='invisible'><code>fn <a href='#method.build_with_data' class='fnname'>build_with_data</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; queue: &amp;<a class='struct' href='../../ocl/struct.Queue.html' title='ocl::Queue'>Queue</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; image_data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>S<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../../ocl/type.Result.html' title='ocl::Result'>OclResult</a>&lt;<a class='struct' href='../../ocl/struct.Image.html' title='ocl::Image'>Image</a>&lt;S&gt;&gt;</code></span></h4>
-<div class='docblock'><p>Builds with the host side image data specified by <code>image_data</code>
-and returns a new <code>Image</code>.</p>
-
-<p>Useful with the <code>ocl::MEM_COPY_HOST_PTR</code> flag for initializing device
-memory by copying the contents of <code>image_data</code>.</p>
-
-<p>Also used with the <code>ocl::MEM_USE_HOST_PTR</code> and <code>ocl::ALLOC_HOST_PTR</code>
-flags. See the <a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clCreateImage.html">official SDK docs</a> for more info.</p>
-</div><h4 id='method.channel_order' class='method'><span id='channel_order.v' class='invisible'><code>fn <a href='#method.channel_order' class='fnname'>channel_order</a>(&amp;mut self, order: <a class='enum' href='../../ocl/enums/enum.ImageChannelOrder.html' title='ocl::enums::ImageChannelOrder'>ImageChannelOrder</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
-<h4 id='method.channel_data_type' class='method'><span id='channel_data_type.v' class='invisible'><code>fn <a href='#method.channel_data_type' class='fnname'>channel_data_type</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data_type: <a class='enum' href='../../ocl/enums/enum.ImageChannelDataType.html' title='ocl::enums::ImageChannelDataType'>ImageChannelDataType</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
-<h4 id='method.image_type' class='method'><span id='image_type.v' class='invisible'><code>fn <a href='#method.image_type' class='fnname'>image_type</a>(&amp;mut self, image_type: <a class='enum' href='../../ocl/enums/enum.MemObjectType.html' title='ocl::enums::MemObjectType'>MemObjectType</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.context' class="method"><span id='context.v' class='invisible'><code>fn <a href='#method.context' class='fnname'>context</a>&lt;'o&gt;(self, context: &amp;'o <a class="struct" href="../../ocl/struct.Context.html" title="struct ocl::Context">Context</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'o: 'a,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>Sets the context with which to associate the buffer.</p>
+<p>May not be used in combination with <code>::queue</code> (use one or the other).</p>
+</div><h4 id='method.queue' class="method"><span id='queue.v' class='invisible'><code>fn <a href='#method.queue' class='fnname'>queue</a>&lt;'b&gt;(self, default_queue: <a class="struct" href="../../ocl/struct.Queue.html" title="struct ocl::Queue">Queue</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
+<div class='docblock'><p>Sets the default queue.</p>
+<p>If this is set, the context associated with the <code>default_queue</code> will
+be used when creating the buffer (use one or the other).</p>
+</div><h4 id='method.flags' class="method"><span id='flags.v' class='invisible'><code>fn <a href='#method.flags' class='fnname'>flags</a>(self, flags: <a class="struct" href="../../ocl/flags/struct.MemFlags.html" title="struct ocl::flags::MemFlags">MemFlags</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
+<div class='docblock'><p>Sets the flags for the memory to be created.</p>
+<p>Setting this overwrites any previously set flags. To combine them,
+use the bitwise or operator (<code>|</code>), for example:</p>
+<pre><code class="language-text">ocl::Image::builder().flags(ocl::MEM_WRITE_ONLY | ocl::MEM_COPY_HOST_PTR)...
+</code></pre>
+<p>Defaults to <code>core::MEM_READ_WRITE</code> if not set.</p>
+</div><h4 id='method.host_data' class="method"><span id='host_data.v' class='invisible'><code>fn <a href='#method.host_data' class='fnname'>host_data</a>&lt;'d&gt;(self, host_data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'d [</a>T<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;'d: 'a,&nbsp;</span></code></span></h4>
+<div class='docblock'><p>A slice use to designate a region of memory for use in combination of
+one of the two following flags:</p>
+<ul>
+<li>
+<p><code>flags::MEM_USE_HOST_PTR</code> aka. <code>MemFlags::new().use_host_ptr()</code>:</p>
+<ul>
+<li>This flag is valid only if <code>host_data</code> is not <code>None</code>. If
+specified, it indicates that the application wants the OpenCL
+implementation to use memory referenced by <code>host_data</code> as the
+storage bits for the memory object (buffer/image).</li>
+<li>OpenCL implementations are allowed to cache the buffer contents
+pointed to by <code>host_data</code> in device memory. This cached copy can
+be used when kernels are executed on a device.</li>
+<li>The result of OpenCL commands that operate on multiple buffer
+objects created with the same <code>host_data</code> or overlapping host
+regions is considered to be undefined.</li>
+<li>Refer to the <a href="https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/dataTypes.html">description of the alignment</a> rules for
+<code>host_data</code> for memory objects (buffer and images) created using
+<code>MEM_USE_HOST_PTR</code>.</li>
+<li><code>MEM_ALLOC_HOST_PTR</code> and <code>MEM_USE_HOST_PTR</code> are mutually exclusive.</li>
+</ul>
+</li>
+<li>
+<p><code>flags::MEM_COPY_HOST_PTR</code> aka. <code>MemFlags::new().copy_host_ptr()</code></p>
+<ul>
+<li>This flag is valid only if <code>host_data</code> is not NULL. If specified, it
+indicates that the application wants the OpenCL implementation to
+allocate memory for the memory object and copy the data from
+memory referenced by <code>host_data</code>.</li>
+<li>CL_MEM_COPY_HOST_PTR and CL_MEM_USE_HOST_PTR are mutually
+exclusive.</li>
+<li>CL_MEM_COPY_HOST_PTR can be used with CL_MEM_ALLOC_HOST_PTR to
+initialize the contents of the cl_mem object allocated using
+host-accessible (e.g. PCIe) memory.</li>
+</ul>
+</li>
+</ul>
+<p>Note: Descriptions adapted from:
+<a href="https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/clCreateBuffer.html">https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/clCreateBuffer.html</a>.</p>
+</div><h4 id='method.channel_order' class="method"><span id='channel_order.v' class='invisible'><code>fn <a href='#method.channel_order' class='fnname'>channel_order</a>(self, order: <a class="enum" href="../../ocl/enums/enum.ImageChannelOrder.html" title="enum ocl::enums::ImageChannelOrder">ImageChannelOrder</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
+<h4 id='method.channel_data_type' class="method"><span id='channel_data_type.v' class='invisible'><code>fn <a href='#method.channel_data_type' class='fnname'>channel_data_type</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;data_type: <a class="enum" href="../../ocl/enums/enum.ImageChannelDataType.html" title="enum ocl::enums::ImageChannelDataType">ImageChannelDataType</a><br>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
+<h4 id='method.image_type' class="method"><span id='image_type.v' class='invisible'><code>fn <a href='#method.image_type' class='fnname'>image_type</a>(self, image_type: <a class="enum" href="../../ocl/enums/enum.MemObjectType.html" title="enum ocl::enums::MemObjectType">MemObjectType</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Sets the type of image (technically the type of memory buffer).</p>
-
 <p>Describes the image type and must be either <code>Image1d</code>, <code>Image1dBuffer</code>,
 <code>Image1dArray</code>, <code>Image2d</code>, <code>Image2dArray</code>, or <code>Image3d</code>.</p>
-</div><h4 id='method.dims' class='method'><span id='dims.v' class='invisible'><code>fn <a href='#method.dims' class='fnname'>dims</a>&lt;D:&nbsp;<a class='trait' href='../../ocl/traits/trait.MemLen.html' title='ocl::traits::MemLen'>MemLen</a>&gt;(&amp;mut self, dims: D) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.dims' class="method"><span id='dims.v' class='invisible'><code>fn <a href='#method.dims' class='fnname'>dims</a>&lt;D&gt;(self, dims: D) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;D: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="../../ocl/enum.SpatialDims.html" title="enum ocl::SpatialDims">SpatialDims</a>&gt;,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>The width, height, and depth of an image or image array:</p>
-
 <p>Some notes adapted from SDK docs:</p>
-
-<h2 id='width' class='section-header'><a href='#width'>Width</a></h2>
+<h2 id="width" class="section-header"><a href="#width">Width</a></h2>
 <p>The width of the image in pixels. For a 2D image and image array, the
 image width must be ≤ <code>DeviceInfo::Image2dMaxWidth</code>. For a 3D image, the
 image width must be ≤ <code>DeviceInfo::Image3dMaxWidth</code>. For a 1D image buffer,
 the image width must be ≤ <code>DeviceInfo::ImageMaxBufferSize</code>. For a 1D image
 and 1D image array, the image width must be ≤ <code>DeviceInfo::Image2dMaxWidth</code>.</p>
-
-<h2 id='height' class='section-header'><a href='#height'>Height</a></h2>
+<h2 id="height" class="section-header"><a href="#height">Height</a></h2>
 <p>The height of the image in pixels. This is only used if the
 image is a 2D, 3D or 2D image array. For a 2D image or image array, the
 image height must be ≤ <code>DeviceInfo::Image2dMaxHeight</code>. For a 3D image, the
 image height must be ≤ <code>DeviceInfo::Image3dMaxHeight</code>.</p>
-
-<h2 id='depth' class='section-header'><a href='#depth'>Depth</a></h2>
+<h2 id="depth" class="section-header"><a href="#depth">Depth</a></h2>
 <p>image_depth The depth of the image in pixels. This is only used if the
 image is a 3D image and must be a value ≥ 1 and ≤
 <code>DeviceInfo::Image3dMaxDepth</code>.</p>
-
-<h2 id='examples' class='section-header'><a href='#examples'>Examples</a></h2>
+<h2 id="examples" class="section-header"><a href="#examples">Examples</a></h2>
 <ul>
 <li>To set the dimensions of a 2d image use:
 <code>SpatialDims::Two(width, height)</code>.</li>
@@ -133,27 +163,23 @@ image is a 3D image and must be a value ≥ 1 and ≤
 <li>To set the dimensions of a 3d image use:
 <code>SpatialDims::Three(width, height, depth)</code>.</li>
 </ul>
-</div><h4 id='method.array_size' class='method'><span id='array_size.v' class='invisible'><code>fn <a href='#method.array_size' class='fnname'>array_size</a>(&amp;mut self, array_size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.array_size' class="method"><span id='array_size.v' class='invisible'><code>fn <a href='#method.array_size' class='fnname'>array_size</a>(self, array_size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Image array size.</p>
-
 <p>The number of images in the image array. This is only used if the image is
 a 1D or 2D image array. The values for image_array_size, if specified,
 must be a value ≥ 1 and ≤ <code>DeviceInfo::ImageMaxArraySize</code>.</p>
-
 <p>Note that reading and writing 2D image arrays from a kernel with
 image_array_size = 1 may be lower performance than 2D images.</p>
-</div><h4 id='method.row_pitch_bytes' class='method'><span id='row_pitch_bytes.v' class='invisible'><code>fn <a href='#method.row_pitch_bytes' class='fnname'>row_pitch_bytes</a>(&amp;mut self, row_pitch: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.row_pitch_bytes' class="method"><span id='row_pitch_bytes.v' class='invisible'><code>fn <a href='#method.row_pitch_bytes' class='fnname'>row_pitch_bytes</a>(self, row_pitch: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Image row pitch.</p>
-
 <p>The scan-line pitch in bytes. This must be 0 if host data is <code>None</code> and
 can be either 0 or ≥ image_width * size of element in bytes if host data
 is not <code>None</code>. If host data is not <code>None</code> and image_row_pitch = 0,
 image_row_pitch is calculated as image_width * size of element in bytes.
 If image_row_pitch is not 0, it must be a multiple of the image element
 size in bytes.</p>
-</div><h4 id='method.slc_pitch_bytes' class='method'><span id='slc_pitch_bytes.v' class='invisible'><code>fn <a href='#method.slc_pitch_bytes' class='fnname'>slc_pitch_bytes</a>(&amp;mut self, slc_pitch: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.slc_pitch_bytes' class="method"><span id='slc_pitch_bytes.v' class='invisible'><code>fn <a href='#method.slc_pitch_bytes' class='fnname'>slc_pitch_bytes</a>(self, slc_pitch: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Image slice pitch.</p>
-
 <p>The size in bytes of each 2D slice in the 3D image or the size in bytes of
 each image in a 1D or 2D image array. This must be 0 if host data is
 <code>None</code>. If host data is not <code>None</code>, image_slice_pitch can be either 0 or ≥
@@ -163,42 +189,27 @@ either 0 or ≥ image_row_pitch for a 1D image array. If host data is not
 image_row_pitch * image_height for a 2D image array or 3D image and
 image_row_pitch for a 1D image array. If image_slice_pitch is not 0, it
 must be a multiple of the image_row_pitch.</p>
-</div><h4 id='method.buffer_sync' class='method'><span id='buffer_sync.v' class='invisible'><code>fn <a href='#method.buffer_sync' class='fnname'>buffer_sync</a>(&amp;mut self, buffer: <a class='struct' href='../../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>MemCore</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.buffer_sync' class="method"><span id='buffer_sync.v' class='invisible'><code>fn <a href='#method.buffer_sync' class='fnname'>buffer_sync</a>(self, buffer: <a class="struct" href="../../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">MemCore</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Buffer synchronization.</p>
-
 <p>Refers to a valid buffer memory object if image_type is
 <code>MemObjectType::Image1dBuffer</code>. Otherwise it must be <code>None</code> (default).
 For a 1D image buffer object, the image pixels are taken from the buffer
-object&#39;s data store. When the contents of a buffer object&#39;s data store are
+object's data store. When the contents of a buffer object's data store are
 modified, those changes are reflected in the contents of the 1D image
 buffer object and vice-versa at corresponding sychronization points. The
 image_width * size of element in bytes must be ≤ size of buffer object
 data store.</p>
-</div><h4 id='method.flags' class='method'><span id='flags.v' class='invisible'><code>fn <a href='#method.flags' class='fnname'>flags</a>(&amp;mut self, flags: <a class='struct' href='../../ocl/flags/struct.MemFlags.html' title='ocl::flags::MemFlags'>MemFlags</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
-<div class='docblock'><p>Sets the flags for the memory to be created.</p>
-
-<p>Setting this overwrites any previously set flags. To combine them,
-use the bitwise or operator (<code>|</code>), for example:</p>
-
-<pre><code class="language-text">ocl::Image::builder().flags(ocl::MEM_WRITE_ONLY | ocl::MEM_COPY_HOST_PTR)...
-</code></pre>
-
-<p>Defaults to <code>core::MEM_READ_WRITE</code> if not set.</p>
-</div><h4 id='method.image_format' class='method'><span id='image_format.v' class='invisible'><code>fn <a href='#method.image_format' class='fnname'>image_format</a>(&amp;mut self, image_format: <a class='struct' href='../../ocl/builders/struct.ImageFormat.html' title='ocl::builders::ImageFormat'>ImageFormat</a>) -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.image_format' class="method"><span id='image_format.v' class='invisible'><code>fn <a href='#method.image_format' class='fnname'>image_format</a>(self, image_format: <a class="struct" href="../../ocl/builders/struct.ImageFormat.html" title="struct ocl::builders::ImageFormat">ImageFormat</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Specifies the image pixel format.</p>
-
 <p>If unspecified, defaults to:</p>
-
 <pre><code class="language-text">ImageFormat {
    channel_order: ImageChannelOrder::Rgba,
    channel_data_type: ImageChannelDataType::SnormInt8,
 }
 </code></pre>
-</div><h4 id='method.image_desc' class='method'><span id='image_desc.v' class='invisible'><code>unsafe fn <a href='#method.image_desc' class='fnname'>image_desc</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; image_desc: <a class='struct' href='../../ocl/builders/struct.ImageDescriptor.html' title='ocl::builders::ImageDescriptor'>ImageDescriptor</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; &amp;mut <a class='struct' href='../../ocl/builders/struct.ImageBuilder.html' title='ocl::builders::ImageBuilder'>ImageBuilder</a>&lt;S&gt;</code></span></h4>
+</div><h4 id='method.image_desc' class="method"><span id='image_desc.v' class='invisible'><code>unsafe fn <a href='#method.image_desc' class='fnname'>image_desc</a>(self, image_desc: <a class="struct" href="../../ocl/builders/struct.ImageDescriptor.html" title="struct ocl::builders::ImageDescriptor">ImageDescriptor</a>) -&gt; <a class="struct" href="../../ocl/builders/struct.ImageBuilder.html" title="struct ocl::builders::ImageBuilder">ImageBuilder</a>&lt;'a, T&gt;</code></span></h4>
 <div class='docblock'><p>Specifies the image descriptor containing a number of important settings.</p>
-
 <p>If unspecified (not recommended), defaults to:</p>
-
 <pre><code class="language-text">ImageDescriptor {
     image_type: MemObjectType::Image1d,
     image_width: 0,
@@ -212,10 +223,8 @@ use the bitwise or operator (<code>|</code>), for example:</p>
     buffer: None,
 }
 </code></pre>
-
 <p>If you are unsure, just set the first four by using
 <code>ImageDescriptor::new</code>. Ex.:</p>
-
 <pre><code class="language-text">ocl::Image::builder()
    .image_desc(ocl::ImageDescriptor::new(
       ocl::MemObjectType::Image2d, 1280, 800, 1))
@@ -223,8 +232,14 @@ use the bitwise or operator (<code>|</code>), for example:</p>
    ...
    .build()
 </code></pre>
-
 <p>Setting this overwrites any previously set type, dimensions, array size, pitch, etc.</p>
+</div><h4 id='method.build_with_data' class="method"><span id='build_with_data.v' class='invisible'><code>fn <a href='#method.build_with_data' class='fnname'>build_with_data</a>(self, queue: <a class="struct" href="../../ocl/struct.Queue.html" title="struct ocl::Queue">Queue</a>, host_data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a>T<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="../../ocl/type.Result.html" title="type ocl::Result">OclResult</a>&lt;<a class="struct" href="../../ocl/struct.Image.html" title="struct ocl::Image">Image</a>&lt;T&gt;&gt;</code></span></h4>
+<div class='stability'><div class='stab deprecated'>Deprecated since 0.13.0<p>: Use '::host_data' and '::build' instead.</p>
+</div></div><div class='docblock'><p>Builds with the host side image data specified by <code>host_data</code>
+and returns a new <code>Image</code>.</p>
+</div><h4 id='method.build' class="method"><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>(self) -&gt; <a class="type" href="../../ocl/type.Result.html" title="type ocl::Result">OclResult</a>&lt;<a class="struct" href="../../ocl/struct.Image.html" title="struct ocl::Image">Image</a>&lt;T&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Builds with no host side image data memory specified and returns a
+new <code>Image</code>.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 
@@ -281,11 +296,9 @@ use the bitwise or operator (<code>|</code>), for example:</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

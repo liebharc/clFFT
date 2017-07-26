@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.12.0\src\standard\device.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.14.1\src\standard\device.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>device.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -531,494 +532,662 @@
 <span id="487">487</span>
 <span id="488">488</span>
 <span id="489">489</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! An OpenCL device identifier and related types.</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! An OpenCL device identifier and related types.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Deref</span>, <span class='ident'>DerefMut</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>Into</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>error</span>::{<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>OclError</span>, <span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>OclResult</span>};
-<span class='kw'>use</span> <span class='ident'>standard</span>::<span class='ident'>Platform</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::{<span class='self'>self</span>, <span class='ident'>DeviceId</span> <span class='kw'>as</span> <span class='ident'>DeviceIdCore</span>, <span class='ident'>DeviceType</span>, <span class='ident'>DeviceInfo</span>, <span class='ident'>DeviceInfoResult</span>, <span class='ident'>ClDeviceIdPtr</span>};
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>util</span>;
+<span class="kw">use</span> <span class="ident">std</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Borrow</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">error</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">OclError</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">OclResult</span>};
+<span class="kw">use</span> <span class="ident">standard</span>::<span class="ident">Platform</span>;
+<span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">cl_device_id</span>;
+<span class="kw">use</span> <span class="ident">core</span>::{<span class="self">self</span>, <span class="ident">DeviceId</span> <span class="kw">as</span> <span class="ident">DeviceIdCore</span>, <span class="ident">DeviceType</span>, <span class="ident">DeviceInfo</span>, <span class="ident">DeviceInfoResult</span>, <span class="ident">ClDeviceIdPtr</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">util</span>;
 
-<span class='doccomment'>/// Specifies [what boils down to] a list of devices.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The `Indices` variant is context-specific, not robust, and may lead to a</span>
-<span class='doccomment'>/// panic if the context changes. It is useful for convenience only and not</span>
-<span class='doccomment'>/// recommended for general use. The `WrappingIndices` variant is somewhat</span>
-<span class='doccomment'>/// less dangerous but can still be somewhat machine-specific.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The `TypeFlags` variant is used for specifying a list of devices using a</span>
-<span class='doccomment'>/// bitfield (`DeviceType`) and is the most robust / portable.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [FIXME: Add some links to the SDK]</span>
-<span class='doccomment'>///</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='ident'>All</span>,
-    <span class='ident'>First</span>,
-    <span class='ident'>Single</span>(<span class='ident'>Device</span>),
-    <span class='ident'>List</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span>),
-    <span class='ident'>Indices</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>),
-    <span class='ident'>WrappingIndices</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>),
-    <span class='ident'>TypeFlags</span>(<span class='ident'>DeviceType</span>),
+
+<span class="comment">// Perhaps add something like this to the `DeviceSpecifier`.</span>
+<span class="comment">//</span>
+<span class="comment">// Copied from `https://github.com/TyOverby/ocl-repro/blob/master/src/main.rs`:</span>
+<span class="comment">//</span>
+<span class="comment">// pub fn first_gpu() -&gt; (Platform, Device) {</span>
+<span class="comment">//     let mut out = vec![];</span>
+<span class="comment">//     for plat in Platform::list() {</span>
+<span class="comment">//         if let Ok(all_devices) = Device::list_all(&amp;plat) {</span>
+<span class="comment">//             for dev in all_devices {</span>
+<span class="comment">//                 out.push((plat.clone(), dev));</span>
+<span class="comment">//             }</span>
+<span class="comment">//         }</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//     // Prefer GPU</span>
+<span class="comment">//     out.sort_by(|&amp;(_, ref a), &amp;(_, ref b)| {</span>
+<span class="comment">//         let a_type = a.info(DeviceInfo::Type);</span>
+<span class="comment">//         let b_type = b.info(DeviceInfo::Type);</span>
+<span class="comment">//         if let (DeviceInfoResult::Type(a_type), DeviceInfoResult::Type(b_type)) = (a_type, b_type) {</span>
+<span class="comment">//             b_type.cmp(&amp;a_type)</span>
+<span class="comment">//         } else {</span>
+<span class="comment">//             (0).cmp(&amp;0)</span>
+<span class="comment">//         }</span>
+<span class="comment">//     });</span>
+<span class="comment">//</span>
+<span class="comment">//     out.first().unwrap().clone()</span>
+<span class="comment">// }</span>
+
+<span class="doccomment">/// Specifies [what boils down to] a list of devices.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `Indices` variant is context-specific, not robust, and may lead to a</span>
+<span class="doccomment">/// panic if the context changes. It is useful for convenience only and not</span>
+<span class="doccomment">/// recommended for general use. The `WrappingIndices` variant is somewhat</span>
+<span class="doccomment">/// less dangerous but can still be somewhat machine-specific.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `TypeFlags` variant is used for specifying a list of devices using a</span>
+<span class="doccomment">/// bitfield (`DeviceType`) and is the most robust / portable.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [FIXME: Add some links to the SDK]</span>
+<span class="doccomment">///</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="ident">All</span>,
+    <span class="ident">First</span>,
+    <span class="ident">Single</span>(<span class="ident">Device</span>),
+    <span class="ident">List</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span>),
+    <span class="ident">Indices</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>),
+    <span class="ident">WrappingIndices</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>),
+    <span class="ident">TypeFlags</span>(<span class="ident">DeviceType</span>),
 }
 
-<span class='kw'>impl</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='doccomment'>/// Returns a `DeviceSpecifier::All` variant which specifies all</span>
-    <span class='doccomment'>/// devices on a platform.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>all</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>All</span>
+<span class="kw">impl</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="doccomment">/// Returns a `DeviceSpecifier::All` variant which specifies all</span>
+    <span class="doccomment">/// devices on a platform.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">all</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">All</span>
     }
 
-    <span class='doccomment'>/// Returns a `DeviceSpecifier::First` variant which specifies only</span>
-    <span class='doccomment'>/// the first device on a platform.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>first</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>First</span>
+    <span class="doccomment">/// Returns a `DeviceSpecifier::First` variant which specifies only</span>
+    <span class="doccomment">/// the first device on a platform.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">First</span>
     }
 
-    <span class='doccomment'>/// Returns a `DeviceSpecifier::Single` variant which specifies a single</span>
-    <span class='doccomment'>/// device.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>single</span>(<span class='self'>self</span>, <span class='ident'>device</span>: <span class='ident'>Device</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>Single</span>(<span class='ident'>device</span>)
+    <span class="doccomment">/// Returns a `DeviceSpecifier::Single` variant which specifies a single</span>
+    <span class="doccomment">/// device.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">single</span>(<span class="self">self</span>, <span class="ident">device</span>: <span class="ident">Device</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">Single</span>(<span class="ident">device</span>)
     }
 
-    <span class='doccomment'>/// Returns a `DeviceSpecifier::List` variant which specifies a list of</span>
-    <span class='doccomment'>/// devices.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list</span>(<span class='self'>self</span>, <span class='ident'>list</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>List</span>(<span class='ident'>list</span>)
+    <span class="doccomment">/// Returns a `DeviceSpecifier::List` variant which specifies a list of</span>
+    <span class="doccomment">/// devices.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list</span>(<span class="self">self</span>, <span class="ident">list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">List</span>(<span class="ident">list</span>)
     }
 
-    <span class='doccomment'>/// Returns a `DeviceSpecifier::Indices` variant which specifies a list of</span>
-    <span class='doccomment'>/// devices by index.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Safety</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This variant is context-specific, not robust, and may lead to a panic</span>
-    <span class='doccomment'>/// if the context changes. It is useful for convenience only and not</span>
-    <span class='doccomment'>/// recommended for general use.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Though using the `Indices` variant is not strictly unsafe in the usual</span>
-    <span class='doccomment'>/// way (will not lead to memory bugs, etc.), it is marked unsafe as a</span>
-    <span class='doccomment'>/// warning. Recommendations for a more idiomatic way to express this</span>
-    <span class='doccomment'>/// potential footgun are welcome.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Using `::wrapping_indices` is a more robust (but still potentially</span>
-    <span class='doccomment'>/// non-portable) solution.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>indices</span>(<span class='self'>self</span>, <span class='ident'>indices</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>Indices</span>(<span class='ident'>indices</span>)
+    <span class="doccomment">/// Returns a `DeviceSpecifier::Indices` variant which specifies a list of</span>
+    <span class="doccomment">/// devices by index.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Safety</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This variant is context-specific, not robust, and may lead to a panic</span>
+    <span class="doccomment">/// if the context changes. It is useful for convenience only and not</span>
+    <span class="doccomment">/// recommended for general use.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Though using the `Indices` variant is not strictly unsafe in the usual</span>
+    <span class="doccomment">/// way (will not lead to memory bugs, etc.), it is marked unsafe as a</span>
+    <span class="doccomment">/// warning. Recommendations for a more idiomatic way to express this</span>
+    <span class="doccomment">/// potential footgun are welcome.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Using `::wrapping_indices` is a more robust (but still potentially</span>
+    <span class="doccomment">/// non-portable) solution.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">indices</span>(<span class="self">self</span>, <span class="ident">indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">Indices</span>(<span class="ident">indices</span>)
     }
 
-    <span class='doccomment'>/// Returns a `DeviceSpecifier::WrappingIndices` variant, specifying a</span>
-    <span class='doccomment'>/// list of devices by indices which are wrapped around (simply using the</span>
-    <span class='doccomment'>/// modulo operator) so that every index is always valid.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>wrapping_indices</span>(<span class='self'>self</span>, <span class='ident'>windices</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>WrappingIndices</span>(<span class='ident'>windices</span>)
+    <span class="doccomment">/// Returns a `DeviceSpecifier::WrappingIndices` variant, specifying a</span>
+    <span class="doccomment">/// list of devices by indices which are wrapped around (simply using the</span>
+    <span class="doccomment">/// modulo operator) so that every index is always valid.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrapping_indices</span>(<span class="self">self</span>, <span class="ident">windices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">WrappingIndices</span>(<span class="ident">windices</span>)
     }
 
-    <span class='doccomment'>/// Returns a `DeviceSpecifier::TypeFlags` variant which specifies a list</span>
-    <span class='doccomment'>/// of devices using a conventional bitfield.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>type_flags</span>(<span class='self'>self</span>, <span class='ident'>flags</span>: <span class='ident'>DeviceType</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>TypeFlags</span>(<span class='ident'>flags</span>)
+    <span class="doccomment">/// Returns a `DeviceSpecifier::TypeFlags` variant which specifies a list</span>
+    <span class="doccomment">/// of devices using a conventional bitfield.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">type_flags</span>(<span class="self">self</span>, <span class="ident">flags</span>: <span class="ident">DeviceType</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">TypeFlags</span>(<span class="ident">flags</span>)
     }
 
-    <span class='doccomment'>/// Returns the list of devices matching the parameters specified by this</span>
-    <span class='doccomment'>/// `DeviceSpecifier`</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Panics</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Any device indices listed within the `Indices` variant must be within</span>
-    <span class='doccomment'>/// the range of the number of devices for the platform specified by</span>
-    <span class='doccomment'>/// `Platform`. If no `platform` has been specified, this behaviour is</span>
-    <span class='doccomment'>/// undefined and could end up using any platform at all.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_device_list</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>platform</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Platform</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>platform</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>platform</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='ident'>p</span>.<span class='ident'>clone</span>(),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Platform</span>::<span class='ident'>default</span>(),
-        };
+    <span class="doccomment">/// Returns the list of devices matching the parameters specified by this</span>
+    <span class="doccomment">/// `DeviceSpecifier`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Any device indices listed within the `Indices` variant must be within</span>
+    <span class="doccomment">/// the range of the number of devices for the platform specified by</span>
+    <span class="doccomment">/// `Platform`. If no `platform` has been specified, this behaviour is</span>
+    <span class="doccomment">/// undefined and could end up using any platform at all.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_device_list</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">platform</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;&gt;</span> {
+        <span class="comment">// let platform = match platform {</span>
+        <span class="comment">//     Some(p) =&gt; p.clone(),</span>
+        <span class="comment">//     None =&gt; Platform::default(),</span>
+        <span class="comment">// };</span>
+        <span class="comment">// let platform = platform.unwrap_or(Platform::default());</span>
+        <span class="kw">let</span> <span class="ident">platform</span> <span class="op">=</span> <span class="ident">platform</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">borrow</span>().<span class="ident">clone</span>()).<span class="ident">unwrap_or</span>(<span class="ident">Platform</span>::<span class="ident">default</span>());
 
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>DeviceSpecifier</span>::<span class='ident'>All</span> <span class='op'>=&gt;</span> {
-                <span class='ident'>Device</span>::<span class='ident'>list_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>platform</span>)
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">DeviceSpecifier</span>::<span class="ident">All</span> <span class="op">=&gt;</span> {
+                <span class="ident">Device</span>::<span class="ident">list_all</span>(<span class="kw-2">&amp;</span><span class="ident">platform</span>)
             },
-            <span class='ident'>DeviceSpecifier</span>::<span class='ident'>First</span> <span class='op'>=&gt;</span> {
-                <span class='ident'>Device</span>::<span class='ident'>list_select</span>(<span class='kw-2'>&amp;</span><span class='ident'>platform</span>, <span class='prelude-val'>None</span>, <span class='kw-2'>&amp;</span>[<span class='number'>0</span>])
+            <span class="ident">DeviceSpecifier</span>::<span class="ident">First</span> <span class="op">=&gt;</span> {
+                <span class="ident">Device</span>::<span class="ident">list_select</span>(<span class="kw-2">&amp;</span><span class="ident">platform</span>, <span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>])
             },
-            <span class='ident'>DeviceSpecifier</span>::<span class='ident'>Single</span>(<span class='kw-2'>ref</span> <span class='ident'>device</span>) <span class='op'>=&gt;</span> {
-                <span class='prelude-val'>Ok</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>device</span>.<span class='ident'>clone</span>()])
+            <span class="ident">DeviceSpecifier</span>::<span class="ident">Single</span>(<span class="kw-2">ref</span> <span class="ident">device</span>) <span class="op">=&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">device</span>.<span class="ident">clone</span>()])
             },
-            <span class='ident'>DeviceSpecifier</span>::<span class='ident'>List</span>(<span class='kw-2'>ref</span> <span class='ident'>devices</span>) <span class='op'>=&gt;</span> {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>devices</span>.<span class='ident'>clone</span>())
+            <span class="ident">DeviceSpecifier</span>::<span class="ident">List</span>(<span class="kw-2">ref</span> <span class="ident">devices</span>) <span class="op">=&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">devices</span>.<span class="ident">clone</span>())
             },
-            <span class='ident'>DeviceSpecifier</span>::<span class='ident'>Indices</span>(<span class='kw-2'>ref</span> <span class='ident'>idx_list</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Device</span>::<span class='ident'>list_select</span>(<span class='kw-2'>&amp;</span><span class='ident'>platform</span>, <span class='prelude-val'>None</span>, <span class='ident'>idx_list</span>)
+            <span class="ident">DeviceSpecifier</span>::<span class="ident">Indices</span>(<span class="kw-2">ref</span> <span class="ident">idx_list</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Device</span>::<span class="ident">list_select</span>(<span class="kw-2">&amp;</span><span class="ident">platform</span>, <span class="prelude-val">None</span>, <span class="ident">idx_list</span>)
             },
-            <span class='ident'>DeviceSpecifier</span>::<span class='ident'>WrappingIndices</span>(<span class='kw-2'>ref</span> <span class='ident'>idx_list</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Device</span>::<span class='ident'>list_select_wrap</span>(<span class='kw-2'>&amp;</span><span class='ident'>platform</span>, <span class='prelude-val'>None</span>, <span class='ident'>idx_list</span>)
+            <span class="ident">DeviceSpecifier</span>::<span class="ident">WrappingIndices</span>(<span class="kw-2">ref</span> <span class="ident">idx_list</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Device</span>::<span class="ident">list_select_wrap</span>(<span class="kw-2">&amp;</span><span class="ident">platform</span>, <span class="prelude-val">None</span>, <span class="ident">idx_list</span>)
             },
-            <span class='ident'>DeviceSpecifier</span>::<span class='ident'>TypeFlags</span>(<span class='ident'>flags</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Device</span>::<span class='ident'>list</span>(<span class='kw-2'>&amp;</span><span class='ident'>platform</span>, <span class='prelude-val'>Some</span>(<span class='ident'>flags</span>))
+            <span class="ident">DeviceSpecifier</span>::<span class="ident">TypeFlags</span>(<span class="ident">flags</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Device</span>::<span class="ident">list</span>(<span class="kw-2">&amp;</span><span class="ident">platform</span>, <span class="prelude-val">Some</span>(<span class="ident">flags</span>))
             },
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>All</span>
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">All</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>WrappingIndices</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>index</span>])
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">index</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">WrappingIndices</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">index</span>])
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>usize</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>indices</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>usize</span>]) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>WrappingIndices</span>(<span class='ident'>indices</span>.<span class='ident'>into</span>())
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">usize</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">indices</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">usize</span>]) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">WrappingIndices</span>(<span class="ident">indices</span>.<span class="ident">into</span>())
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>indices</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>WrappingIndices</span>(<span class='ident'>indices</span>.<span class='ident'>clone</span>())
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">indices</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">WrappingIndices</span>(<span class="ident">indices</span>.<span class="ident">clone</span>())
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>Device</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>devices</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>Device</span>]) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>List</span>(<span class='ident'>devices</span>.<span class='ident'>into</span>())
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Device</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">devices</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Device</span>]) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">List</span>(<span class="ident">devices</span>.<span class="ident">into</span>())
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>devices</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>List</span>(<span class='ident'>devices</span>.<span class='ident'>clone</span>())
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">devices</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">List</span>(<span class="ident">devices</span>.<span class="ident">clone</span>())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>device</span>: <span class='ident'>Device</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>Single</span>(<span class='ident'>device</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">device</span>: <span class="ident">Device</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">Single</span>(<span class="ident">device</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Device</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>device</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Device</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>Single</span>(<span class='ident'>device</span>.<span class='ident'>clone</span>())
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Device</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">device</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Device</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">Single</span>(<span class="ident">device</span>.<span class="ident">clone</span>())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>DeviceType</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DeviceSpecifier</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>flags</span>: <span class='ident'>DeviceType</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>TypeFlags</span>(<span class='ident'>flags</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DeviceType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeviceSpecifier</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">flags</span>: <span class="ident">DeviceType</span>) <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">TypeFlags</span>(<span class="ident">flags</span>)
     }
 }
 
 
-<span class='doccomment'>/// An individual device identifier (an OpenCL device_id).</span>
-<span class='doccomment'>///</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Device</span>(<span class='ident'>DeviceIdCore</span>);
+<span class="doccomment">/// An individual device identifier (an OpenCL device_id).</span>
+<span class="doccomment">///</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Device</span>(<span class="ident">DeviceIdCore</span>);
 
-<span class='kw'>impl</span> <span class='ident'>Device</span> {
-    <span class='doccomment'>/// Returns the first available device on a platform.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>first</span>(<span class='ident'>platform</span>: <span class='ident'>Platform</span>) <span class='op'>-&gt;</span> <span class='ident'>Device</span> {
-        <span class='kw'>let</span> <span class='ident'>first_core</span> <span class='op'>=</span> <span class='ident'>core</span>::<span class='ident'>get_device_ids</span>(<span class='kw-2'>&amp;</span><span class='ident'>platform</span>, <span class='prelude-val'>None</span>, <span class='prelude-val'>None</span>)
-            .<span class='ident'>expect</span>(<span class='string'>&quot;ocl::Device::first: Error retrieving device list&quot;</span>);
-        <span class='ident'>Device</span>(<span class='ident'>first_core</span>[<span class='number'>0</span>])
+<span class="kw">impl</span> <span class="ident">Device</span> {
+    <span class="doccomment">/// Returns the first available device on a platform.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Panics upon OpenCL error.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;&gt;</span>(<span class="ident">platform</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">Device</span> {
+        <span class="kw">let</span> <span class="ident">device_ids</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">get_device_ids</span>(<span class="ident">platform</span>.<span class="ident">borrow</span>(), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+            .<span class="ident">expect</span>(<span class="string">&quot;ocl::Device::first: Error retrieving device list&quot;</span>);
+        <span class="ident">Device</span>(<span class="ident">device_ids</span>[<span class="number">0</span>])
     }
 
-    <span class='doccomment'>/// Returns a `DeviceSpecifier` useful for precisely specifying a set</span>
-    <span class='doccomment'>/// of devices.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>specifier</span>() <span class='op'>-&gt;</span> <span class='ident'>DeviceSpecifier</span> {
-        <span class='ident'>DeviceSpecifier</span>::<span class='ident'>default</span>()
+    <span class="doccomment">/// Returns a single device specified by a wrapped index.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Panics upon OpenCL error.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">by_idx_wrap</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;&gt;</span>(<span class="ident">platform</span>: <span class="ident">P</span>, <span class="ident">device_idx_wrap</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Device</span> {
+        <span class="kw">let</span> <span class="ident">device_ids</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">get_device_ids</span>(<span class="ident">platform</span>.<span class="ident">borrow</span>(), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+            .<span class="ident">expect</span>(<span class="string">&quot;ocl::Device::by_idx_wrap: Error retrieving device list&quot;</span>);
+        <span class="kw">let</span> <span class="ident">wrapped_idx</span> <span class="op">=</span> <span class="ident">device_idx_wrap</span> <span class="op">%</span> <span class="ident">device_ids</span>.<span class="ident">len</span>();
+        <span class="ident">Device</span>(<span class="ident">device_ids</span>[<span class="ident">wrapped_idx</span>])
     }
 
-    <span class='doccomment'>/// Resolves a list of indices into a list of valid devices.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `devices` is the set of all indexable devices.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// All indices in `idxs` must be valid. Use `resolve_idxs_wrap` for index</span>
-    <span class='doccomment'>/// lists which may contain out of bounds indices.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>resolve_idxs</span>(<span class='ident'>idxs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>usize</span>], <span class='ident'>devices</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Device</span>]) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;&gt;</span> {
-        <span class='comment'>// idxs.iter().map(|&amp;idx| devices.get(idx)).collect()</span>
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>idxs</span>.<span class='ident'>len</span>());
-        <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>idx</span> <span class='kw'>in</span> <span class='ident'>idxs</span>.<span class='ident'>iter</span>() {
-            <span class='kw'>match</span> <span class='ident'>devices</span>.<span class='ident'>get</span>(<span class='ident'>idx</span>) {
-                <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>device</span>) <span class='op'>=&gt;</span> <span class='ident'>result</span>.<span class='ident'>push</span>(<span class='ident'>device</span>),
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Error resolving device index: &#39;{}&#39;. Index out of \
-                    range. Devices avaliable: &#39;{}&#39;.&quot;</span>, <span class='ident'>idx</span>, <span class='ident'>devices</span>.<span class='ident'>len</span>())),
+    <span class="doccomment">/// Returns a `DeviceSpecifier` useful for precisely specifying a set</span>
+    <span class="doccomment">/// of devices.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">specifier</span>() <span class="op">-&gt;</span> <span class="ident">DeviceSpecifier</span> {
+        <span class="ident">DeviceSpecifier</span>::<span class="ident">default</span>()
+    }
+
+    <span class="doccomment">/// Resolves a list of indices into a list of valid devices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `devices` is the set of all indexable devices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// All indices in `idxs` must be valid. Use `resolve_idxs_wrap` for index</span>
+    <span class="doccomment">/// lists which may contain out of bounds indices.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resolve_idxs</span>(<span class="ident">idxs</span>: <span class="kw-2">&amp;</span>[<span class="ident">usize</span>], <span class="ident">devices</span>: <span class="kw-2">&amp;</span>[<span class="ident">Device</span>]) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">idxs</span>.<span class="ident">len</span>());
+        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">idx</span> <span class="kw">in</span> <span class="ident">idxs</span>.<span class="ident">iter</span>() {
+            <span class="kw">match</span> <span class="ident">devices</span>.<span class="ident">get</span>(<span class="ident">idx</span>) {
+                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">device</span>) <span class="op">=&gt;</span> <span class="ident">result</span>.<span class="ident">push</span>(<span class="ident">device</span>),
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Error resolving device index: &#39;{}&#39;. Index out of \
+                    range. Devices avaliable: &#39;{}&#39;.&quot;</span>, <span class="ident">idx</span>, <span class="ident">devices</span>.<span class="ident">len</span>())),
             }
         }
-        <span class='prelude-val'>Ok</span>(<span class='ident'>result</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
     }
 
-    <span class='doccomment'>/// Resolves a list of indices into a list of valid devices.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `devices` is the set of all indexable devices.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Wraps indices around using modulo (`%`) so that every index is valid.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>resolve_idxs_wrap</span>(<span class='ident'>idxs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>usize</span>], <span class='ident'>devices</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Device</span>]) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>valid_idxs</span> <span class='op'>=</span> <span class='ident'>util</span>::<span class='ident'>wrap_vals</span>(<span class='ident'>idxs</span>, <span class='ident'>devices</span>.<span class='ident'>len</span>());
-        <span class='ident'>valid_idxs</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>idx</span><span class='op'>|</span> <span class='ident'>devices</span>[<span class='ident'>idx</span>]).<span class='ident'>collect</span>()
+    <span class="doccomment">/// Resolves a list of indices into a list of valid devices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `devices` is the set of all indexable devices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Wraps indices around using modulo (`%`) so that every index is valid.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resolve_idxs_wrap</span>(<span class="ident">idxs</span>: <span class="kw-2">&amp;</span>[<span class="ident">usize</span>], <span class="ident">devices</span>: <span class="kw-2">&amp;</span>[<span class="ident">Device</span>]) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">valid_idxs</span> <span class="op">=</span> <span class="ident">util</span>::<span class="ident">wrap_vals</span>(<span class="ident">idxs</span>, <span class="ident">devices</span>.<span class="ident">len</span>());
+        <span class="ident">valid_idxs</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">idx</span><span class="op">|</span> <span class="ident">devices</span>[<span class="ident">idx</span>]).<span class="ident">collect</span>()
     }
 
-    <span class='doccomment'>/// Returns a list of all devices avaliable for a given platform which</span>
-    <span class='doccomment'>/// optionally match the flags set in the bitfield, `device_types`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Setting `device_types` to `None` will return a list of all avaliable</span>
-    <span class='doccomment'>/// devices for `platform` regardless of type.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns an `Err(ocl::core::Error::Status {...})` enum variant upon any</span>
-    <span class='doccomment'>/// OpenCL error. Calling [`.status()`] on the returned error will return</span>
-    <span class='doccomment'>/// an `Option(``[ocl::core::Status]``)` which can be unwrapped then</span>
-    <span class='doccomment'>/// matched to determine the precise reason for failure.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [`.status()`]: /ocl_core/ocl_core/error/enum.Error.html#method.status</span>
-    <span class='doccomment'>/// [`ocl::core::Status`]: /ocl_core/ocl_core/enum.Status.html</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list</span>(<span class='ident'>platform</span>: <span class='kw-2'>&amp;</span><span class='ident'>Platform</span>, <span class='ident'>device_types</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DeviceType</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>list_core</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>core</span>::<span class='ident'>get_device_ids</span>(<span class='ident'>platform</span>.<span class='ident'>as_core</span>(), <span class='ident'>device_types</span>, <span class='prelude-val'>None</span>));
-        <span class='prelude-val'>Ok</span>(<span class='ident'>list_core</span>.<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='ident'>Device</span>).<span class='ident'>collect</span>())
+    <span class="doccomment">/// Returns a list of all devices avaliable for a given platform which</span>
+    <span class="doccomment">/// optionally match the flags set in the bitfield, `device_types`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Setting `device_types` to `None` will return a list of all avaliable</span>
+    <span class="doccomment">/// devices for `platform` regardless of type.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an `Err(ocl::core::Error::Status {...})` enum variant upon any</span>
+    <span class="doccomment">/// OpenCL error. Calling [`.status()`] on the returned error will return</span>
+    <span class="doccomment">/// an `Option(``[ocl::core::Status]``)` which can be unwrapped then</span>
+    <span class="doccomment">/// matched to determine the precise reason for failure.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`.status()`]: enum.Error.html#method.status</span>
+    <span class="doccomment">/// [`ocl::core::Status`]: enum.Status.html</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;&gt;</span>(<span class="ident">platform</span>: <span class="ident">P</span>, <span class="ident">device_types</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeviceType</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="ident">list_core</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">get_device_ids</span>(<span class="ident">platform</span>.<span class="ident">borrow</span>(), <span class="ident">device_types</span>, <span class="prelude-val">None</span>)
+            .<span class="ident">unwrap_or</span>(<span class="macro">vec</span><span class="macro">!</span>[]);
+        <span class="prelude-val">Ok</span>(<span class="ident">list_core</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Device</span>).<span class="ident">collect</span>())
     }
 
-    <span class='doccomment'>/// Returns a list of all devices avaliable for a given `platform`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Equivalent to `::list(platform, None)`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See [`::list`](/ocl/ocl/struct.Device.html#method.list) for other</span>
-    <span class='doccomment'>/// error information.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list_all</span>(<span class='ident'>platform</span>: <span class='kw-2'>&amp;</span><span class='ident'>Platform</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>Self</span>::<span class='ident'>list</span>(<span class='ident'>platform</span>, <span class='prelude-val'>None</span>)
+    <span class="doccomment">/// Returns a list of all devices avaliable for a given `platform`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Equivalent to `::list(platform, None)`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [`::list`](struct.Device.html#method.list) for other</span>
+    <span class="doccomment">/// error information.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_all</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;&gt;</span>(<span class="ident">platform</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;&gt;</span> {
+        <span class="self">Self</span>::<span class="ident">list</span>(<span class="ident">platform</span>, <span class="prelude-val">None</span>)
     }
 
-    <span class='doccomment'>/// Returns a list of devices filtered by type then selected using a</span>
-    <span class='doccomment'>/// list of indices.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// All indices in `idxs` must be valid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See [`::list`](/ocl/ocl/struct.Device.html#method.list) for other</span>
-    <span class='doccomment'>/// error information.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list_select</span>(<span class='ident'>platform</span>: <span class='kw-2'>&amp;</span><span class='ident'>Platform</span>, <span class='ident'>device_types</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DeviceType</span><span class='op'>&gt;</span>,
-                <span class='ident'>idxs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>usize</span>]) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>Self</span>::<span class='ident'>resolve_idxs</span>(<span class='ident'>idxs</span>, <span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>Self</span>::<span class='ident'>list</span>(<span class='ident'>platform</span>, <span class='ident'>device_types</span>)))
+    <span class="doccomment">/// Returns a list of devices filtered by type then selected using a</span>
+    <span class="doccomment">/// list of indices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// All indices in `idxs` must be valid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [`::list`](struct.Device.html#method.list) for other</span>
+    <span class="doccomment">/// error information.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_select</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;&gt;</span>(<span class="ident">platform</span>: <span class="ident">P</span>, <span class="ident">device_types</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeviceType</span><span class="op">&gt;</span>,
+                <span class="ident">idxs</span>: <span class="kw-2">&amp;</span>[<span class="ident">usize</span>]) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;&gt;</span> {
+        <span class="self">Self</span>::<span class="ident">resolve_idxs</span>(<span class="ident">idxs</span>, <span class="kw-2">&amp;</span><span class="macro">try</span><span class="macro">!</span>(<span class="self">Self</span>::<span class="ident">list</span>(<span class="ident">platform</span>, <span class="ident">device_types</span>)))
     }
 
-    <span class='doccomment'>/// Returns a list of devices filtered by type then selected using a</span>
-    <span class='doccomment'>/// wrapping list of indices.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Wraps indices around (`%`) so that every index is valid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See [`::list`](/ocl/ocl/struct.Device.html#method.list)</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list_select_wrap</span>(<span class='ident'>platform</span>: <span class='kw-2'>&amp;</span><span class='ident'>Platform</span>, <span class='ident'>device_types</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DeviceType</span><span class='op'>&gt;</span>,
-                <span class='ident'>idxs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>usize</span>]) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='self'>Self</span>::<span class='ident'>resolve_idxs_wrap</span>(<span class='ident'>idxs</span>, <span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>Self</span>::<span class='ident'>list</span>(<span class='ident'>platform</span>, <span class='ident'>device_types</span>))))
+    <span class="doccomment">/// Returns a list of devices filtered by type then selected using a</span>
+    <span class="doccomment">/// wrapping list of indices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Wraps indices around (`%`) so that every index is valid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ### Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [`::list`](struct.Device.html#method.list)</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_select_wrap</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;&gt;</span>(<span class="ident">platform</span>: <span class="ident">P</span>, <span class="ident">device_types</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeviceType</span><span class="op">&gt;</span>,
+                <span class="ident">idxs</span>: <span class="kw-2">&amp;</span>[<span class="ident">usize</span>]) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">resolve_idxs_wrap</span>(<span class="ident">idxs</span>, <span class="kw-2">&amp;</span><span class="macro">try</span><span class="macro">!</span>(<span class="self">Self</span>::<span class="ident">list</span>(<span class="ident">platform</span>, <span class="ident">device_types</span>))))
     }
 
-    <span class='doccomment'>/// Returns a list of `Device`s from a list of `DeviceIdCore`s</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list_from_core</span>(<span class='ident'>devices</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>DeviceIdCore</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span> {
-        <span class='ident'>devices</span>.<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='ident'>Device</span>).<span class='ident'>collect</span>()
-    }
-
-    <span class='doccomment'>/// Returns the device name.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='ident'>core</span>::<span class='ident'>get_device_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>DeviceInfo</span>::<span class='ident'>Name</span>).<span class='ident'>into</span>()
-    }
-
-    <span class='doccomment'>/// Returns the device vendor as a string.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>vendor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='ident'>core</span>::<span class='ident'>get_device_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>DeviceInfo</span>::<span class='ident'>Vendor</span>).<span class='ident'>into</span>()
-    }
-
-    <span class='doccomment'>/// Returns the maximum workgroup size.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ### Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns any OpenCL error.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>max_wg_size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxWorkGroupSize</span>) {
-            <span class='ident'>DeviceInfoResult</span>::<span class='ident'>MaxWorkGroupSize</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>s</span>),
-            <span class='ident'>DeviceInfoResult</span>::<span class='ident'>Error</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='op'>*</span><span class='ident'>err</span>),
-            <span class='comment'>// Verify that this is unreachable and replace with `unreachable!()`:</span>
-            _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;ocl::Device::max_wg_size: Unexpected &#39;DeviceInfoResult&#39; variant.&quot;</span>),
+    <span class="doccomment">/// Returns a list of `Device`s from a list of `DeviceIdCore`s</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_from_core</span>(<span class="kw-2">mut</span> <span class="ident">devices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DeviceIdCore</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">DeviceIdCore</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span>());
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> (<span class="ident">ptr</span>, <span class="ident">len</span>, <span class="ident">cap</span>) <span class="op">=</span> (<span class="ident">devices</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">devices</span>.<span class="ident">len</span>(), <span class="ident">devices</span>.<span class="ident">capacity</span>());
+            <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="ident">devices</span>);
+            <span class="ident">Vec</span>::<span class="ident">from_raw_parts</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Device</span>, <span class="ident">len</span>, <span class="ident">cap</span>)
         }
     }
 
-    <span class='doccomment'>/// Returns info about the device.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info_kind</span>: <span class='ident'>DeviceInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceInfoResult</span> {
-        <span class='ident'>core</span>::<span class='ident'>get_device_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>info_kind</span>)
+    <span class="doccomment">/// Returns the device name.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="ident">core</span>::<span class="ident">get_device_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">DeviceInfo</span>::<span class="ident">Name</span>).<span class="ident">into</span>()
     }
 
-    <span class='doccomment'>/// Returns a string containing a formatted list of device properties.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_string</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='self'>self</span>.<span class='ident'>clone</span>().<span class='ident'>into</span>()
+    <span class="doccomment">/// Returns the device vendor as a string.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vendor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="ident">core</span>::<span class="ident">get_device_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">DeviceInfo</span>::<span class="ident">Vendor</span>).<span class="ident">into</span>()
     }
 
-    <span class='doccomment'>/// Returns the underlying `DeviceIdCore`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_core</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>DeviceIdCore</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>
+    <span class="doccomment">/// Returns the maximum workgroup size or an error.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_wg_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxWorkGroupSize</span>) {
+            <span class="ident">DeviceInfoResult</span>::<span class="ident">MaxWorkGroupSize</span>(<span class="ident">r</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">r</span>),
+            <span class="ident">DeviceInfoResult</span>::<span class="ident">Error</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="kw-2">*</span><span class="ident">err</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Device::max_wg_size: Unexpected &#39;DeviceInfoResult&#39; variant.&quot;</span>),
+        }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>fmt_info</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='ident'>f</span>.<span class='ident'>debug_struct</span>(<span class='string'>&quot;Device&quot;</span>)
-            .<span class='ident'>field</span>(<span class='string'>&quot;Type&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Type</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;VendorId&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>VendorId</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxComputeUnits&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxComputeUnits</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxWorkItemDimensions&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxWorkItemDimensions</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxWorkGroupSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxWorkGroupSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxWorkItemSizes&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxWorkItemSizes</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredVectorWidthChar&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredVectorWidthChar</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredVectorWidthShort&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredVectorWidthShort</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredVectorWidthInt&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredVectorWidthInt</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredVectorWidthLong&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredVectorWidthLong</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredVectorWidthFloat&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredVectorWidthFloat</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredVectorWidthDouble&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredVectorWidthDouble</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxClockFrequency&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxClockFrequency</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;AddressBits&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>AddressBits</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxReadImageArgs&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxReadImageArgs</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxWriteImageArgs&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxWriteImageArgs</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxMemAllocSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxMemAllocSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Image2dMaxWidth&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Image2dMaxWidth</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Image2dMaxHeight&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Image2dMaxHeight</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Image3dMaxWidth&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Image3dMaxWidth</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Image3dMaxHeight&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Image3dMaxHeight</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Image3dMaxDepth&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Image3dMaxDepth</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ImageSupport&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ImageSupport</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxParameterSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxParameterSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxSamplers&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxSamplers</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MemBaseAddrAlign&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MemBaseAddrAlign</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MinDataTypeAlignSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MinDataTypeAlignSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;SingleFpConfig&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>SingleFpConfig</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;GlobalMemCacheType&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>GlobalMemCacheType</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;GlobalMemCachelineSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>GlobalMemCachelineSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;GlobalMemCacheSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>GlobalMemCacheSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;GlobalMemSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>GlobalMemSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxConstantBufferSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxConstantBufferSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;MaxConstantArgs&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>MaxConstantArgs</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;LocalMemType&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>LocalMemType</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;LocalMemSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>LocalMemSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ErrorCorrectionSupport&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ErrorCorrectionSupport</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ProfilingTimerResolution&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ProfilingTimerResolution</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;EndianLittle&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>EndianLittle</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Available&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Available</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;CompilerAvailable&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>CompilerAvailable</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ExecutionCapabilities&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ExecutionCapabilities</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;QueueProperties&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>QueueProperties</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Name&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Name</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Vendor&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Vendor</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;DriverVersion&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>DriverVersion</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Profile&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Profile</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Version&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Version</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Extensions&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Extensions</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;Platform&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>Platform</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;DoubleFpConfig&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>DoubleFpConfig</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;HalfFpConfig&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>HalfFpConfig</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredVectorWidthHalf&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredVectorWidthHalf</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;HostUnifiedMemory&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>HostUnifiedMemory</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NativeVectorWidthChar&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>NativeVectorWidthChar</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NativeVectorWidthShort&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>NativeVectorWidthShort</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NativeVectorWidthInt&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>NativeVectorWidthInt</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NativeVectorWidthLong&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>NativeVectorWidthLong</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NativeVectorWidthFloat&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>NativeVectorWidthFloat</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NativeVectorWidthDouble&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>NativeVectorWidthDouble</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;NativeVectorWidthHalf&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>NativeVectorWidthHalf</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;OpenclCVersion&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>OpenclCVersion</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;LinkerAvailable&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>LinkerAvailable</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;BuiltInKernels&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>BuiltInKernels</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ImageMaxBufferSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ImageMaxBufferSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ImageMaxArraySize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ImageMaxArraySize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ParentDevice&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ParentDevice</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PartitionMaxSubDevices&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PartitionMaxSubDevices</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PartitionProperties&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PartitionProperties</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PartitionAffinityDomain&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PartitionAffinityDomain</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PartitionType&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PartitionType</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ReferenceCount&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ReferenceCount</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PreferredInteropUserSync&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PreferredInteropUserSync</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;PrintfBufferSize&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>PrintfBufferSize</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ImagePitchAlignment&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ImagePitchAlignment</span>))
-            .<span class='ident'>field</span>(<span class='string'>&quot;ImageBaseAddressAlignment&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>info</span>(<span class='ident'>DeviceInfo</span>::<span class='ident'>ImageBaseAddressAlignment</span>))
-            .<span class='ident'>finish</span>()
+    <span class="doccomment">/// Returns the memory base address alignment offset or an error.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mem_base_addr_align</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MemBaseAddrAlign</span>) {
+            <span class="ident">DeviceInfoResult</span>::<span class="ident">MemBaseAddrAlign</span>(<span class="ident">r</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">r</span>),
+            <span class="ident">DeviceInfoResult</span>::<span class="ident">Error</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="kw-2">*</span><span class="ident">err</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Device::mem_base_addr_align: Unexpected &#39;DeviceInfoResult&#39; variant.&quot;</span>),
+        }
+    }
+
+    <span class="doccomment">/// Returns whether or not the device is available for use.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_available</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Available</span>) {
+            <span class="ident">DeviceInfoResult</span>::<span class="ident">Available</span>(<span class="ident">r</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">r</span>),
+            <span class="ident">DeviceInfoResult</span>::<span class="ident">Error</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="kw-2">*</span><span class="ident">err</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Device::is_available: Unexpected &#39;DeviceInfoResult&#39; variant.&quot;</span>),
+        }
+    }
+
+    <span class="doccomment">/// Returns info about the device.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">info_kind</span>: <span class="ident">DeviceInfo</span>) <span class="op">-&gt;</span> <span class="ident">DeviceInfoResult</span> {
+        <span class="ident">core</span>::<span class="ident">get_device_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">info_kind</span>)
+    }
+
+    <span class="doccomment">/// Returns a string containing a formatted list of device properties.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into</span>()
+    }
+
+    <span class="doccomment">/// Returns the underlying `DeviceIdCore`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_core</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">DeviceIdCore</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">fmt_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Device&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;Type&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Type</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;VendorId&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">VendorId</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxComputeUnits&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxComputeUnits</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxWorkItemDimensions&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxWorkItemDimensions</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxWorkGroupSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxWorkGroupSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxWorkItemSizes&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxWorkItemSizes</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredVectorWidthChar&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredVectorWidthChar</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredVectorWidthShort&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredVectorWidthShort</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredVectorWidthInt&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredVectorWidthInt</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredVectorWidthLong&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredVectorWidthLong</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredVectorWidthFloat&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredVectorWidthFloat</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredVectorWidthDouble&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredVectorWidthDouble</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxClockFrequency&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxClockFrequency</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;AddressBits&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">AddressBits</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxReadImageArgs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxReadImageArgs</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxWriteImageArgs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxWriteImageArgs</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxMemAllocSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxMemAllocSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Image2dMaxWidth&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Image2dMaxWidth</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Image2dMaxHeight&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Image2dMaxHeight</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Image3dMaxWidth&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Image3dMaxWidth</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Image3dMaxHeight&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Image3dMaxHeight</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Image3dMaxDepth&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Image3dMaxDepth</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ImageSupport&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ImageSupport</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxParameterSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxParameterSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxSamplers&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxSamplers</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MemBaseAddrAlign&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MemBaseAddrAlign</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MinDataTypeAlignSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MinDataTypeAlignSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;SingleFpConfig&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">SingleFpConfig</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;GlobalMemCacheType&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">GlobalMemCacheType</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;GlobalMemCachelineSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">GlobalMemCachelineSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;GlobalMemCacheSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">GlobalMemCacheSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;GlobalMemSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">GlobalMemSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxConstantBufferSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxConstantBufferSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;MaxConstantArgs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">MaxConstantArgs</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;LocalMemType&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">LocalMemType</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;LocalMemSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">LocalMemSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ErrorCorrectionSupport&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ErrorCorrectionSupport</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ProfilingTimerResolution&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ProfilingTimerResolution</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;EndianLittle&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">EndianLittle</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Available&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Available</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;CompilerAvailable&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">CompilerAvailable</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ExecutionCapabilities&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ExecutionCapabilities</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;QueueProperties&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">QueueProperties</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Name</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Vendor&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Vendor</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;DriverVersion&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">DriverVersion</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Profile&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Profile</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Version&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Version</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Extensions&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Extensions</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;Platform&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">Platform</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;DoubleFpConfig&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">DoubleFpConfig</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;HalfFpConfig&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">HalfFpConfig</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredVectorWidthHalf&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredVectorWidthHalf</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;HostUnifiedMemory&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">HostUnifiedMemory</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NativeVectorWidthChar&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">NativeVectorWidthChar</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NativeVectorWidthShort&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">NativeVectorWidthShort</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NativeVectorWidthInt&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">NativeVectorWidthInt</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NativeVectorWidthLong&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">NativeVectorWidthLong</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NativeVectorWidthFloat&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">NativeVectorWidthFloat</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NativeVectorWidthDouble&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">NativeVectorWidthDouble</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;NativeVectorWidthHalf&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">NativeVectorWidthHalf</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;OpenclCVersion&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">OpenclCVersion</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;LinkerAvailable&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">LinkerAvailable</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;BuiltInKernels&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">BuiltInKernels</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ImageMaxBufferSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ImageMaxBufferSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ImageMaxArraySize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ImageMaxArraySize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ParentDevice&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ParentDevice</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PartitionMaxSubDevices&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PartitionMaxSubDevices</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PartitionProperties&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PartitionProperties</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PartitionAffinityDomain&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PartitionAffinityDomain</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PartitionType&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PartitionType</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ReferenceCount&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ReferenceCount</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PreferredInteropUserSync&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PreferredInteropUserSync</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;PrintfBufferSize&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">PrintfBufferSize</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ImagePitchAlignment&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ImagePitchAlignment</span>))
+            .<span class="ident">field</span>(<span class="string">&quot;ImageBaseAddressAlignment&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>(<span class="ident">DeviceInfo</span>::<span class="ident">ImageBaseAddressAlignment</span>))
+            .<span class="ident">finish</span>()
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>ClDeviceIdPtr</span> <span class='kw'>for</span> <span class='ident'>Device</span> {}
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ClDeviceIdPtr</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Device</span> {}
-
-<span class='kw'>impl</span> <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Device</span> {
-    <span class='kw'>fn</span> <span class='ident'>into</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>)
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">ClDeviceIdPtr</span> <span class="kw">for</span> <span class="ident">Device</span> {
+    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">cl_device_id</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_raw</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>DeviceIdCore</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Device</span> {
-    <span class='kw'>fn</span> <span class='ident'>into</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>DeviceIdCore</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ClDeviceIdPtr</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Device</span> {
+    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">cl_device_id</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_raw</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Device</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='self'>self</span>.<span class='ident'>fmt_info</span>(<span class='ident'>f</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DeviceIdCore</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Device</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">core</span>: <span class="ident">DeviceIdCore</span>) <span class="op">-&gt;</span> <span class="ident">Device</span> {
+        <span class="ident">Device</span>(<span class="ident">core</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Device</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Device</span> {
-        <span class='self'>self</span>
+<span class="comment">// impl Into&lt;String&gt; for Device {</span>
+<span class="comment">//     fn into(self) -&gt; String {</span>
+<span class="comment">//         format!(&quot;{}&quot;, self)</span>
+<span class="comment">//     }</span>
+<span class="comment">// }</span>
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">d</span>: <span class="ident">Device</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">d</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>Device</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>DeviceIdCore</span>;
+<span class="comment">// impl Into&lt;DeviceIdCore&gt; for Device {</span>
+<span class="comment">//     fn into(self) -&gt; DeviceIdCore {</span>
+<span class="comment">//         self.0</span>
+<span class="comment">//     }</span>
+<span class="comment">// }</span>
 
-    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>DeviceIdCore</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeviceIdCore</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">d</span>: <span class="ident">Device</span>) <span class="op">-&gt;</span> <span class="ident">DeviceIdCore</span> {
+        <span class="ident">d</span>.<span class="number">0</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>Device</span> {
-    <span class='kw'>fn</span> <span class='ident'>deref_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>DeviceIdCore</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Device</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="self">self</span>.<span class="ident">fmt_info</span>(<span class="ident">f</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Device</span> {
+    <span class="kw">fn</span> <span class="ident">as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Device</span> {
+        <span class="self">self</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Device</span> {
+    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">DeviceIdCore</span>;
+
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">DeviceIdCore</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">Device</span> {
+    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">DeviceIdCore</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>
     }
 }
 </pre>
@@ -1078,11 +1247,9 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

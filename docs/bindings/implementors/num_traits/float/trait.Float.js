@@ -1,5 +1,9 @@
 (function() {var implementors = {};
-implementors["num_traits"] = [];implementors["enum_primitive"] = [];implementors["ocl"] = [];implementors["clfft"] = [];
+implementors["clfft"] = [];
+implementors["enum_primitive"] = [];
+implementors["num_traits"] = [];
+implementors["ocl"] = [];
+implementors["ocl_core"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

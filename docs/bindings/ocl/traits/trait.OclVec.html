@@ -9,6 +9,7 @@
 
     <title>ocl::traits::OclVec - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,70 +43,80 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>traits</a>::<wbr><a class='trait' href=''>OclVec</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>ocl</a>::<wbr><a href='index.html'>traits</a>::<wbr><a class="trait" href=''>OclVec</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2961' class='srclink' href='../../ocl_core/trait.OclVec.html?gotosrc=2961' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub unsafe trait OclVec { }</pre><div class='docblock'><p>A vector type usable within <code>OpenCL</code> kernels.</p>
+               </span><a class='srclink' href='../../src/ocl_core/lib.rs.html#268' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub unsafe trait OclVec: <a class="trait" href="../../ocl/traits/trait.OclPrm.html" title="trait ocl::traits::OclPrm">OclPrm</a> + <a class="trait" href="../../ocl_core/traits/trait.OclNum.html" title="trait ocl_core::traits::OclNum">OclNum</a> { }</pre><div class='docblock'><p>A vector type usable within <code>OpenCL</code> kernels.</p>
+<p>To describe the contents of buffers, etc., prefer using the more general
+<code>OclPrm</code> trait unless numeric operations are required.</p>
 </div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClChar2.html' title='ocl::aliases::ClChar2'>ClChar2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClChar3.html' title='ocl::aliases::ClChar3'>ClChar3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClChar4.html' title='ocl::aliases::ClChar4'>ClChar4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClChar8.html' title='ocl::aliases::ClChar8'>ClChar8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClChar16.html' title='ocl::aliases::ClChar16'>ClChar16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUchar2.html' title='ocl::aliases::ClUchar2'>ClUchar2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUchar3.html' title='ocl::aliases::ClUchar3'>ClUchar3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUchar4.html' title='ocl::aliases::ClUchar4'>ClUchar4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUchar8.html' title='ocl::aliases::ClUchar8'>ClUchar8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUchar16.html' title='ocl::aliases::ClUchar16'>ClUchar16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClShort2.html' title='ocl::aliases::ClShort2'>ClShort2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClShort3.html' title='ocl::aliases::ClShort3'>ClShort3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClShort4.html' title='ocl::aliases::ClShort4'>ClShort4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClShort8.html' title='ocl::aliases::ClShort8'>ClShort8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClShort16.html' title='ocl::aliases::ClShort16'>ClShort16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUshort2.html' title='ocl::aliases::ClUshort2'>ClUshort2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUshort3.html' title='ocl::aliases::ClUshort3'>ClUshort3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUshort4.html' title='ocl::aliases::ClUshort4'>ClUshort4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUshort8.html' title='ocl::aliases::ClUshort8'>ClUshort8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUshort16.html' title='ocl::aliases::ClUshort16'>ClUshort16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClInt2.html' title='ocl::aliases::ClInt2'>ClInt2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClInt3.html' title='ocl::aliases::ClInt3'>ClInt3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClInt4.html' title='ocl::aliases::ClInt4'>ClInt4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClInt8.html' title='ocl::aliases::ClInt8'>ClInt8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClInt16.html' title='ocl::aliases::ClInt16'>ClInt16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUint2.html' title='ocl::aliases::ClUint2'>ClUint2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUint3.html' title='ocl::aliases::ClUint3'>ClUint3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUint4.html' title='ocl::aliases::ClUint4'>ClUint4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUint8.html' title='ocl::aliases::ClUint8'>ClUint8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUint16.html' title='ocl::aliases::ClUint16'>ClUint16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClLong1.html' title='ocl::aliases::ClLong1'>ClLong1</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClLong2.html' title='ocl::aliases::ClLong2'>ClLong2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClLong3.html' title='ocl::aliases::ClLong3'>ClLong3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClLong4.html' title='ocl::aliases::ClLong4'>ClLong4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClLong8.html' title='ocl::aliases::ClLong8'>ClLong8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClLong16.html' title='ocl::aliases::ClLong16'>ClLong16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUlong1.html' title='ocl::aliases::ClUlong1'>ClUlong1</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUlong2.html' title='ocl::aliases::ClUlong2'>ClUlong2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUlong3.html' title='ocl::aliases::ClUlong3'>ClUlong3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUlong4.html' title='ocl::aliases::ClUlong4'>ClUlong4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUlong8.html' title='ocl::aliases::ClUlong8'>ClUlong8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClUlong16.html' title='ocl::aliases::ClUlong16'>ClUlong16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClFloat2.html' title='ocl::aliases::ClFloat2'>ClFloat2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClFloat3.html' title='ocl::aliases::ClFloat3'>ClFloat3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClFloat4.html' title='ocl::aliases::ClFloat4'>ClFloat4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClFloat8.html' title='ocl::aliases::ClFloat8'>ClFloat8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClFloat16.html' title='ocl::aliases::ClFloat16'>ClFloat16</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClDouble2.html' title='ocl::aliases::ClDouble2'>ClDouble2</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClDouble3.html' title='ocl::aliases::ClDouble3'>ClDouble3</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClDouble4.html' title='ocl::aliases::ClDouble4'>ClDouble4</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClDouble8.html' title='ocl::aliases::ClDouble8'>ClDouble8</a></code></li>
-<li><code>impl OclVec for <a class='struct' href='../../ocl/aliases/struct.ClDouble16.html' title='ocl::aliases::ClDouble16'>ClDouble16</a></code></li>
+    <li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Char.html" title="struct ocl::prm::Char">Char</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Char2.html" title="struct ocl::prm::Char2">Char2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Char3.html" title="struct ocl::prm::Char3">Char3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Char4.html" title="struct ocl::prm::Char4">Char4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Char8.html" title="struct ocl::prm::Char8">Char8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Char16.html" title="struct ocl::prm::Char16">Char16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uchar.html" title="struct ocl::prm::Uchar">Uchar</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uchar2.html" title="struct ocl::prm::Uchar2">Uchar2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uchar3.html" title="struct ocl::prm::Uchar3">Uchar3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uchar4.html" title="struct ocl::prm::Uchar4">Uchar4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uchar8.html" title="struct ocl::prm::Uchar8">Uchar8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uchar16.html" title="struct ocl::prm::Uchar16">Uchar16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Short.html" title="struct ocl::prm::Short">Short</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Short2.html" title="struct ocl::prm::Short2">Short2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Short3.html" title="struct ocl::prm::Short3">Short3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Short4.html" title="struct ocl::prm::Short4">Short4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Short8.html" title="struct ocl::prm::Short8">Short8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Short16.html" title="struct ocl::prm::Short16">Short16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ushort.html" title="struct ocl::prm::Ushort">Ushort</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ushort2.html" title="struct ocl::prm::Ushort2">Ushort2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ushort3.html" title="struct ocl::prm::Ushort3">Ushort3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ushort4.html" title="struct ocl::prm::Ushort4">Ushort4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ushort8.html" title="struct ocl::prm::Ushort8">Ushort8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ushort16.html" title="struct ocl::prm::Ushort16">Ushort16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Int.html" title="struct ocl::prm::Int">Int</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Int2.html" title="struct ocl::prm::Int2">Int2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Int3.html" title="struct ocl::prm::Int3">Int3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Int4.html" title="struct ocl::prm::Int4">Int4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Int8.html" title="struct ocl::prm::Int8">Int8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Int16.html" title="struct ocl::prm::Int16">Int16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uint.html" title="struct ocl::prm::Uint">Uint</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uint2.html" title="struct ocl::prm::Uint2">Uint2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uint3.html" title="struct ocl::prm::Uint3">Uint3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uint4.html" title="struct ocl::prm::Uint4">Uint4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uint8.html" title="struct ocl::prm::Uint8">Uint8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Uint16.html" title="struct ocl::prm::Uint16">Uint16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Long.html" title="struct ocl::prm::Long">Long</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Long2.html" title="struct ocl::prm::Long2">Long2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Long3.html" title="struct ocl::prm::Long3">Long3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Long4.html" title="struct ocl::prm::Long4">Long4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Long8.html" title="struct ocl::prm::Long8">Long8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Long16.html" title="struct ocl::prm::Long16">Long16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ulong.html" title="struct ocl::prm::Ulong">Ulong</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ulong2.html" title="struct ocl::prm::Ulong2">Ulong2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ulong3.html" title="struct ocl::prm::Ulong3">Ulong3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ulong4.html" title="struct ocl::prm::Ulong4">Ulong4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ulong8.html" title="struct ocl::prm::Ulong8">Ulong8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Ulong16.html" title="struct ocl::prm::Ulong16">Ulong16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Float.html" title="struct ocl::prm::Float">Float</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Float2.html" title="struct ocl::prm::Float2">Float2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Float3.html" title="struct ocl::prm::Float3">Float3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Float4.html" title="struct ocl::prm::Float4">Float4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Float8.html" title="struct ocl::prm::Float8">Float8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Float16.html" title="struct ocl::prm::Float16">Float16</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Double.html" title="struct ocl::prm::Double">Double</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Double2.html" title="struct ocl::prm::Double2">Double2</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Double3.html" title="struct ocl::prm::Double3">Double3</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Double4.html" title="struct ocl::prm::Double4">Double4</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Double8.html" title="struct ocl::prm::Double8">Double8</a></code></li>
+<li><code>impl OclVec for <a class="struct" href="../../ocl/prm/struct.Double16.html" title="struct ocl::prm::Double16">Double16</a></code></li>
 </ul><script type="text/javascript" async
-                         src="../../implementors/ocl_core/trait.OclVec.js">
+                         src="../../implementors/ocl_core/traits/ocl_vec/trait.OclVec.js">
                  </script></section>
     <section id='search' class="content hidden"></section>
 
@@ -162,11 +173,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

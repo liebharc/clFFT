@@ -1,5 +1,12 @@
 (function() {var implementors = {};
-implementors["lazy_static"] = [];implementors["libc"] = [];implementors["enum_primitive"] = [];implementors["rand"] = [];implementors["num"] = [];implementors["num"] = [];implementors["ocl"] = [];implementors["ocl"] = [];implementors["clfft"] = [];implementors["clfft"] = [];
+implementors["cl_sys"] = [];
+implementors["clfft"] = [];
+implementors["enum_primitive"] = [];
+implementors["libc"] = [];
+implementors["num"] = [];
+implementors["ocl"] = [];
+implementors["ocl_core"] = [];
+implementors["rand"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.2.1\src\cl_gl_h.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\cl-sys-0.3.0\src\cl_gl_h.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>cl_gl_h.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -164,128 +165,128 @@
 <span id="120">120</span>
 <span id="121">121</span>
 <span id="122">122</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! OpenGL Extensions.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! OpenGL Extensions.</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>, <span class='ident'>dead_code</span>, <span class='ident'>unused_variables</span>, <span class='ident'>improper_ctypes</span>, <span class='ident'>non_upper_case_globals</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>, <span class="ident">dead_code</span>, <span class="ident">unused_variables</span>, <span class="ident">improper_ctypes</span>, <span class="ident">non_upper_case_globals</span>)]</span>
 
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_void</span>, <span class='ident'>size_t</span>};
-<span class='kw'>use</span> <span class='ident'>platform_h</span>::{<span class='ident'>cl_GLuint</span>, <span class='ident'>cl_GLint</span>, <span class='ident'>cl_GLenum</span>};
+<span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_void</span>, <span class="ident">size_t</span>};
+<span class="kw">use</span> <span class="ident">platform_h</span>::{<span class="ident">cl_GLuint</span>, <span class="ident">cl_GLint</span>, <span class="ident">cl_GLenum</span>};
 
-<span class='kw'>use</span> <span class='ident'>cl_h</span>::{<span class='ident'>cl_context</span>, <span class='ident'>cl_context_properties</span>, <span class='ident'>cl_mem_flags</span>, <span class='ident'>cl_command_queue</span>,
-    <span class='ident'>cl_int</span>, <span class='ident'>cl_uint</span>, <span class='ident'>cl_mem</span>, <span class='ident'>cl_event</span>};
+<span class="kw">use</span> <span class="ident">cl_h</span>::{<span class="ident">cl_context</span>, <span class="ident">cl_context_properties</span>, <span class="ident">cl_mem_flags</span>, <span class="ident">cl_command_queue</span>,
+    <span class="ident">cl_int</span>, <span class="ident">cl_uint</span>, <span class="ident">cl_mem</span>, <span class="ident">cl_event</span>};
 
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cl_gl_object_type</span>      <span class='op'>=</span> <span class='ident'>cl_uint</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cl_gl_texture_info</span>     <span class='op'>=</span> <span class='ident'>cl_uint</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cl_gl_platform_info</span>    <span class='op'>=</span> <span class='ident'>cl_uint</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cl_gl_context_info</span>     <span class='op'>=</span> <span class='ident'>cl_uint</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cl_gl_object_type</span>      <span class="op">=</span> <span class="ident">cl_uint</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cl_gl_texture_info</span>     <span class="op">=</span> <span class="ident">cl_uint</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cl_gl_platform_info</span>    <span class="op">=</span> <span class="ident">cl_uint</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cl_gl_context_info</span>     <span class="op">=</span> <span class="ident">cl_uint</span>;
 
-<span class='comment'>// cl_gl_object_type = 0x2000 - 0x200F enum values are currently taken</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_BUFFER</span>:          <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x2000</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_TEXTURE2D</span>:       <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x2001</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_TEXTURE3D</span>:       <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x2002</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_RENDERBUFFER</span>:    <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x2003</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_TEXTURE2D_ARRAY</span>: <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x200E</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_TEXTURE1D</span>:       <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x200F</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_TEXTURE1D_ARRAY</span>: <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x2010</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_OBJECT_TEXTURE_BUFFER</span>:  <span class='ident'>cl_gl_object_type</span> <span class='op'>=</span> <span class='number'>0x2011</span>;
+<span class="comment">// cl_gl_object_type = 0x2000 - 0x200F enum values are currently taken</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_BUFFER</span>:          <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x2000</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_TEXTURE2D</span>:       <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x2001</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_TEXTURE3D</span>:       <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x2002</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_RENDERBUFFER</span>:    <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x2003</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_TEXTURE2D_ARRAY</span>: <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x200E</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_TEXTURE1D</span>:       <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x200F</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_TEXTURE1D_ARRAY</span>: <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x2010</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_OBJECT_TEXTURE_BUFFER</span>:  <span class="ident">cl_gl_object_type</span> <span class="op">=</span> <span class="number">0x2011</span>;
 
-<span class='comment'>// cl_gl_texture_info</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_TEXTURE_TARGET</span>: <span class='ident'>cl_gl_texture_info</span> <span class='op'>=</span> <span class='number'>0x2004</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_MIPMAP_LEVEL</span>:   <span class='ident'>cl_gl_texture_info</span> <span class='op'>=</span> <span class='number'>0x2005</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_NUM_SAMPLES</span>:    <span class='ident'>cl_gl_texture_info</span> <span class='op'>=</span> <span class='number'>0x2012</span>;
+<span class="comment">// cl_gl_texture_info</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_TEXTURE_TARGET</span>: <span class="ident">cl_gl_texture_info</span> <span class="op">=</span> <span class="number">0x2004</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_MIPMAP_LEVEL</span>:   <span class="ident">cl_gl_texture_info</span> <span class="op">=</span> <span class="number">0x2005</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_NUM_SAMPLES</span>:    <span class="ident">cl_gl_texture_info</span> <span class="op">=</span> <span class="number">0x2012</span>;
 
-<span class='comment'>// cl_khr_gl_sharing extension</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_KHR_GL_SHARING</span>: <span class='ident'>cl_int</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class="comment">// cl_khr_gl_sharing extension</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_KHR_GL_SHARING</span>: <span class="ident">cl_int</span> <span class="op">=</span> <span class="number">1</span>;
 
-<span class='comment'>// Additional Error Codes</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR</span>: <span class='ident'>cl_int</span> <span class='op'>=</span> <span class='op'>-</span><span class='number'>1000</span>;
+<span class="comment">// Additional Error Codes</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR</span>: <span class="ident">cl_int</span> <span class="op">=</span> <span class="op">-</span><span class="number">1000</span>;
 
-<span class='comment'>// cl_gl_context_info</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR</span>: <span class='ident'>cl_gl_context_info</span> <span class='op'>=</span> <span class='number'>0x2006</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_DEVICES_FOR_GL_CONTEXT_KHR</span>:        <span class='ident'>cl_gl_context_info</span> <span class='op'>=</span> <span class='number'>0x2007</span>;
+<span class="comment">// cl_gl_context_info</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR</span>: <span class="ident">cl_gl_context_info</span> <span class="op">=</span> <span class="number">0x2006</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_DEVICES_FOR_GL_CONTEXT_KHR</span>:        <span class="ident">cl_gl_context_info</span> <span class="op">=</span> <span class="number">0x2007</span>;
 
-<span class='comment'>// Additional cl_context_properties</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GL_CONTEXT_KHR</span>:        <span class='ident'>cl_context_properties</span> <span class='op'>=</span> <span class='number'>0x2008</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_EGL_DISPLAY_KHR</span>:       <span class='ident'>cl_context_properties</span> <span class='op'>=</span> <span class='number'>0x2009</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_GLX_DISPLAY_KHR</span>:       <span class='ident'>cl_context_properties</span> <span class='op'>=</span> <span class='number'>0x200A</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_WGL_HDC_KHR</span>:           <span class='ident'>cl_context_properties</span> <span class='op'>=</span> <span class='number'>0x200B</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CL_CGL_SHAREGROUP_KHR</span>:    <span class='ident'>cl_context_properties</span> <span class='op'>=</span> <span class='number'>0x200C</span>;
+<span class="comment">// Additional cl_context_properties</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GL_CONTEXT_KHR</span>:        <span class="ident">cl_context_properties</span> <span class="op">=</span> <span class="number">0x2008</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_EGL_DISPLAY_KHR</span>:       <span class="ident">cl_context_properties</span> <span class="op">=</span> <span class="number">0x2009</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_GLX_DISPLAY_KHR</span>:       <span class="ident">cl_context_properties</span> <span class="op">=</span> <span class="number">0x200A</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_WGL_HDC_KHR</span>:           <span class="ident">cl_context_properties</span> <span class="op">=</span> <span class="number">0x200B</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CL_CGL_SHAREGROUP_KHR</span>:    <span class="ident">cl_context_properties</span> <span class="op">=</span> <span class="number">0x200C</span>;
 
-<span class='comment'>//#[link_args = &quot;-L$OPENCL_LIB -lOpenCL&quot;]</span>
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;OpenCL&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;framework&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;windows&quot;</span>, <span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;OpenCL&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>), <span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;OpenCL&quot;</span>))]</span>
-<span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> {
+<span class="comment">//#[link_args = &quot;-L$OPENCL_LIB -lOpenCL&quot;]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;OpenCL&quot;</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="string">&quot;framework&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>, <span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;OpenCL&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>), <span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;OpenCL&quot;</span>))]</span>
+<span class="kw">extern</span> <span class="string">&quot;system&quot;</span> {
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clCreateFromGLBuffer</span>(<span class='ident'>context</span>: <span class='ident'>cl_context</span>,
-                                <span class='ident'>flags</span>: <span class='ident'>cl_mem_flags</span>,
-                                <span class='ident'>bufobj</span>: <span class='ident'>cl_GLuint</span>,
-                                <span class='ident'>errcode_ret</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_int</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_mem</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clCreateFromGLBuffer</span>(<span class="ident">context</span>: <span class="ident">cl_context</span>,
+                                <span class="ident">flags</span>: <span class="ident">cl_mem_flags</span>,
+                                <span class="ident">bufobj</span>: <span class="ident">cl_GLuint</span>,
+                                <span class="ident">errcode_ret</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_int</span>) <span class="op">-&gt;</span> <span class="ident">cl_mem</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clCreateFromGLTexture</span>(<span class='ident'>context</span>: <span class='ident'>cl_context</span>,
-                                 <span class='ident'>flags</span>: <span class='ident'>cl_mem_flags</span>,
-                                 <span class='ident'>texture_target</span>: <span class='ident'>cl_GLenum</span>,
-                                 <span class='ident'>miplevel</span>: <span class='ident'>cl_GLint</span>,
-                                 <span class='ident'>texture</span>: <span class='ident'>cl_GLuint</span>,
-                                 <span class='ident'>errcode_ret</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_int</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_mem</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clCreateFromGLTexture</span>(<span class="ident">context</span>: <span class="ident">cl_context</span>,
+                                 <span class="ident">flags</span>: <span class="ident">cl_mem_flags</span>,
+                                 <span class="ident">texture_target</span>: <span class="ident">cl_GLenum</span>,
+                                 <span class="ident">miplevel</span>: <span class="ident">cl_GLint</span>,
+                                 <span class="ident">texture</span>: <span class="ident">cl_GLuint</span>,
+                                 <span class="ident">errcode_ret</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_int</span>) <span class="op">-&gt;</span> <span class="ident">cl_mem</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clGetGLObjectInfo</span>(<span class='ident'>memobj</span>: <span class='ident'>cl_mem</span>,
-                             <span class='ident'>gl_object_type</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_gl_object_type</span>,
-                             <span class='ident'>gl_object_name</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_GLuint</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clGetGLObjectInfo</span>(<span class="ident">memobj</span>: <span class="ident">cl_mem</span>,
+                             <span class="ident">gl_object_type</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_gl_object_type</span>,
+                             <span class="ident">gl_object_name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_GLuint</span>) <span class="op">-&gt;</span> <span class="ident">cl_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clGetGLTextureInfo</span>(<span class='ident'>memobj</span>: <span class='ident'>cl_mem</span>,
-                              <span class='ident'>param_name</span>: <span class='ident'>cl_gl_texture_info</span>,
-                              <span class='ident'>param_value_size</span>: <span class='ident'>size_t</span>,
-                              <span class='ident'>param_value</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
-                              <span class='ident'>param_value_size_ret</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clGetGLTextureInfo</span>(<span class="ident">memobj</span>: <span class="ident">cl_mem</span>,
+                              <span class="ident">param_name</span>: <span class="ident">cl_gl_texture_info</span>,
+                              <span class="ident">param_value_size</span>: <span class="ident">size_t</span>,
+                              <span class="ident">param_value</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>,
+                              <span class="ident">param_value_size_ret</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">size_t</span>) <span class="op">-&gt;</span> <span class="ident">cl_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clCreateFromGLRenderbuffer</span>(<span class='ident'>context</span>: <span class='ident'>cl_context</span>,
-                                      <span class='ident'>flags</span>: <span class='ident'>cl_mem_flags</span>,
-                                      <span class='ident'>renderbuffer</span>: <span class='ident'>cl_GLuint</span>,
-                                      <span class='ident'>errcode_ret</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_int</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_mem</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clCreateFromGLRenderbuffer</span>(<span class="ident">context</span>: <span class="ident">cl_context</span>,
+                                      <span class="ident">flags</span>: <span class="ident">cl_mem_flags</span>,
+                                      <span class="ident">renderbuffer</span>: <span class="ident">cl_GLuint</span>,
+                                      <span class="ident">errcode_ret</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_int</span>) <span class="op">-&gt;</span> <span class="ident">cl_mem</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clEnqueueAcquireGLObjects</span>(<span class='ident'>command_queue</span>: <span class='ident'>cl_command_queue</span>,
-                                     <span class='ident'>num_objects</span>: <span class='ident'>cl_uint</span>,
-                                     <span class='ident'>mem_objects</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>cl_mem</span>,
-                                     <span class='ident'>num_events_in_wait_list</span>: <span class='ident'>cl_uint</span>,
-                                     <span class='ident'>event_wait_list</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>cl_event</span>,
-                                     <span class='ident'>event</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_event</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clEnqueueAcquireGLObjects</span>(<span class="ident">command_queue</span>: <span class="ident">cl_command_queue</span>,
+                                     <span class="ident">num_objects</span>: <span class="ident">cl_uint</span>,
+                                     <span class="ident">mem_objects</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">cl_mem</span>,
+                                     <span class="ident">num_events_in_wait_list</span>: <span class="ident">cl_uint</span>,
+                                     <span class="ident">event_wait_list</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">cl_event</span>,
+                                     <span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_event</span>) <span class="op">-&gt;</span> <span class="ident">cl_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clEnqueueReleaseGLObjects</span>(<span class='ident'>command_queue</span>: <span class='ident'>cl_command_queue</span>,
-                                     <span class='ident'>num_objects</span>: <span class='ident'>cl_uint</span>,
-                                     <span class='ident'>mem_objects</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>cl_mem</span>,
-                                     <span class='ident'>num_events_in_wait_list</span>: <span class='ident'>cl_uint</span>,
-                                     <span class='ident'>event_wait_list</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>cl_event</span>,
-                                     <span class='ident'>event</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_event</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clEnqueueReleaseGLObjects</span>(<span class="ident">command_queue</span>: <span class="ident">cl_command_queue</span>,
+                                     <span class="ident">num_objects</span>: <span class="ident">cl_uint</span>,
+                                     <span class="ident">mem_objects</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">cl_mem</span>,
+                                     <span class="ident">num_events_in_wait_list</span>: <span class="ident">cl_uint</span>,
+                                     <span class="ident">event_wait_list</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">cl_event</span>,
+                                     <span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_event</span>) <span class="op">-&gt;</span> <span class="ident">cl_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clGetGLContextInfoKHR</span>(<span class='ident'>properties</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>cl_context_properties</span>,
-                                 <span class='ident'>param_name</span>: <span class='ident'>cl_gl_context_info</span>,
-                                 <span class='ident'>param_value_size</span>: <span class='ident'>size_t</span>,
-                                 <span class='ident'>param_value</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
-                                 <span class='ident'>param_value_size_ret</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clGetGLContextInfoKHR</span>(<span class="ident">properties</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">cl_context_properties</span>,
+                                 <span class="ident">param_name</span>: <span class="ident">cl_gl_context_info</span>,
+                                 <span class="ident">param_value_size</span>: <span class="ident">size_t</span>,
+                                 <span class="ident">param_value</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>,
+                                 <span class="ident">param_value_size_ret</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">size_t</span>) <span class="op">-&gt;</span> <span class="ident">cl_int</span>;
 
-    <span class='comment'>// typedef CL_API_ENTRY cl_int (CL_API_CALL *clGetGLContextInfoKHR_fn)(</span>
-    <span class='comment'>//     const cl_context_properties * properties,</span>
-    <span class='comment'>//     cl_gl_context_info            param_name,</span>
-    <span class='comment'>//     size_t                        param_value_size,</span>
-    <span class='comment'>//     void *                        param_value,</span>
-    <span class='comment'>//     size_t *                      param_value_size_ret);</span>
+    <span class="comment">// typedef CL_API_ENTRY cl_int (CL_API_CALL *clGetGLContextInfoKHR_fn)(</span>
+    <span class="comment">//     const cl_context_properties * properties,</span>
+    <span class="comment">//     cl_gl_context_info            param_name,</span>
+    <span class="comment">//     size_t                        param_value_size,</span>
+    <span class="comment">//     void *                        param_value,</span>
+    <span class="comment">//     size_t *                      param_value_size_ret);</span>
 
-    <span class='comment'>// Deprecated OpenCL 1.1 APIs</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clCreateFromGLTexture2D</span>(<span class='ident'>context</span>: <span class='ident'>cl_context</span>,
-                                   <span class='ident'>flags</span>: <span class='ident'>cl_mem_flags</span>,
-                                   <span class='ident'>texture_target</span>: <span class='ident'>cl_GLenum</span>,
-                                   <span class='ident'>miplevel</span>: <span class='ident'>cl_GLint</span>,
-                                   <span class='ident'>texture</span>: <span class='ident'>cl_GLuint</span>,
-                                   <span class='ident'>errcode_ret</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_int</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_mem</span>;
+    <span class="comment">// Deprecated OpenCL 1.1 APIs</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clCreateFromGLTexture2D</span>(<span class="ident">context</span>: <span class="ident">cl_context</span>,
+                                   <span class="ident">flags</span>: <span class="ident">cl_mem_flags</span>,
+                                   <span class="ident">texture_target</span>: <span class="ident">cl_GLenum</span>,
+                                   <span class="ident">miplevel</span>: <span class="ident">cl_GLint</span>,
+                                   <span class="ident">texture</span>: <span class="ident">cl_GLuint</span>,
+                                   <span class="ident">errcode_ret</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_int</span>) <span class="op">-&gt;</span> <span class="ident">cl_mem</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clCreateFromGLTexture3D</span>(<span class='ident'>context</span>: <span class='ident'>cl_context</span>,
-                                   <span class='ident'>flags</span>: <span class='ident'>cl_mem_flags</span>,
-                                   <span class='ident'>texture_target</span>: <span class='ident'>cl_GLenum</span>,
-                                   <span class='ident'>miplevel</span>: <span class='ident'>cl_GLint</span>,
-                                   <span class='ident'>texture</span>: <span class='ident'>cl_GLuint</span>,
-                                   <span class='ident'>errcode_ret</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cl_int</span>) <span class='op'>-&gt;</span> <span class='ident'>cl_mem</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clCreateFromGLTexture3D</span>(<span class="ident">context</span>: <span class="ident">cl_context</span>,
+                                   <span class="ident">flags</span>: <span class="ident">cl_mem_flags</span>,
+                                   <span class="ident">texture_target</span>: <span class="ident">cl_GLenum</span>,
+                                   <span class="ident">miplevel</span>: <span class="ident">cl_GLint</span>,
+                                   <span class="ident">texture</span>: <span class="ident">cl_GLuint</span>,
+                                   <span class="ident">errcode_ret</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cl_int</span>) <span class="op">-&gt;</span> <span class="ident">cl_mem</span>;
 }
 </pre>
 </section>
@@ -344,11 +345,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "cl_sys";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

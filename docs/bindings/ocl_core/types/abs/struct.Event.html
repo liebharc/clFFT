@@ -9,6 +9,7 @@
 
     <title>ocl_core::types::abs::Event - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,50 +43,112 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>abs</a>::<wbr><a class='struct' href=''>Event</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>ocl_core</a>::<wbr><a href='../index.html'>types</a>::<wbr><a href='index.html'>abs</a>::<wbr><a class="struct" href=''>Event</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3283' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#603' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Event(_);</pre><div class='docblock'><p>cl_event</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1181' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#605-652' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.from_fresh_ptr' class='method'><span id='from_fresh_ptr.v' class='invisible'><code>unsafe fn <a href='#method.from_fresh_ptr' class='fnname'>from_fresh_ptr</a>(ptr: <a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a>) -&gt; <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span></h4>
-<div class='docblock'><p>Only call this when passing a newly created pointer directly from
-<code>clCreate...</code>. Do not use this to clone or copy.</p>
-</div><h4 id='method.from_cloned_ptr' class='method'><span id='from_cloned_ptr.v' class='invisible'><code>unsafe fn <a href='#method.from_cloned_ptr' class='fnname'>from_cloned_ptr</a>(ptr: <a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a>) -&gt; <a class='type' href='../../../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a>&gt;</code></span></h4>
-<div class='docblock'><p>Only use when cloning from a pre-existing and valid <code>cl_event</code>.</p>
-</div><h4 id='method.null' class='method'><span id='null.v' class='invisible'><code>unsafe fn <a href='#method.null' class='fnname'>null</a>() -&gt; <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span></h4>
-<div class='docblock'><p>For passage directly to an &#39;event creation&#39; function (such as enqueue).</p>
-</div><h4 id='method.as_ptr_ref' class='method'><span id='as_ptr_ref.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr_ref' class='fnname'>as_ptr_ref</a>(&amp;self) -&gt; &amp;<a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a></code></span></h4>
+               </span><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#924' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct Event(_);</pre><div class='docblock'><p>cl_event</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#926-1123' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.null' class="method"><span id='null.v' class='invisible'><code>fn <a href='#method.null' class='fnname'>null</a>() -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span></h4>
+<div class='docblock'><p>For passage directly to an 'event creation' function (such as enqueue...).</p>
+</div><h4 id='method.user' class="method"><span id='user.v' class='invisible'><code>fn <a href='#method.user' class='fnname'>user</a>&lt;C:&nbsp;<a class="trait" href="../../../ocl_core/types/abs/trait.ClContextPtr.html" title="trait ocl_core::types::abs::ClContextPtr">ClContextPtr</a>&gt;(context: C) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a>&gt;</code></span></h4>
+<div class='docblock'><p>Creates and returns a new 'user' event.</p>
+<p>User events are events which are meant to have their completion status
+set from the host side (that means you).</p>
+</div><h4 id='method.from_raw_create_ptr' class="method"><span id='from_raw_create_ptr.v' class='invisible'><code>unsafe fn <a href='#method.from_raw_create_ptr' class='fnname'>from_raw_create_ptr</a>(ptr: <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a>) -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span></h4>
+<div class='docblock'><p>Only call this when passing <strong>the original</strong> newly created pointer
+directly from <code>clCreate...</code>. Do not use this to clone or copy.</p>
+</div><h4 id='method.from_raw_copied_ptr' class="method"><span id='from_raw_copied_ptr.v' class='invisible'><code>unsafe fn <a href='#method.from_raw_copied_ptr' class='fnname'>from_raw_copied_ptr</a>(ptr: <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a>) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a>&gt;</code></span></h4>
+<div class='docblock'><p>Only use when cloning or copying from a pre-existing and valid
+<code>cl_event</code>.</p>
+</div><h4 id='method.set_complete' class="method"><span id='set_complete.v' class='invisible'><code>fn <a href='#method.set_complete' class='fnname'>set_complete</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>Sets this user created event to <code>CommandExecutionStatus::Complete</code>.</p>
+<p>Will return an error if this event is not a 'user' event (created
+with <code>::user()</code>).</p>
+</div><h4 id='method.is_complete' class="method"><span id='is_complete.v' class='invisible'><code>fn <a href='#method.is_complete' class='fnname'>is_complete</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;</code></span></h4>
+<div class='docblock'><p>Queries the command status associated with this event and returns true
+if it is complete, false if incomplete or upon error.</p>
+<p>This is the fastest possible way to determine event status.</p>
+</div><h4 id='method.wait_for' class="method"><span id='wait_for.v' class='invisible'><code>fn <a href='#method.wait_for' class='fnname'>wait_for</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>Causes the command queue to wait until this event is complete before returning.</p>
+</div><h4 id='method.is_null' class="method"><span id='is_null.v' class='invisible'><code>fn <a href='#method.is_null' class='fnname'>is_null</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether or not this event is associated with a command or is a
+user event.</p>
+</div><h4 id='method.is_valid' class="method"><span id='is_valid.v' class='invisible'><code>fn <a href='#method.is_valid' class='fnname'>is_valid</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+<div class='docblock'><p>[FIXME]: ADD VALIDITY CHECK BY CALLING '_INFO' OR SOMETHING:
+NULL CHECK IS NOT ENOUGH</p>
+<p>This still leads to crazy segfaults when non-event pointers (random
+whatever addresses) are passed. Need better check.</p>
+</div><h4 id='method.set_callback' class="method"><span id='set_callback.v' class='invisible'><code>unsafe fn <a href='#method.set_callback' class='fnname'>set_callback</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;callback_receiver: <a class="type" href="../../../ocl_core/type.EventCallbackFn.html" title="type ocl_core::EventCallbackFn">EventCallbackFn</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;user_data_ptr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="enum" href="../../../libc/enum.c_void.html" title="enum libc::c_void">c_void</a><br>) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span></h4>
+<div class='docblock'><p>Sets a callback function, <code>callback_receiver</code>, to trigger upon
+completion of this event with an optional pointer to user data.</p>
+<p>The callback function must have a signature matching:
+<code>extern &quot;C&quot; fn (ffi::cl_event, i32, *mut libc::c_void)</code></p>
+<h1 id="safety" class="section-header"><a href="#safety">Safety</a></h1>
+<p><code>user_data</code> must be guaranteed to still exist if and when <code>callback_receiver</code>
+is ever called.</p>
+<p>TODO: Create a safer type wrapper for <code>callback_receiver</code> (using an
+<code>Arc</code>?, etc.) within <code>ocl</code>.</p>
+</div><h4 id='method.context' class="method"><span id='context.v' class='invisible'><code>fn <a href='#method.context' class='fnname'>context</a>(&amp;self) -&gt; <a class="type" href="../../../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="../../../ocl_core/types/abs/struct.Context.html" title="struct ocl_core::types::abs::Context">Context</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the <code>Context</code> associated with this event.</p>
+</div><h4 id='method.as_ptr_ref' class="method"><span id='as_ptr_ref.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr_ref' class='fnname'>as_ptr_ref</a>(&amp;self) -&gt; &amp;<a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
 <div class='docblock'><p>Returns an immutable reference to a pointer, do not deref and store it unless
 you will manage its associated reference count carefully.</p>
-</div><h4 id='method.as_ptr_mut' class='method'><span id='as_ptr_mut.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr_mut' class='fnname'>as_ptr_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a></code></span></h4>
+<h3 id="warning" class="section-header"><a href="#warning">Warning</a></h3>
+<p>DO NOT store this pointer.</p>
+<p>DO NOT send this pointer across threads unless you are incrementing
+the reference count before sending and decrementing after sending.</p>
+<p>Use <code>::into_raw</code> for these purposes. Thank you.</p>
+</div><h4 id='method.as_ptr_mut' class="method"><span id='as_ptr_mut.v' class='invisible'><code>unsafe fn <a href='#method.as_ptr_mut' class='fnname'>as_ptr_mut</a>(&amp;mut self) -&gt; &amp;mut <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
 <div class='docblock'><p>Returns a mutable reference to a pointer, do not deref then modify or store it
 unless you will manage its associated reference count carefully.</p>
-</div><h4 id='method.is_valid' class='method'><span id='is_valid.v' class='invisible'><code>fn <a href='#method.is_valid' class='fnname'>is_valid</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
-<div class='docblock'><p>[FIXME]: ADD VALIDITY CHECK BY CALLING &#39;_INFO&#39; OR SOMETHING:
-NULL CHECK IS NOT ENOUGH</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3286' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#602' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<h3 id="warning-1" class="section-header"><a href="#warning-1">Warning</a></h3>
+<p>DO NOT store this pointer.</p>
+<p>DO NOT send this pointer across threads unless you are incrementing
+the reference count before sending and decrementing after sending.</p>
+<p>Use <code>::into_raw</code> for these purposes. Thank you.</p>
+</div><h4 id='method.into_raw' class="method"><span id='into_raw.v' class='invisible'><code>fn <a href='#method.into_raw' class='fnname'>into_raw</a>(self) -&gt; <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
+<div class='docblock'><p>Consumes the <code>Event</code>, returning the wrapped <code>cl_event</code> pointer.</p>
+<p>To avoid a memory leak the pointer must be converted back to an <code>Event</code> using
+<a href="struct.Event.html#method.from_raw"><code>Event::from_raw</code></a>.</p>
+</div><h4 id='method.from_raw' class="method"><span id='from_raw.v' class='invisible'><code>unsafe fn <a href='#method.from_raw' class='fnname'>from_raw</a>(ptr: <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a>) -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span></h4>
+<div class='docblock'><p>Constructs an <code>Event</code> from a raw <code>cl_event</code> pointer.</p>
+<p>The raw pointer must have been previously returned by a call to a
+<a href="struct.Event.html#method.into_raw"><code>Event::into_raw</code></a>.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#923' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../ocl_core/types/abs/trait.ClEventPtrNew.html' title='ocl_core::types::abs::ClEventPtrNew'>ClEventPtrNew</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1194' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#654-663' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.ptr_mut_ptr_new' class='method'><span id='ptr_mut_ptr_new.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClEventPtrNew.html#tymethod.ptr_mut_ptr_new' class='fnname'>ptr_mut_ptr_new</a>(&amp;mut self) -&gt; <a class='type' href='../../../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a>&gt;</code></span></h4>
-</div><h3 class='impl'><span class='in-band'><code>impl&lt;'e&gt; <a class='trait' href='../../../ocl_core/types/abs/trait.ClEventRef.html' title='ocl_core::types::abs::ClEventRef'>ClEventRef</a>&lt;'e&gt; for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1197' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#665-669' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.as_ptr_ref-1' class='method'><span id='as_ptr_ref.v-1' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClEventRef.html#tymethod.as_ptr_ref' class='fnname'>as_ptr_ref</a>(&amp;'e self) -&gt; &amp;'e <a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a></code></span></h4>
-</div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../ocl_core/types/abs/trait.ClWaitList.html' title='ocl_core::types::abs::ClWaitList'>ClWaitList</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1201' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#671-679' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.as_ptr_ptr' class='method'><span id='as_ptr_ptr.v' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClWaitList.html#tymethod.as_ptr_ptr' class='fnname'>as_ptr_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../../../cl_sys/cl_h/type.cl_event.html' title='cl_sys::cl_h::cl_event'>cl_event</a></code></span></h4>
-<h4 id='method.count' class='method'><span id='count.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClWaitList.html#tymethod.count' class='fnname'>count</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
-</div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1206' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#681-686' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../../../ocl_core/types/abs/trait.ClNullEventPtr.html" title="trait ocl_core::types::abs::ClNullEventPtr">ClNullEventPtr</a> for &amp;'a mut <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1125-1133' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.alloc_new' class="method"><span id='alloc_new.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClNullEventPtr.html#tymethod.alloc_new' class='fnname'>alloc_new</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
+<h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClNullEventPtr.html#tymethod.clone_from' class='fnname'>clone_from</a>&lt;E:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a>&gt;&gt;(&amp;mut self, ev: E)</code></span></h4>
+</div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../../../ocl_core/types/abs/trait.ClWaitListPtr.html" title="trait ocl_core::types::abs::ClWaitListPtr">ClWaitListPtr</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1135-1138' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_ptr_ptr' class="method"><span id='as_ptr_ptr.v' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClWaitListPtr.html#tymethod.as_ptr_ptr' class='fnname'>as_ptr_ptr</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*const </a><a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
+<div class='docblock'><p>Returns a pointer to the first pointer in this list.</p>
+</div><h4 id='method.count' class="method"><span id='count.v' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClWaitListPtr.html#tymethod.count' class='fnname'>count</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></h4>
+<div class='docblock'><p>Returns the number of items in this wait list.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../../../ocl_core/types/abs/trait.ClWaitListPtr.html" title="trait ocl_core::types::abs::ClWaitListPtr">ClWaitListPtr</a> for &amp;'a <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1140-1143' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_ptr_ptr-1' class="method"><span id='as_ptr_ptr.v-1' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClWaitListPtr.html#tymethod.as_ptr_ptr' class='fnname'>as_ptr_ptr</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*const </a><a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
+<div class='docblock'><p>Returns a pointer to the first pointer in this list.</p>
+</div><h4 id='method.count-1' class="method"><span id='count.v-1' class='invisible'><code>fn <a href='../../../ocl_core/types/abs/trait.ClWaitListPtr.html#tymethod.count' class='fnname'>count</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></h4>
+<div class='docblock'><p>Returns the number of items in this wait list.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'e&gt; <a class="trait" href="../../../ocl_core/types/abs/trait.ClEventPtrRef.html" title="trait ocl_core::types::abs::ClEventPtrRef">ClEventPtrRef</a>&lt;'e&gt; for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1145-1147' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_ptr_ref-1' class="method"><span id='as_ptr_ref.v-1' class='invisible'><code>unsafe fn <a href='../../../ocl_core/types/abs/trait.ClEventPtrRef.html#tymethod.as_ptr_ref' class='fnname'>as_ptr_ref</a>(&amp;'e self) -&gt; &amp;'e <a class="type" href="../../../cl_sys/cl_h/type.cl_event.html" title="type cl_sys::cl_h::cl_event">cl_event</a></code></span></h4>
+</div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a>&gt; for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1149-1153' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_ref' class="method"><span id='as_ref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html#tymethod.as_ref' class='fnname'>as_ref</a>(&amp;self) -&gt; &amp;<a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1155-1162' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from-1' class="method"><span id='clone_from.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1209' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#688-698' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.drop' class='method'><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html" title="trait core::ops::Drop">Drop</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1164-1170' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
 <div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1212' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#701' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../../../ocl_core/types/abs/struct.Event.html' title='ocl_core::types::abs::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1213' class='srclink' href='../../../src/ocl_core/types/abs.rs.html#702' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1173' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../../ocl_core/types/abs/struct.Event.html" title="struct ocl_core::types::abs::Event">Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/ocl_core/types/abs.rs.html#1174' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
@@ -142,11 +205,9 @@ NULL CHECK IS NOT ENOUGH</p>
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

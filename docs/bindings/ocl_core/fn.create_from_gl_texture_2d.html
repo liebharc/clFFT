@@ -9,6 +9,7 @@
 
     <title>ocl_core::create_from_gl_texture_2d - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,13 +43,13 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>ocl_core</a>::<wbr><a class='fn' href=''>create_from_gl_texture_2d</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>ocl_core</a>::<wbr><a class="fn" href=''>create_from_gl_texture_2d</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-235' class='srclink' href='../src/ocl_core/functions.rs.html#838-863' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub unsafe fn create_from_gl_texture_2d(context: &amp;<a class='struct' href='../ocl_core/types/abs/struct.Context.html' title='ocl_core::types::abs::Context'>Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; texture_target: <a class='type' href='../cl_sys/platform_h/type.cl_GLenum.html' title='cl_sys::platform_h::cl_GLenum'>cl_GLenum</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; miplevel: <a class='type' href='../cl_sys/platform_h/type.cl_GLint.html' title='cl_sys::platform_h::cl_GLint'>cl_GLint</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; texture: <a class='type' href='../cl_sys/platform_h/type.cl_GLuint.html' title='cl_sys::platform_h::cl_GLuint'>cl_GLuint</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; flags: <a class='struct' href='../ocl_core/struct.MemFlags.html' title='ocl_core::MemFlags'>MemFlags</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../ocl_core/error/type.Result.html' title='ocl_core::error::Result'>OclResult</a>&lt;<a class='struct' href='../ocl_core/types/abs/struct.Mem.html' title='ocl_core::types::abs::Mem'>Mem</a>&gt;</pre><div class='docblock'><p>[UNTESTED] [DEPRICATED]
+               </span><a class='srclink' href='../src/ocl_core/functions.rs.html#981-1005' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub unsafe fn create_from_gl_texture_2d&lt;C&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;context: C, <br>&nbsp;&nbsp;&nbsp;&nbsp;texture_target: <a class="type" href="../cl_sys/platform_h/type.cl_GLenum.html" title="type cl_sys::platform_h::cl_GLenum">cl_GLenum</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;miplevel: <a class="type" href="../cl_sys/platform_h/type.cl_GLint.html" title="type cl_sys::platform_h::cl_GLint">cl_GLint</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;texture: <a class="type" href="../cl_sys/platform_h/type.cl_GLuint.html" title="type cl_sys::platform_h::cl_GLuint">cl_GLuint</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;flags: <a class="struct" href="../ocl_core/struct.MemFlags.html" title="struct ocl_core::MemFlags">MemFlags</a><br>) -&gt; <a class="type" href="../ocl_core/error/type.Result.html" title="type ocl_core::error::Result">OclResult</a>&lt;<a class="struct" href="../ocl_core/types/abs/struct.Mem.html" title="struct ocl_core::types::abs::Mem">Mem</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;C: <a class="trait" href="../ocl_core/types/abs/trait.ClContextPtr.html" title="trait ocl_core::types::abs::ClContextPtr">ClContextPtr</a>,&nbsp;</span></pre><div class='docblock'><p>[UNTESTED] [DEPRICATED]
 Return a texture2D pointer from a <code>OpenGL</code> texture2D object.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
@@ -106,11 +107,9 @@ Return a texture2D pointer from a <code>OpenGL</code> texture2D object.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "ocl_core";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    <script src="../extra.js"></script>
     <script defer src="../search-index.js"></script>
 </body>
 </html>

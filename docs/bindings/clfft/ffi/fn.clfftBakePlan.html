@@ -9,6 +9,7 @@
 
     <title>clfft::ffi::clfftBakePlan - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,13 +43,13 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>clfft</a>::<wbr><a href='index.html'>ffi</a>::<wbr><a class='fn' href=''>clfftBakePlan</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>clfft</a>::<wbr><a href='index.html'>ffi</a>::<wbr><a class="fn" href=''>clfftBakePlan</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-29' class='srclink' href='../../src/clfft/src/ffi.rs.html#234-242' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub unsafe extern fn clfftBakePlan(plHandle: <a class='type' href='../../clfft/ffi/type.clfftPlanHandle.html' title='clfft::ffi::clfftPlanHandle'>clfftPlanHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; numQueues: <a class='type' href='../../cl_sys/cl_h/type.cl_uint.html' title='cl_sys::cl_h::cl_uint'>cl_uint</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; commQueueFFT: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../cl_sys/cl_h/type.cl_command_queue.html' title='cl_sys::cl_h::cl_command_queue'>cl_command_queue</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pfn_notify: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;unsafe extern fn(plHandle: <a class='type' href='../../clfft/ffi/type.clfftPlanHandle.html' title='clfft::ffi::clfftPlanHandle'>clfftPlanHandle</a>, user_data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a>)&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; user_data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='../../clfft/ffi/enum.clfftStatus.html' title='clfft::ffi::clfftStatus'>clfftStatus</a></pre></section>
+               </span><a class='srclink' href='../../src/clfft/ffi.rs.html#234-242' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub unsafe extern fn clfftBakePlan(<br>&nbsp;&nbsp;&nbsp;&nbsp;plHandle: <a class="type" href="../../clfft/ffi/type.clfftPlanHandle.html" title="type clfft::ffi::clfftPlanHandle">clfftPlanHandle</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;numQueues: <a class="type" href="../../cl_sys/cl_h/type.cl_uint.html" title="type cl_sys::cl_h::cl_uint">cl_uint</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;commQueueFFT: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="type" href="../../cl_sys/cl_h/type.cl_command_queue.html" title="type cl_sys::cl_h::cl_command_queue">cl_command_queue</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;pfn_notify: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;unsafe extern fn(_: <a class="type" href="../../clfft/ffi/type.clfftPlanHandle.html" title="type clfft::ffi::clfftPlanHandle">clfftPlanHandle</a>, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="enum" href="https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html" title="enum std::os::raw::c_void">c_void</a>)&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;user_data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="enum" href="https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html" title="enum std::os::raw::c_void">c_void</a><br>) -&gt; <a class="enum" href="../../clfft/ffi/enum.clfftStatus.html" title="enum clfft::ffi::clfftStatus">clfftStatus</a></pre></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -104,11 +105,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "clfft";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

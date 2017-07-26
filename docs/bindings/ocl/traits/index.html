@@ -9,6 +9,7 @@
 
     <title>ocl::traits - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,50 +43,71 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>ocl</a>::<wbr><a class='mod' href=''>traits</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>ocl</a>::<wbr><a class="mod" href=''>traits</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1774' class='srclink' href='../../src/ocl/lib.rs.html#93-98' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/ocl/lib.rs.html#124-129' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Commonly used traits.</p>
 </div><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.MemLen.html'
-                                  title='ocl::traits::MemLen'>MemLen</a></td>
+                           <td><a class="trait" href="trait.IntoMarker.html"
+                                  title='trait ocl::traits::IntoMarker'>IntoMarker</a></td>
+                           <td class='docblock-short'>
+                                <p>Conversion to a 'marker' event.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.IntoRawEventArray.html"
+                                  title='trait ocl::traits::IntoRawEventArray'>IntoRawEventArray</a></td>
+                           <td class='docblock-short'>
+                                <p>Conversion to a stack allocated array of <code>cl_event</code> pointers.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.MemLen.html"
+                                  title='trait ocl::traits::MemLen'>MemLen</a></td>
                            <td class='docblock-short'>
                                 <p>Types which have properties allowing them to be used to define the size
 of a volume of memory.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.OclPrm.html'
-                                  title='ocl::traits::OclPrm'>OclPrm</a></td>
+                           <td><a class="trait" href="trait.OclPrm.html"
+                                  title='trait ocl::traits::OclPrm'>OclPrm</a></td>
                            <td class='docblock-short'>
-                                <p>A type usable within <code>OpenCL</code> kernels.</p>
+                                <p>A primitive type usable within <code>OpenCL</code> kernels.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.OclScl.html'
-                                  title='ocl::traits::OclScl'>OclScl</a></td>
+                           <td><a class="trait" href="trait.OclScl.html"
+                                  title='trait ocl::traits::OclScl'>OclScl</a></td>
                            <td class='docblock-short'>
-                                <p>A scalar type usable within <code>OpenCL</code> kernels.</p>
+                                <p>A scalar type usable within OpenCL kernels.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.OclVec.html'
-                                  title='ocl::traits::OclVec'>OclVec</a></td>
+                           <td><a class="trait" href="trait.OclVec.html"
+                                  title='trait ocl::traits::OclVec'>OclVec</a></td>
                            <td class='docblock-short'>
                                 <p>A vector type usable within <code>OpenCL</code> kernels.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.WorkDims.html'
-                                  title='ocl::traits::WorkDims'>WorkDims</a></td>
+                           <td><a class="trait" href="trait.WorkDims.html"
+                                  title='trait ocl::traits::WorkDims'>WorkDims</a></td>
                            <td class='docblock-short'>
                                 <p>Types which have properties describing the amount of work to be done
 in multiple dimensions.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -143,11 +165,9 @@ in multiple dimensions.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../extra.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

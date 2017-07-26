@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.12.0\src\standard\spatial_dims.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.14.1\src\standard\spatial_dims.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>spatial_dims.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -341,304 +342,364 @@
 <span id="297">297</span>
 <span id="298">298</span>
 <span id="299">299</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! A simple way to specify the sizes or offsets of up to three dimensions.</span>
-<span class='comment'>// use std::convert::Into;</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>From</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Index</span>;
-<span class='comment'>// use std::mem;</span>
-<span class='kw'>use</span> <span class='ident'>num</span>::{<span class='ident'>Num</span>, <span class='ident'>ToPrimitive</span>};
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>error</span>::{<span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>OclResult</span>, <span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>OclError</span>};
-<span class='kw'>use</span> <span class='ident'>standard</span>::{<span class='ident'>MemLen</span>, <span class='ident'>WorkDims</span>};
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>util</span>;
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! A simple way to specify the sizes or offsets of up to three dimensions.</span>
+<span class="comment">// use std::convert::Into;</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">From</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Index</span>;
+<span class="comment">// use std::mem;</span>
+<span class="kw">use</span> <span class="ident">num</span>::{<span class="ident">Num</span>, <span class="ident">ToPrimitive</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">error</span>::{<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">OclResult</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">OclError</span>};
+<span class="kw">use</span> <span class="ident">standard</span>::{<span class="ident">MemLen</span>, <span class="ident">WorkDims</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">util</span>;
 
-<span class='doccomment'>/// Specifies a size or offset in up to three dimensions.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Using `SpatialDims` to specify dimensions for your application may not be</span>
-<span class='doccomment'>/// appropriate. Custom types implementing the traits `MemLen` and `WorkDims`</span>
-<span class='doccomment'>/// should be created to express more complex relationships between data shape</span>
-<span class='doccomment'>/// and work size for kernels which do not have a 1:1 correspondence between</span>
-<span class='doccomment'>/// data set length and global work size.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [FIXME]: Describe the ways a `SpatialDims` can be created using various</span>
-<span class='doccomment'>/// `From` implementations.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [UNSTABLE]: This type and its methods may be renamed or otherwise changed</span>
-<span class='doccomment'>/// at any time. This is still a work in progress.</span>
-<span class='doccomment'>///</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>, <span class='ident'>Copy</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>SpatialDims</span> {
-    <span class='ident'>Unspecified</span>,
-    <span class='ident'>One</span>     (<span class='ident'>usize</span>),
-    <span class='ident'>Two</span>     (<span class='ident'>usize</span>, <span class='ident'>usize</span>),
-    <span class='ident'>Three</span>   (<span class='ident'>usize</span>, <span class='ident'>usize</span>, <span class='ident'>usize</span>),
+<span class="doccomment">/// Specifies a size or offset in up to three dimensions.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Using `SpatialDims` to specify dimensions for your application may not be</span>
+<span class="doccomment">/// appropriate. Custom types implementing the traits `MemLen` and `WorkDims`</span>
+<span class="doccomment">/// should be created to express more complex relationships between data shape</span>
+<span class="doccomment">/// and work size for kernels which do not have a 1:1 correspondence between</span>
+<span class="doccomment">/// data set length and global work size.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [FIXME]: Describe the ways a `SpatialDims` can be created using various</span>
+<span class="doccomment">/// `From` implementations.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [UNSTABLE]: This type and its methods may be renamed or otherwise changed</span>
+<span class="doccomment">/// at any time. This is still a work in progress.</span>
+<span class="doccomment">///</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SpatialDims</span> {
+    <span class="ident">Unspecified</span>,
+    <span class="ident">One</span>     (<span class="ident">usize</span>),
+    <span class="ident">Two</span>     (<span class="ident">usize</span>, <span class="ident">usize</span>),
+    <span class="ident">Three</span>   (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>),
 }
 
-<span class='kw'>impl</span> <span class='ident'>SpatialDims</span> {
-    <span class='doccomment'>/// Returns a new `SpatialDims`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Dimensions must be specified in order from d0 -&gt; d1 -&gt; d2; i.e. `d1`</span>
-    <span class='doccomment'>/// cannot be `Some(x)` if `d0` is `None`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Explicitly setting all zeros as values is not recommended as it is</span>
-    <span class='doccomment'>/// invalid to OpenCL functions. Use `::Unspecified` to represent `NULL`</span>
-    <span class='doccomment'>/// instead.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>d0</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>, <span class='ident'>d1</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>, <span class='ident'>d2</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>SpatialDims</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>std_err_msg</span> <span class='op'>=</span> <span class='string'>&quot;Dimensions must be defined from left to right. If you define the 2nd \
+<span class="kw">impl</span> <span class="ident">SpatialDims</span> {
+    <span class="doccomment">/// Returns a new `SpatialDims`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Dimensions must be specified in order from d0 -&gt; d1 -&gt; d2; i.e. `d1`</span>
+    <span class="doccomment">/// cannot be `Some(x)` if `d0` is `None`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Explicitly setting all zeros as values is not recommended as it is</span>
+    <span class="doccomment">/// invalid to OpenCL functions. Use `::Unspecified` to represent `NULL`</span>
+    <span class="doccomment">/// instead.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">d0</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">d1</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">d2</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">SpatialDims</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">std_err_msg</span> <span class="op">=</span> <span class="string">&quot;Dimensions must be defined from left to right. If you define the 2nd \
             dimension, you must also define the 1st, etc.&quot;</span>;
 
-        <span class='kw'>if</span> <span class='ident'>d2</span>.<span class='ident'>is_some</span>() {
-            <span class='kw'>if</span> <span class='ident'>d1</span>.<span class='ident'>is_some</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>d0</span>.<span class='ident'>is_some</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(<span class='ident'>d0</span>.<span class='ident'>unwrap</span>(), <span class='ident'>d1</span>.<span class='ident'>unwrap</span>(), <span class='ident'>d2</span>.<span class='ident'>unwrap</span>()))
-            } <span class='kw'>else</span> {
-                <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='ident'>std_err_msg</span>)
+        <span class="kw">if</span> <span class="ident">d2</span>.<span class="ident">is_some</span>() {
+            <span class="kw">if</span> <span class="ident">d1</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="ident">d0</span>.<span class="ident">is_some</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">SpatialDims</span>::<span class="ident">Three</span>(<span class="ident">d0</span>.<span class="ident">unwrap</span>(), <span class="ident">d1</span>.<span class="ident">unwrap</span>(), <span class="ident">d2</span>.<span class="ident">unwrap</span>()))
+            } <span class="kw">else</span> {
+                <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="ident">std_err_msg</span>)
             }
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>d1</span>.<span class='ident'>is_some</span>() {
-            <span class='kw'>if</span> <span class='ident'>d0</span>.<span class='ident'>is_some</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(<span class='ident'>d1</span>.<span class='ident'>unwrap</span>(), <span class='ident'>d0</span>.<span class='ident'>unwrap</span>()))
-            } <span class='kw'>else</span> {
-                <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='ident'>std_err_msg</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">d1</span>.<span class="ident">is_some</span>() {
+            <span class="kw">if</span> <span class="ident">d0</span>.<span class="ident">is_some</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">SpatialDims</span>::<span class="ident">Two</span>(<span class="ident">d1</span>.<span class="ident">unwrap</span>(), <span class="ident">d0</span>.<span class="ident">unwrap</span>()))
+            } <span class="kw">else</span> {
+                <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="ident">std_err_msg</span>)
             }
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>d0</span>.<span class='ident'>is_some</span>() {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>d0</span>.<span class='ident'>unwrap</span>()))
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>SpatialDims</span>::<span class='ident'>Unspecified</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">d0</span>.<span class="ident">is_some</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">d0</span>.<span class="ident">unwrap</span>()))
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">SpatialDims</span>::<span class="ident">Unspecified</span>)
         }
     }
 
-    <span class='doccomment'>/// Returns the number of dimensions defined by this `SpatialDims`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dim_count</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Unspecified</span> <span class='op'>=&gt;</span> <span class='number'>0</span>,
-            <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(..) <span class='op'>=&gt;</span> <span class='number'>1</span>,
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(..) <span class='op'>=&gt;</span> <span class='number'>2</span>,
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(..) <span class='op'>=&gt;</span> <span class='number'>3</span>,
+    <span class="doccomment">/// Returns the number of dimensions defined by this `SpatialDims`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dim_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">SpatialDims</span>::<span class="ident">Unspecified</span> <span class="op">=&gt;</span> <span class="number">0</span>,
+            <span class="ident">SpatialDims</span>::<span class="ident">One</span>(..) <span class="op">=&gt;</span> <span class="number">1</span>,
+            <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(..) <span class="op">=&gt;</span> <span class="number">2</span>,
+            <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(..) <span class="op">=&gt;</span> <span class="number">3</span>,
         }
     }
 
-    <span class='doccomment'>/// Returns a 3D size or an error if unspecified.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_lens</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Unspecified</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>OclError</span>::<span class='ident'>UnspecifiedDimensions</span>),
-            <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>([<span class='ident'>x</span>, <span class='number'>1</span>, <span class='number'>1</span>]),
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(<span class='ident'>x</span>, <span class='ident'>y</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>([<span class='ident'>x</span>, <span class='ident'>y</span>, <span class='number'>1</span>]),
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(<span class='ident'>x</span>, <span class='ident'>y</span>, <span class='ident'>z</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>([<span class='ident'>x</span>, <span class='ident'>y</span>, <span class='ident'>z</span>]),
+    <span class="doccomment">/// Returns a 3D size or an error if unspecified.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_lens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span>[<span class="ident">usize</span>; <span class="number">3</span>]<span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">SpatialDims</span>::<span class="ident">Unspecified</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">OclError</span>::<span class="ident">UnspecifiedDimensions</span>),
+            <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">x</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>([<span class="ident">x</span>, <span class="number">1</span>, <span class="number">1</span>]),
+            <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>([<span class="ident">x</span>, <span class="ident">y</span>, <span class="number">1</span>]),
+            <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">z</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>([<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">z</span>]),
         }
     }
 
-    <span class='doccomment'>/// Returns a 3D offset or an error if unspecified.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_offset</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Unspecified</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>OclError</span>::<span class='ident'>UnspecifiedDimensions</span>),
-            <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>([<span class='ident'>x</span>, <span class='number'>0</span>, <span class='number'>0</span>]),
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(<span class='ident'>x</span>, <span class='ident'>y</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>([<span class='ident'>x</span>, <span class='ident'>y</span>, <span class='number'>0</span>]),
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(<span class='ident'>x</span>, <span class='ident'>y</span>, <span class='ident'>z</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>([<span class='ident'>x</span>, <span class='ident'>y</span>, <span class='ident'>z</span>]),
+    <span class="doccomment">/// Returns a 3D offset or an error if unspecified.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span>[<span class="ident">usize</span>; <span class="number">3</span>]<span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">SpatialDims</span>::<span class="ident">Unspecified</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">OclError</span>::<span class="ident">UnspecifiedDimensions</span>),
+            <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">x</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>([<span class="ident">x</span>, <span class="number">0</span>, <span class="number">0</span>]),
+            <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>([<span class="ident">x</span>, <span class="ident">y</span>, <span class="number">0</span>]),
+            <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">z</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>([<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">z</span>]),
         }
     }
 
-    <span class='doccomment'>/// Returns the product of all contained dimensional values (equivalent to</span>
-    <span class='doccomment'>/// a length, area, or volume) or zero if unspecified.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Check `::is_unspecified` if it matters whether or not the zero length</span>
-    <span class='doccomment'>/// has been explicitly set however, explicitly setting all zeros as</span>
-    <span class='doccomment'>/// dimensions is not recommended as it is an invalid value to OpenCL</span>
-    <span class='doccomment'>/// functions. Use `::Unspecified` to represent `NULL` instead.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Unspecified</span> <span class='op'>=&gt;</span> <span class='number'>0</span>,
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(<span class='ident'>d0</span>, <span class='ident'>d1</span>, <span class='ident'>d2</span>) <span class='op'>=&gt;</span> <span class='ident'>d0</span> <span class='op'>*</span> <span class='ident'>d1</span> <span class='op'>*</span> <span class='ident'>d2</span>,
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(<span class='ident'>d0</span>, <span class='ident'>d1</span>) <span class='op'>=&gt;</span> <span class='ident'>d0</span> <span class='op'>*</span> <span class='ident'>d1</span>,
-            <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>d0</span>) <span class='op'>=&gt;</span> <span class='ident'>d0</span>,
+    <span class="doccomment">/// Returns the product of all contained dimensional values (equivalent to</span>
+    <span class="doccomment">/// a length, area, or volume) or zero if unspecified.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Check `::is_unspecified` if it matters whether or not the zero length</span>
+    <span class="doccomment">/// has been explicitly set however, explicitly setting all zeros as</span>
+    <span class="doccomment">/// dimensions is not recommended as it is an invalid value to OpenCL</span>
+    <span class="doccomment">/// functions. Use `::Unspecified` to represent `NULL` instead.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">SpatialDims</span>::<span class="ident">Unspecified</span> <span class="op">=&gt;</span> <span class="number">0</span>,
+            <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(<span class="ident">d0</span>, <span class="ident">d1</span>, <span class="ident">d2</span>) <span class="op">=&gt;</span> <span class="ident">d0</span> <span class="op">*</span> <span class="ident">d1</span> <span class="op">*</span> <span class="ident">d2</span>,
+            <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(<span class="ident">d0</span>, <span class="ident">d1</span>) <span class="op">=&gt;</span> <span class="ident">d0</span> <span class="op">*</span> <span class="ident">d1</span>,
+            <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">d0</span>) <span class="op">=&gt;</span> <span class="ident">d0</span>,
         }
     }
 
-    <span class='doccomment'>/// Takes the length and rounds it up to the nearest `incr` or an error.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try_to_padded_len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>incr</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>util</span>::<span class='ident'>padded_len</span>(<span class='self'>self</span>.<span class='ident'>to_len</span>(), <span class='ident'>incr</span>))
+    <span class="doccomment">/// Takes the length and rounds it up to the nearest `incr` or an error.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_to_padded_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">incr</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">util</span>::<span class="ident">padded_len</span>(<span class="self">self</span>.<span class="ident">to_len</span>(), <span class="ident">incr</span>))
     }
 
-    <span class='doccomment'>/// Returns `true` if this `SpatialDims` is an `Unspecified` variant.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_unspecified</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>SpatialDims</span>::<span class='ident'>Unspecified</span> <span class='op'>=</span> <span class='op'>*</span><span class='self'>self</span> { <span class='bool-val'>true</span> } <span class='kw'>else</span> { <span class='bool-val'>false</span> }
+    <span class="doccomment">/// Returns `true` if this `SpatialDims` is an `Unspecified` variant.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_unspecified</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">SpatialDims</span>::<span class="ident">Unspecified</span> <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span> { <span class="bool-val">true</span> } <span class="kw">else</span> { <span class="bool-val">false</span> }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>MemLen</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>to_len_padded</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>incr</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>try_to_padded_len</span>(<span class='ident'>incr</span>).<span class='ident'>expect</span>(<span class='string'>&quot;ocl::SpatialDims::to_len_padded()&quot;</span>)
+<span class="kw">impl</span> <span class="ident">MemLen</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">to_len_padded</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">incr</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">try_to_padded_len</span>(<span class="ident">incr</span>).<span class="ident">expect</span>(<span class="string">&quot;ocl::SpatialDims::to_len_padded()&quot;</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>to_len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>to_len</span>()
+    <span class="kw">fn</span> <span class="ident">to_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">to_len</span>()
     }
 
-    <span class='kw'>fn</span> <span class='ident'>to_lens</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> [<span class='ident'>usize</span>; <span class='number'>3</span>] {
-        <span class='self'>self</span>.<span class='ident'>to_lens</span>().<span class='ident'>expect</span>(<span class='string'>&quot;SpatialDims::&lt;MemLen&gt;::to_lens()&quot;</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>WorkDims</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>dim_count</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>dim_count</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>to_work_size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>to_lens</span>().<span class='ident'>ok</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>to_work_offset</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>to_offset</span>().<span class='ident'>ok</span>()
+    <span class="kw">fn</span> <span class="ident">to_lens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> [<span class="ident">usize</span>; <span class="number">3</span>] {
+        <span class="self">self</span>.<span class="ident">to_lens</span>().<span class="ident">expect</span>(<span class="string">&quot;SpatialDims::&lt;MemLen&gt;::to_lens()&quot;</span>)
     }
 }
 
+<span class="kw">impl</span> <span class="ident">WorkDims</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">dim_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="ident">dim_count</span>()
+    }
 
-<span class='kw'>impl</span> <span class='ident'>Index</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>usize</span>;
+    <span class="kw">fn</span> <span class="ident">to_work_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">usize</span>; <span class="number">3</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">to_lens</span>().<span class="ident">ok</span>()
+    }
 
-    <span class='kw'>fn</span> <span class='ident'>index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>usize</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Unspecified</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;ocl::SpatialDims::index(): \
+    <span class="kw">fn</span> <span class="ident">to_work_offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">usize</span>; <span class="number">3</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">to_offset</span>().<span class="ident">ok</span>()
+    }
+}
+
+
+<span class="kw">impl</span> <span class="ident">Index</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">usize</span>;
+
+    <span class="kw">fn</span> <span class="ident">index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">usize</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">SpatialDims</span>::<span class="ident">Unspecified</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;ocl::SpatialDims::index(): \
                 Cannot index. No dimensions have been specified.&quot;</span>),
-            <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='kw-2'>ref</span> <span class='ident'>x</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>index</span> <span class='op'>==</span> <span class='number'>0</span>, <span class='string'>&quot;ocl::SpatialDims::index(): Index: [{}], out of range. \
-                    Only one dimension avaliable.&quot;</span>, <span class='ident'>index</span>);
-                <span class='ident'>x</span>
+            <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="kw-2">ref</span> <span class="ident">x</span>) <span class="op">=&gt;</span> {
+                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">index</span> <span class="op">==</span> <span class="number">0</span>, <span class="string">&quot;ocl::SpatialDims::index(): Index: [{}], out of range. \
+                    Only one dimension avaliable.&quot;</span>, <span class="ident">index</span>);
+                <span class="ident">x</span>
             },
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(<span class='kw-2'>ref</span> <span class='ident'>x</span>, <span class='kw-2'>ref</span> <span class='ident'>y</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>match</span> <span class='ident'>index</span> {
-                    <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='ident'>x</span>,
-                    <span class='number'>1</span> <span class='op'>=&gt;</span> <span class='ident'>y</span>,
-                    _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;ocl::SpatialDims::index(): Index: [{}], out of range. \
-                    Only two dimensions avaliable.&quot;</span>, <span class='ident'>index</span>),
+            <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(<span class="kw-2">ref</span> <span class="ident">x</span>, <span class="kw-2">ref</span> <span class="ident">y</span>) <span class="op">=&gt;</span> {
+                <span class="kw">match</span> <span class="ident">index</span> {
+                    <span class="number">0</span> <span class="op">=&gt;</span> <span class="ident">x</span>,
+                    <span class="number">1</span> <span class="op">=&gt;</span> <span class="ident">y</span>,
+                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;ocl::SpatialDims::index(): Index: [{}], out of range. \
+                    Only two dimensions avaliable.&quot;</span>, <span class="ident">index</span>),
                 }
             },
-            <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(<span class='kw-2'>ref</span> <span class='ident'>x</span>, <span class='kw-2'>ref</span> <span class='ident'>y</span>, <span class='kw-2'>ref</span> <span class='ident'>z</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>match</span> <span class='ident'>index</span> {
-                    <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='ident'>x</span>,
-                    <span class='number'>1</span> <span class='op'>=&gt;</span> <span class='ident'>y</span>,
-                    <span class='number'>2</span> <span class='op'>=&gt;</span> <span class='ident'>z</span>,
-                    _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;ocl::SpatialDims::index(): Index: [{}], out of range. \
-                    Only three dimensions avaliable.&quot;</span>, <span class='ident'>index</span>),
+            <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(<span class="kw-2">ref</span> <span class="ident">x</span>, <span class="kw-2">ref</span> <span class="ident">y</span>, <span class="kw-2">ref</span> <span class="ident">z</span>) <span class="op">=&gt;</span> {
+                <span class="kw">match</span> <span class="ident">index</span> {
+                    <span class="number">0</span> <span class="op">=&gt;</span> <span class="ident">x</span>,
+                    <span class="number">1</span> <span class="op">=&gt;</span> <span class="ident">y</span>,
+                    <span class="number">2</span> <span class="op">=&gt;</span> <span class="ident">z</span>,
+                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;ocl::SpatialDims::index(): Index: [{}], out of range. \
+                    Only three dimensions avaliable.&quot;</span>, <span class="ident">index</span>),
                 }
             },
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>SpatialDims</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>sd</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>SpatialDims</span>) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>sd</span>.<span class='ident'>clone</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SpatialDims</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">sd</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SpatialDims</span>) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">sd</span>.<span class="ident">clone</span>()
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span>(<span class='ident'>T</span>, )<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>val</span>: (<span class='ident'>T</span>, )) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>to_usize</span>(<span class='ident'>val</span>.<span class='number'>0</span>))
+<span class="comment">// [FIXME]: Quit being lazy and implement FromPrimitive.</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">val</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> (<span class='ident'>T</span>, )<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>val</span>: <span class='kw-2'>&amp;</span>(<span class='ident'>T</span>, )) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>to_usize</span>(<span class='ident'>val</span>.<span class='number'>0</span>))
+<span class="comment">// [FIXME]: Quit being lazy and implement FromPrimitive.</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="ident">isize</span>) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">val</span> <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;Invalid &#39;SpatialDims&#39; value: {}. \
+            Dimensions must be greater than zero.&quot;</span>, <span class="ident">val</span>);
+        (<span class="ident">val</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">into</span>()
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span>[<span class='ident'>T</span>; <span class='number'>1</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>val</span>: [<span class='ident'>T</span>; <span class='number'>1</span>]) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>to_usize</span>(<span class='ident'>val</span>[<span class='number'>0</span>]))
+<span class="comment">// [FIXME]: Quit being lazy and implement FromPrimitive.</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        (<span class="ident">val</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">into</span>()
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>T</span>; <span class='number'>1</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>val</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>; <span class='number'>1</span>]) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>One</span>(<span class='ident'>to_usize</span>(<span class='ident'>val</span>[<span class='number'>0</span>]))
+<span class="comment">// [FIXME]: Quit being lazy and implement FromPrimitive.</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        (<span class="ident">val</span> <span class="kw">as</span> <span class="ident">isize</span>).<span class="ident">into</span>()
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span>(<span class='ident'>T</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pair</span>: (<span class='ident'>T</span>, <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>.<span class='number'>0</span>),
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>.<span class='number'>1</span>),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">T</span>, )<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: (<span class="ident">T</span>, )) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">to_usize</span>(<span class="ident">val</span>.<span class="number">0</span>))
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">T</span>, )<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="kw-2">&amp;</span>(<span class="ident">T</span>, )) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">to_usize</span>(<span class="ident">val</span>.<span class="number">0</span>))
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>[<span class="ident">T</span>; <span class="number">1</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: [<span class="ident">T</span>; <span class="number">1</span>]) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">to_usize</span>(<span class="ident">val</span>[<span class="number">0</span>]))
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>; <span class="number">1</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>; <span class="number">1</span>]) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">One</span>(<span class="ident">to_usize</span>(<span class="ident">val</span>[<span class="number">0</span>]))
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">pair</span>: (<span class="ident">T</span>, <span class="ident">T</span>)) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>.<span class="number">0</span>),
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>.<span class="number">1</span>),
         )
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> (<span class='ident'>T</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pair</span>: <span class='kw-2'>&amp;</span>(<span class='ident'>T</span>, <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>.<span class='number'>0</span>),
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>.<span class='number'>1</span>),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">pair</span>: <span class="kw-2">&amp;</span>(<span class="ident">T</span>, <span class="ident">T</span>)) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>.<span class="number">0</span>),
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>.<span class="number">1</span>),
         )
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span>[<span class='ident'>T</span>; <span class='number'>2</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pair</span>: [<span class='ident'>T</span>; <span class='number'>2</span>]) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>[<span class='number'>0</span>]),
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>[<span class='number'>1</span>]),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>[<span class="ident">T</span>; <span class="number">2</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">pair</span>: [<span class="ident">T</span>; <span class="number">2</span>]) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>[<span class="number">0</span>]),
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>[<span class="number">1</span>]),
         )
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>T</span>; <span class='number'>2</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pair</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>; <span class='number'>2</span>]) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Two</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>[<span class='number'>0</span>]),
-            <span class='ident'>to_usize</span>(<span class='ident'>pair</span>[<span class='number'>1</span>]),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>; <span class="number">2</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">pair</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>; <span class="number">2</span>]) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Two</span>(
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>[<span class="number">0</span>]),
+            <span class="ident">to_usize</span>(<span class="ident">pair</span>[<span class="number">1</span>]),
         )
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span>(<span class='ident'>T</span>, <span class='ident'>T</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>set</span>: (<span class='ident'>T</span>, <span class='ident'>T</span>, <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>.<span class='number'>0</span>),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>.<span class='number'>1</span>),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>.<span class='number'>2</span>),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">set</span>: (<span class="ident">T</span>, <span class="ident">T</span>, <span class="ident">T</span>)) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(
+            <span class="ident">to_usize</span>(<span class="ident">set</span>.<span class="number">0</span>),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>.<span class="number">1</span>),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>.<span class="number">2</span>),
         )
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> (<span class='ident'>T</span>, <span class='ident'>T</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>set</span>: <span class='kw-2'>&amp;</span>(<span class='ident'>T</span>, <span class='ident'>T</span>, <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>.<span class='number'>0</span>),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>.<span class='number'>1</span>),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>.<span class='number'>2</span>),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">T</span>, <span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">set</span>: <span class="kw-2">&amp;</span>(<span class="ident">T</span>, <span class="ident">T</span>, <span class="ident">T</span>)) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(
+            <span class="ident">to_usize</span>(<span class="ident">set</span>.<span class="number">0</span>),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>.<span class="number">1</span>),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>.<span class="number">2</span>),
         )
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span>[<span class='ident'>T</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>set</span>: [<span class='ident'>T</span>; <span class='number'>3</span>]) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>[<span class='number'>0</span>]),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>[<span class='number'>1</span>]),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>[<span class='number'>2</span>]),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>[<span class="ident">T</span>; <span class="number">3</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">set</span>: [<span class="ident">T</span>; <span class="number">3</span>]) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(
+            <span class="ident">to_usize</span>(<span class="ident">set</span>[<span class="number">0</span>]),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>[<span class="number">1</span>]),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>[<span class="number">2</span>]),
         )
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>T</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SpatialDims</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>set</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>; <span class='number'>3</span>]) <span class='op'>-&gt;</span> <span class='ident'>SpatialDims</span> {
-        <span class='ident'>SpatialDims</span>::<span class='ident'>Three</span>(
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>[<span class='number'>0</span>]),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>[<span class='number'>1</span>]),
-            <span class='ident'>to_usize</span>(<span class='ident'>set</span>[<span class='number'>2</span>]),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>; <span class="number">3</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SpatialDims</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">set</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>; <span class="number">3</span>]) <span class="op">-&gt;</span> <span class="ident">SpatialDims</span> {
+        <span class="ident">SpatialDims</span>::<span class="ident">Three</span>(
+            <span class="ident">to_usize</span>(<span class="ident">set</span>[<span class="number">0</span>]),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>[<span class="number">1</span>]),
+            <span class="ident">to_usize</span>(<span class="ident">set</span>[<span class="number">2</span>]),
         )
     }
 }
 
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_usize</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Copy</span><span class='op'>&gt;</span>(<span class='ident'>val</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-    <span class='ident'>val</span>.<span class='ident'>to_usize</span>().<span class='ident'>expect</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Unable to convert the value &#39;{:?}&#39; into a &#39;SpatialDims&#39;. \
-        Dimensions must have positive values.&quot;</span>, <span class='ident'>val</span>))
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_usize</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span>(<span class="ident">val</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+    <span class="ident">val</span>.<span class="ident">to_usize</span>().<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Unable to convert the value &#39;{:?}&#39; into a &#39;SpatialDims&#39;. \
+        Dimensions must have positive values.&quot;</span>, <span class="ident">val</span>))
 }
 
 </pre>
@@ -698,11 +759,9 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

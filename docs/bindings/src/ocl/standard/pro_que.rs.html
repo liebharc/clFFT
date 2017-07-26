@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.12.0\src\standard\pro_que.rs`.">
+    <meta name="description" content="Source to the Rust file `C:\Users\Chrilieb\.cargo\registry\src\github.com-1ecc6299db9ec823\ocl-0.14.1\src\standard\pro_que.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>pro_que.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -444,409 +445,461 @@
 <span id="400">400</span>
 <span id="401">401</span>
 <span id="402">402</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! A convenient wrapper for `Program` and `Queue`.</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! A convenient wrapper for `Program` and `Queue`.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>Into</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Deref</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>error</span>::{<span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>OclResult</span>, <span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>OclError</span>};
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>OclPrm</span>;
-<span class='kw'>use</span> <span class='ident'>standard</span>::{<span class='ident'>Platform</span>, <span class='ident'>Device</span>, <span class='ident'>Context</span>, <span class='ident'>ProgramBuilder</span>, <span class='ident'>Program</span>, <span class='ident'>Queue</span>, <span class='ident'>Kernel</span>, <span class='ident'>Buffer</span>,
-    <span class='ident'>MemLen</span>, <span class='ident'>SpatialDims</span>, <span class='ident'>WorkDims</span>, <span class='ident'>DeviceSpecifier</span>};
+<span class="comment">// use std::convert::Into;</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Deref</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">error</span>::{<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">OclResult</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">OclError</span>};
+<span class="kw">use</span> <span class="ident">core</span>::{<span class="ident">OclPrm</span>, <span class="ident">CommandQueueProperties</span>};
+<span class="kw">use</span> <span class="ident">standard</span>::{<span class="ident">Platform</span>, <span class="ident">Device</span>, <span class="ident">Context</span>, <span class="ident">ProgramBuilder</span>, <span class="ident">Program</span>, <span class="ident">Queue</span>, <span class="ident">Kernel</span>, <span class="ident">Buffer</span>,
+    <span class="ident">MemLen</span>, <span class="ident">SpatialDims</span>, <span class="ident">WorkDims</span>, <span class="ident">DeviceSpecifier</span>};
 
-<span class='kw'>static</span> <span class='ident'>DIMS_ERR_MSG</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;This &#39;ProQue&#39; has not had any dimensions specified. Use
+<span class="kw">static</span> <span class="ident">DIMS_ERR_MSG</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;This &#39;ProQue&#39; has not had any dimensions specified. Use
     &#39;ProQueBuilder::dims&#39; during creation or &#39;ProQue::set_dims&#39; after creation to specify.&quot;</span>;
 
-<span class='kw'>const</span> <span class='ident'>DEBUG_PRINT</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+<span class="kw">const</span> <span class="ident">DEBUG_PRINT</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
-<span class='doccomment'>/// A builder for `ProQue`.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ProQueBuilder</span> {
-    <span class='ident'>platform</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Platform</span><span class='op'>&gt;</span>,
-    <span class='ident'>context</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Context</span><span class='op'>&gt;</span>,
-    <span class='comment'>// device_idx: usize,</span>
-    <span class='ident'>device_spec</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DeviceSpecifier</span><span class='op'>&gt;</span>,
-    <span class='ident'>program_builder</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ProgramBuilder</span><span class='op'>&gt;</span>,
-    <span class='ident'>dims</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>SpatialDims</span><span class='op'>&gt;</span>,
+
+<span class="doccomment">/// An all-in-one chimera of the `Program`, `Queue`, `Context` and</span>
+<span class="doccomment">/// (optionally) `SpatialDims` types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Handy when you only need a single context, program, and queue for your</span>
+<span class="doccomment">/// project or when using a unique context and program on each device.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// All `ProQue` functionality is also provided separately by the `Context`, `Queue`,</span>
+<span class="doccomment">/// `Program`, and `SpatialDims` types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Creation</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// There are two ways to create a `ProQue`:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// 1. [Recommended] Use `ProQue::builder` or `ProQueBuilder::new()`.</span>
+<span class="doccomment">/// 2. Call `::new` and pass pre-created components.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Destruction</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Now handled automatically. Freely use, store, clone, discard, share among</span>
+<span class="doccomment">/// threads... put some on your toast... whatever.</span>
+<span class="doccomment">///</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ProQue</span> {
+    <span class="ident">context</span>: <span class="ident">Context</span>,
+    <span class="ident">queue</span>: <span class="ident">Queue</span>,
+    <span class="ident">program</span>: <span class="ident">Program</span>,
+    <span class="ident">dims</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SpatialDims</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>ProQueBuilder</span> {
-    <span class='doccomment'>/// Returns a new `ProQueBuilder` with an empty / default configuration.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The minimum amount of configuration possible before calling `::build` is to</span>
-    <span class='doccomment'>/// simply assign some source code using `::src`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// For full configuration options, separately create a `Context` and</span>
-    <span class='doccomment'>/// `ProgramBuilder` (do not `::build` the `ProgramBuilder`, its device</span>
-    <span class='doccomment'>/// list must be set by this `ProQueBuilder` to assure consistency) then</span>
-    <span class='doccomment'>/// pass them as arguments to the `::context` and `::prog_bldr` methods</span>
-    <span class='doccomment'>/// respectively.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>ProQueBuilder</span> {
-        <span class='ident'>ProQueBuilder</span> {
-            <span class='ident'>platform</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>context</span>: <span class='prelude-val'>None</span>,
-            <span class='comment'>// device_idx: 0,</span>
-            <span class='ident'>device_spec</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>program_builder</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>dims</span>: <span class='prelude-val'>None</span>,
+<span class="kw">impl</span> <span class="ident">ProQue</span> {
+    <span class="doccomment">/// Returns a new `ProQueBuilder`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is the recommended way to create a new `ProQue`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Calling `ProQueBuilder::build()` will return a new `ProQue`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() <span class="op">-&gt;</span> <span class="ident">ProQueBuilder</span> {
+        <span class="ident">ProQueBuilder</span>::<span class="ident">new</span>()
+    }
+
+    <span class="doccomment">/// Creates a new ProQue from individual parts.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Use `::builder` instead unless you know what you&#39;re doing. Creating</span>
+    <span class="doccomment">/// from components associated with different devices or contexts will</span>
+    <span class="doccomment">/// cause errors later on.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SpatialDims</span><span class="op">&gt;&gt;</span>(<span class="ident">context</span>: <span class="ident">Context</span>, <span class="ident">queue</span>: <span class="ident">Queue</span>, <span class="ident">program</span>: <span class="ident">Program</span>,
+                    <span class="ident">dims</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">ProQue</span>
+    {
+        <span class="ident">ProQue</span> {
+            <span class="ident">context</span>: <span class="ident">context</span>,
+            <span class="ident">queue</span>: <span class="ident">queue</span>,
+            <span class="ident">program</span>: <span class="ident">program</span>,
+            <span class="ident">dims</span>: <span class="ident">dims</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">into</span>()),
         }
     }
 
-    <span class='doccomment'>/// Returns a new `ProQue`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ## Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A `ProgramBuilder` or some source code must have been specified with</span>
-    <span class='doccomment'>/// `::prog_bldr` or `::src` before building.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>ProQue</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>program_builder</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>program_builder</span> {
-            <span class='comment'>// Some(program_builder) =&gt; ProQueBuilder::_build(self.context, self.device_idx, program_builder),</span>
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>program_builder</span>) <span class='op'>=&gt;</span> <span class='ident'>program_builder</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='string'>&quot;ProQueBuilder::build(): No program builder or kernel source defined. \
+    <span class="doccomment">/// Creates a kernel with pre-assigned dimensions.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_kernel</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Kernel</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">kernel</span> <span class="op">=</span> <span class="ident">Kernel</span>::<span class="ident">new</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">program</span>)<span class="question-mark">?</span>
+            .<span class="ident">queue</span>(<span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">clone</span>());
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">dims</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">d</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">kernel</span>.<span class="ident">gws</span>(<span class="ident">d</span>)),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">kernel</span>),
+        }
+    }
+
+    <span class="doccomment">/// Returns a new buffer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default dimensions and queue from this `ProQue` will be used.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The buffer will be filled with zeros upon creation, blocking the</span>
+    <span class="doccomment">/// current thread until completion.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Use `Buffer::builder()` (or `BufferBuilder::new()`) for access to the</span>
+    <span class="doccomment">/// full range of buffer creation options.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This `ProQue` must have been pre-configured with default dimensions.</span>
+    <span class="doccomment">/// If not, set them with `::set_dims`, or just create a buffer using</span>
+    <span class="doccomment">/// `Buffer::builder()` instead.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_buffer</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">OclPrm</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">Buffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="ident">dims</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">dims_result</span>());
+        <span class="comment">// Buffer::&lt;T&gt;::new(self.queue.clone(), None, dims, None)</span>
+        <span class="comment">// Buffer::&lt;T&gt;::new(self.queue.clone(), None, dims, None, None)</span>
+        <span class="ident">Buffer</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>::<span class="ident">builder</span>()
+            .<span class="ident">queue</span>(<span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">clone</span>())
+            .<span class="ident">dims</span>(<span class="ident">dims</span>)
+            .<span class="ident">fill_val</span>(<span class="ident">Default</span>::<span class="ident">default</span>(), <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> ::<span class="ident">Event</span><span class="op">&gt;</span>)
+            .<span class="ident">build</span>()
+    }
+
+    <span class="doccomment">/// Sets the default dimensions used when creating buffers and kernels.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_dims</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SpatialDims</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dims</span>: <span class="ident">S</span>) {
+        <span class="self">self</span>.<span class="ident">dims</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">dims</span>.<span class="ident">into</span>());
+    }
+
+    <span class="doccomment">/// Returns the maximum workgroup size supported by the device associated</span>
+    <span class="doccomment">/// with this `ProQue`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [UNSTABLE]: Evaluate usefulness.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_wg_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">device</span>().<span class="ident">max_wg_size</span>()
+    }
+
+    <span class="doccomment">/// Returns a reference to the queue associated with this ProQue.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Queue</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">queue</span>
+    }
+
+    <span class="doccomment">/// Returns the contained context.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Context</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">context</span>
+    }
+
+    <span class="doccomment">/// Returns the current program build.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">program</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Program</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">program</span>
+    }
+
+    <span class="doccomment">/// Returns the current `dims` or panics.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [UNSTABLE]: Evaluate which &#39;dims&#39; method to keep. Leaning towards this</span>
+    <span class="doccomment">/// version at the moment.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dims</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">SpatialDims</span> {
+        <span class="self">self</span>.<span class="ident">dims_result</span>().<span class="ident">expect</span>(<span class="ident">DIMS_ERR_MSG</span>)
+    }
+
+    <span class="doccomment">/// Returns the current `dims` or an error.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [UNSTABLE]: Evaluate which &#39;dims&#39; method to keep. Leaning towards the</span>
+    <span class="doccomment">/// above, panicing version at the moment.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dims_result</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SpatialDims</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">dims</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">dims</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">dims</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="ident">DIMS_ERR_MSG</span>),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">MemLen</span> <span class="kw">for</span> <span class="ident">ProQue</span> {
+    <span class="kw">fn</span> <span class="ident">to_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">dims</span>().<span class="ident">to_len</span>()
+    }
+    <span class="kw">fn</span> <span class="ident">to_len_padded</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">incr</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">dims</span>().<span class="ident">to_len_padded</span>(<span class="ident">incr</span>)
+    }
+    <span class="kw">fn</span> <span class="ident">to_lens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> [<span class="ident">usize</span>; <span class="number">3</span>] {
+        <span class="self">self</span>.<span class="ident">dims_result</span>().<span class="ident">expect</span>(<span class="string">&quot;ocl::ProQue::to_lens()&quot;</span>)
+            .<span class="ident">to_lens</span>().<span class="ident">expect</span>(<span class="string">&quot;ocl::ProQue::to_lens()&quot;</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">WorkDims</span> <span class="kw">for</span> <span class="ident">ProQue</span> {
+    <span class="kw">fn</span> <span class="ident">dim_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="ident">dims_result</span>().<span class="ident">expect</span>(<span class="string">&quot;ProQue::dim_count&quot;</span>).<span class="ident">dim_count</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">to_work_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">usize</span>; <span class="number">3</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">dims_result</span>().<span class="ident">expect</span>(<span class="string">&quot;ProQue::to_work_size&quot;</span>).<span class="ident">to_work_size</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">to_work_offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">usize</span>; <span class="number">3</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">dims_result</span>().<span class="ident">expect</span>(<span class="string">&quot;ProQue::to_work_offset&quot;</span>).<span class="ident">to_work_offset</span>()
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">ProQue</span> {
+    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Queue</span>;
+
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Queue</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">queue</span>
+    }
+}
+
+
+<span class="doccomment">/// A builder for `ProQue`.</span>
+<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;builders do nothing unless &#39;::build&#39; is called&quot;</span>]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ProQueBuilder</span> {
+    <span class="ident">platform</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Platform</span><span class="op">&gt;</span>,
+    <span class="ident">context</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Context</span><span class="op">&gt;</span>,
+    <span class="ident">device_spec</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeviceSpecifier</span><span class="op">&gt;</span>,
+    <span class="ident">program_builder</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ProgramBuilder</span><span class="op">&gt;</span>,
+    <span class="ident">dims</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SpatialDims</span><span class="op">&gt;</span>,
+    <span class="ident">queue_properties</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandQueueProperties</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">ProQueBuilder</span> {
+    <span class="doccomment">/// Returns a new `ProQueBuilder` with an empty / default configuration.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The minimum amount of configuration possible before calling `::build` is to</span>
+    <span class="doccomment">/// simply assign some source code using `::src`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For full configuration options, separately create a `Context` and</span>
+    <span class="doccomment">/// `ProgramBuilder` (do not `::build` the `ProgramBuilder`, its device</span>
+    <span class="doccomment">/// list must be set by this `ProQueBuilder` to assure consistency) then</span>
+    <span class="doccomment">/// pass them as arguments to the `::context` and `::prog_bldr` methods</span>
+    <span class="doccomment">/// respectively.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">ProQueBuilder</span> {
+        <span class="ident">ProQueBuilder</span> {
+            <span class="ident">platform</span>: <span class="prelude-val">None</span>,
+            <span class="ident">context</span>: <span class="prelude-val">None</span>,
+            <span class="ident">device_spec</span>: <span class="prelude-val">None</span>,
+            <span class="ident">program_builder</span>: <span class="prelude-val">None</span>,
+            <span class="ident">dims</span>: <span class="prelude-val">None</span>,
+            <span class="ident">queue_properties</span>: <span class="prelude-val">None</span>,
+        }
+    }
+
+    <span class="doccomment">/// Sets the platform to be used and returns the builder.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If context is set, this will panic upon building. Only one or the other</span>
+    <span class="doccomment">/// can be configured.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">platform</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">platform</span>: <span class="ident">Platform</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProQueBuilder</span> {
+        <span class="self">self</span>.<span class="ident">platform</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">platform</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the context and returns the `ProQueBuilder`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If platform is set, this will panic upon building. Only one or the other</span>
+    <span class="doccomment">/// can be configured.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="ident">Context</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProQueBuilder</span> {
+        <span class="self">self</span>.<span class="ident">context</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">context</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets a device or devices to be used and returns a `ProQueBuilder`</span>
+    <span class="doccomment">/// reference.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Must specify only a single device.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">device</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">DeviceSpecifier</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">device_spec</span>: <span class="ident">D</span>)
+            <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProQueBuilder</span>
+    {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">device_spec</span>.<span class="ident">is_none</span>(), <span class="string">&quot;ocl::ProQue::devices: Devices already specified&quot;</span>);
+        <span class="self">self</span>.<span class="ident">device_spec</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">device_spec</span>.<span class="ident">into</span>());
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Adds some source code to be compiled and returns the `ProQueBuilder`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Creates a `ProgramBuilder` if one has not already been added. Attempts</span>
+    <span class="doccomment">/// to call `::program_builder` after calling this method will cause a panic.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If you need a more complex build configuration or to add multiple</span>
+    <span class="doccomment">/// source files. Pass an *unbuilt* `ProgramBuilder` to the</span>
+    <span class="doccomment">/// `::program_builder` method (described below).</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">src</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">src</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProQueBuilder</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">program_builder</span>.<span class="ident">is_some</span>() {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;ocl::ProQueBuilder::src: Cannot set src if a &#39;ProgramBuilder&#39; is already \
+                defined. Please use the &#39;::program_builder&#39; method for more complex build \
+                configurations.&quot;</span>);
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">program_builder</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Program</span>::<span class="ident">builder</span>().<span class="ident">src</span>(<span class="ident">src</span>))
+        }
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Adds a pre-configured `ProgramBuilder` and returns the `ProQueBuilder`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This `ProQueBuilder` may not already contain a `ProgramBuilder`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `program_builder` must not have any device indices configured (via its</span>
+    <span class="doccomment">/// `::device_idxs` method). `ProQueBuilder` will only build programs for</span>
+    <span class="doccomment">/// the device specified by `::device_idx` or the default device if none has</span>
+    <span class="doccomment">/// been specified.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prog_bldr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">program_builder</span>: <span class="ident">ProgramBuilder</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProQueBuilder</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">program_builder</span>.<span class="ident">is_none</span>(), <span class="string">&quot;ProQueBuilder::prog_bldr(): Cannot set the \
+            &#39;ProgramBuilder&#39; using this method after one has already been set or after &#39;::src&#39; has \
+            been called.&quot;</span>);
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">program_builder</span>.<span class="ident">get_device_spec</span>().<span class="ident">is_none</span>(), <span class="string">&quot;ProQueBuilder::prog_bldr(): The \
+            &#39;ProgramBuilder&#39; passed may not have any device indices set as they will be unused. \
+            See &#39;ProQueBuilder&#39; documentation for more information.&quot;</span>);
+
+        <span class="self">self</span>.<span class="ident">program_builder</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">program_builder</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the built-in dimensions.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is optional.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Use if you want to be able to call the `::create_kernel` or</span>
+    <span class="doccomment">/// `::create_buffer` methods on the `ProQue` created by this builder.</span>
+    <span class="doccomment">/// Dimensions can alternatively be set after building by using the</span>
+    <span class="doccomment">/// `ProQue::set_dims` method.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dims</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SpatialDims</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dims</span>: <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProQueBuilder</span> {
+        <span class="self">self</span>.<span class="ident">dims</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">dims</span>.<span class="ident">into</span>());
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the command queue properties.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Optional.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue_properties</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">props</span>: <span class="ident">CommandQueueProperties</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ProQueBuilder</span> {
+        <span class="self">self</span>.<span class="ident">queue_properties</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">props</span>);
+        <span class="self">self</span>
+    }
+
+
+    <span class="doccomment">/// Returns a new `ProQue`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A `ProgramBuilder` or some source code must have been specified with</span>
+    <span class="doccomment">/// `::prog_bldr` or `::src` before building.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">OclResult</span><span class="op">&lt;</span><span class="ident">ProQue</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">program_builder</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">program_builder</span> {
+            <span class="comment">// Some(program_builder) =&gt; ProQueBuilder::_build(self.context, self.device_idx, program_builder),</span>
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">program_builder</span>) <span class="op">=&gt;</span> <span class="ident">program_builder</span>,
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="string">&quot;ProQueBuilder::build(): No program builder or kernel source defined. \
                 OpenCL programs must have some source code to be compiled. Use &#39;::src&#39; to directly \
                 add source code or &#39;::program_builder&#39; for more complex builds. Please see the \
                 &#39;ProQueBuilder&#39; and &#39;ProgramBuilder&#39; documentation for more information.&quot;</span>),
         };
 
-        <span class='comment'>// If no platform is set or no context platform is set, use the first available:</span>
-        <span class='kw'>let</span> <span class='ident'>platform</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>platform</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>plt</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>context</span>.<span class='ident'>is_none</span>(), <span class='string'>&quot;ocl::ProQueBuilder::build: \
+        <span class="comment">// If no platform is set or no context platform is set, use the first available:</span>
+        <span class="kw">let</span> <span class="ident">platform</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">platform</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">plt</span>) <span class="op">=&gt;</span> {
+                <span class="macro">assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">context</span>.<span class="ident">is_none</span>(), <span class="string">&quot;ocl::ProQueBuilder::build: \
                     platform and context cannot both be set.&quot;</span>);
-                <span class='ident'>plt</span>.<span class='ident'>clone</span>()
+                <span class="ident">plt</span>.<span class="ident">clone</span>()
             },
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>context</span> {
-                <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>context</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='ident'>context</span>.<span class='ident'>platform</span>() {
-                    <span class='prelude-val'>Some</span>(<span class='ident'>platform</span>) <span class='op'>=&gt;</span> <span class='ident'>platform</span>.<span class='ident'>clone</span>(),
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Platform</span>::<span class='ident'>default</span>(),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">context</span> {
+                <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">context</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">plat</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">platform</span>()<span class="question-mark">?</span>;
+
+                    <span class="kw">if</span> <span class="ident">DEBUG_PRINT</span> { <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;ProQue::build(): plat: {:?}, default: {:?}&quot;</span>,
+                        <span class="ident">plat</span>, <span class="ident">Platform</span>::<span class="ident">default</span>()); }
+
+                    <span class="kw">match</span> <span class="ident">plat</span> {
+                        <span class="prelude-val">Some</span>(<span class="ident">platform</span>) <span class="op">=&gt;</span> <span class="ident">platform</span>.<span class="ident">clone</span>(),
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">Platform</span>::<span class="ident">default</span>(),
+                    }
                 },
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Platform</span>::<span class='ident'>default</span>(),
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">Platform</span>::<span class="ident">default</span>(),
             },
         };
 
 
-        <span class='comment'>// Resolve the device and ensure only one was specified.</span>
-        <span class='kw'>let</span> <span class='ident'>device</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>device_spec</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ds</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>device_list</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ds</span>.<span class='ident'>to_device_list</span>(<span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>platform</span>)));
+        <span class="comment">// Resolve the device and ensure only one was specified.</span>
+        <span class="kw">let</span> <span class="ident">device</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">device_spec</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">ds</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">device_list</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">ds</span>.<span class="ident">to_device_list</span>(<span class="prelude-val">Some</span>(<span class="ident">platform</span>)));
 
-                <span class='kw'>if</span> <span class='ident'>device_list</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>1</span> {
-                    <span class='ident'>device_list</span>[<span class='number'>0</span>]
-                } <span class='kw'>else</span> {
-                    <span class='kw'>return</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Invalid number of devices specified ({}). Each &#39;ProQue&#39; \
+                <span class="kw">if</span> <span class="ident">device_list</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
+                    <span class="ident">device_list</span>[<span class="number">0</span>]
+                } <span class="kw">else</span> {
+                    <span class="kw">return</span> <span class="ident">OclError</span>::<span class="ident">err_string</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Invalid number of devices specified ({}). Each &#39;ProQue&#39; \
                         can only be associated with a single device. Use &#39;Context&#39;, &#39;Program&#39;, and \
-                        &#39;Queue&#39; separately for multi-device configurations.&quot;</span>, <span class='ident'>device_list</span>.<span class='ident'>len</span>()));
+                        &#39;Queue&#39; separately for multi-device configurations.&quot;</span>, <span class="ident">device_list</span>.<span class="ident">len</span>()));
                 }
             },
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Device</span>::<span class='ident'>first</span>(<span class='ident'>platform</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">Device</span>::<span class="ident">first</span>(<span class="ident">platform</span>),
         };
 
-        <span class='kw'>if</span> <span class='ident'>DEBUG_PRINT</span> { <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;ProQue::build(): device: {:?}&quot;</span>, <span class='ident'>device</span>); }
+        <span class="kw">if</span> <span class="ident">DEBUG_PRINT</span> { <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;ProQue::build(): device: {:?}&quot;</span>, <span class="ident">device</span>); }
 
-        <span class='comment'>// If no context was set, creates one using the above platform and</span>
-        <span class='comment'>// the pre-set device index (default [0]).</span>
-        <span class='kw'>let</span> <span class='ident'>context</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>context</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ctx</span>) <span class='op'>=&gt;</span> <span class='ident'>ctx</span>.<span class='ident'>clone</span>(),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Context</span>::<span class='ident'>builder</span>()
-                    .<span class='ident'>platform</span>(<span class='ident'>platform</span>)
-                    .<span class='ident'>devices</span>(<span class='ident'>device</span>)
-                    .<span class='ident'>build</span>())
+        <span class="comment">// If no context was set, creates one using the above platform and the</span>
+        <span class="comment">// pre-set device index (default [0]).</span>
+        <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">context</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">ctx</span>) <span class="op">=&gt;</span> {
+                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ctx</span>.<span class="ident">devices</span>().<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">device</span>));
+                <span class="ident">ctx</span>.<span class="ident">clone</span>()
+            }
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Context</span>::<span class="ident">builder</span>()
+                    .<span class="ident">platform</span>(<span class="ident">platform</span>)
+                    .<span class="ident">devices</span>(<span class="ident">device</span>)
+                    .<span class="ident">build</span>())
             },
         };
 
-        <span class='kw'>if</span> <span class='ident'>DEBUG_PRINT</span> { <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;ProQue::build(): context.devices(): {:?}&quot;</span>, <span class='ident'>context</span>.<span class='ident'>devices</span>()); }
+        <span class="kw">if</span> <span class="ident">DEBUG_PRINT</span> { <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;ProQue::build(): context.devices(): {:?}&quot;</span>, <span class="ident">context</span>.<span class="ident">devices</span>()); }
 
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Queue</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>context</span>, <span class='ident'>device</span>));
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Queue</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">device</span>, <span class="self">self</span>.<span class="ident">queue_properties</span>));
 
-        <span class='comment'>// println!(&quot;PROQUEBUILDER: About to load SRC_STRINGS.&quot;);</span>
-        <span class='kw'>let</span> <span class='ident'>src_strings</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>program_builder</span>.<span class='ident'>get_src_strings</span>().<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>to_string</span>()));
-        <span class='comment'>// println!(&quot;PROQUEBUILDER: About to load CMPLR_OPTS.&quot;);</span>
-        <span class='kw'>let</span> <span class='ident'>cmplr_opts</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>program_builder</span>.<span class='ident'>get_compiler_options</span>().<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>to_string</span>()));
-        <span class='comment'>// println!(&quot;PROQUEBUILDER: All done.&quot;);</span>
+        <span class="comment">// println!(&quot;PROQUEBUILDER: About to load SRC_STRINGS.&quot;);</span>
+        <span class="kw">let</span> <span class="ident">src_strings</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">program_builder</span>.<span class="ident">get_src_strings</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>()));
+        <span class="comment">// println!(&quot;PROQUEBUILDER: About to load CMPLR_OPTS.&quot;);</span>
+        <span class="kw">let</span> <span class="ident">cmplr_opts</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">program_builder</span>.<span class="ident">get_compiler_options</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>()));
+        <span class="comment">// println!(&quot;PROQUEBUILDER: All done.&quot;);</span>
 
-        <span class='kw'>let</span> <span class='ident'>program</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Program</span>::<span class='ident'>new</span>(
-            <span class='ident'>src_strings</span>,
-            <span class='ident'>cmplr_opts</span>,
-            <span class='kw-2'>&amp;</span><span class='ident'>context</span>,
-            <span class='kw-2'>&amp;</span>[<span class='ident'>device</span>],
+        <span class="kw">let</span> <span class="ident">program</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Program</span>::<span class="ident">new</span>(
+            <span class="kw-2">&amp;</span><span class="ident">context</span>,
+            <span class="ident">src_strings</span>,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="ident">device</span>]),
+            <span class="comment">// None,</span>
+            <span class="ident">cmplr_opts</span>,
+
+
         ));
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>ProQue</span>::<span class='ident'>new</span>(<span class='ident'>context</span>, <span class='ident'>queue</span>, <span class='ident'>program</span>, <span class='self'>self</span>.<span class='ident'>dims</span>))
-    }
-
-    <span class='doccomment'>/// Sets the platform to be used and returns the builder.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Panics</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If context is set, this will panic upon building. Only one or the other</span>
-    <span class='doccomment'>/// can be configured.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>platform</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>platform</span>: <span class='ident'>Platform</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ProQueBuilder</span> {
-        <span class='self'>self</span>.<span class='ident'>platform</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>platform</span>);
-        <span class='self'>self</span>
-    }
-
-    <span class='doccomment'>/// Sets the context and returns the `ProQueBuilder`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Panics</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If platform is set, this will panic upon building. Only one or the other</span>
-    <span class='doccomment'>/// can be configured.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>context</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>context</span>: <span class='ident'>Context</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ProQueBuilder</span> {
-        <span class='self'>self</span>.<span class='ident'>context</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>context</span>);
-        <span class='self'>self</span>
-    }
-
-    <span class='doccomment'>/// Sets a device or devices to be used and returns a `ProQueBuilder`</span>
-    <span class='doccomment'>/// reference.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Must specify only a single device.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>device</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>DeviceSpecifier</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>device_spec</span>: <span class='ident'>D</span>)
-            <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ProQueBuilder</span>
-    {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>device_spec</span>.<span class='ident'>is_none</span>(), <span class='string'>&quot;ocl::ProQue::devices: Devices already specified&quot;</span>);
-        <span class='self'>self</span>.<span class='ident'>device_spec</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>device_spec</span>.<span class='ident'>into</span>());
-        <span class='self'>self</span>
-    }
-
-    <span class='comment'>// /// Sets a device index to be used and returns the `ProQueBuilder`.</span>
-    <span class='comment'>// ///</span>
-    <span class='comment'>// /// Defaults to `0`, the first available.</span>
-    <span class='comment'>// ///</span>
-    <span class='comment'>// /// This index WILL round robin, in other words, it cannot be invalid.</span>
-    <span class='comment'>// /// If you need to guarantee a certain device, create your parts without</span>
-    <span class='comment'>// /// using this builder and just call `ProQue::new` directly.</span>
-    <span class='comment'>// pub fn device_idx&lt;&#39;p&gt;(&amp;&#39;p mut self, device_idx: usize) -&gt; &amp;&#39;p mut ProQueBuilder {</span>
-    <span class='comment'>//     self.device_idx = device_idx;</span>
-    <span class='comment'>//     self</span>
-    <span class='comment'>// }</span>
-
-    <span class='doccomment'>/// Adds some source code to be compiled and returns the `ProQueBuilder`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Creates a `ProgramBuilder` if one has not already been added. Attempts</span>
-    <span class='doccomment'>/// to call `::program_builder` after calling this method will cause a panic.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If you need a more complex build configuration or to add multiple</span>
-    <span class='doccomment'>/// source files. Pass an *unbuilt* `ProgramBuilder` to the</span>
-    <span class='doccomment'>/// `::program_builder` method (described below).</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>src</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ProQueBuilder</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>program_builder</span>.<span class='ident'>is_some</span>() {
-            <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;ocl::ProQueBuilder::src: Cannot set src if a &#39;ProgramBuilder&#39; is already \
-                defined. Please use the &#39;::program_builder&#39; method for more complex build \
-                configurations.&quot;</span>);
-        } <span class='kw'>else</span> {
-            <span class='self'>self</span>.<span class='ident'>program_builder</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>Program</span>::<span class='ident'>builder</span>().<span class='ident'>src</span>(<span class='ident'>src</span>))
-        }
-        <span class='self'>self</span>
-    }
-
-    <span class='doccomment'>/// Adds a pre-configured `ProgramBuilder` and returns the `ProQueBuilder`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ## Panics</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This `ProQueBuilder` may not already contain a `ProgramBuilder`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `program_builder` must not have any device indices configured (via its</span>
-    <span class='doccomment'>/// `::device_idxs` method). `ProQueBuilder` will only build programs for</span>
-    <span class='doccomment'>/// the device specified by `::device_idx` or the default device if none has</span>
-    <span class='doccomment'>/// been specified.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>prog_bldr</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>program_builder</span>: <span class='ident'>ProgramBuilder</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ProQueBuilder</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>program_builder</span>.<span class='ident'>is_none</span>(), <span class='string'>&quot;ProQueBuilder::prog_bldr(): Cannot set the \
-            &#39;ProgramBuilder&#39; using this method after one has already been set or after &#39;::src&#39; has \
-            been called.&quot;</span>);
-
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>program_builder</span>.<span class='ident'>get_device_spec</span>().<span class='ident'>is_none</span>(), <span class='string'>&quot;ProQueBuilder::prog_bldr(): The \
-            &#39;ProgramBuilder&#39; passed may not have any device indices set as they will be unused. \
-            See &#39;ProQueBuilder&#39; documentation for more information.&quot;</span>);
-
-        <span class='self'>self</span>.<span class='ident'>program_builder</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>program_builder</span>);
-        <span class='self'>self</span>
-    }
-
-    <span class='doccomment'>/// Sets the built-in dimensions.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is optional.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use if you want to be able to call the `::create_kernel` or</span>
-    <span class='doccomment'>/// `::create_buffer` methods on the `ProQue` created by this builder.</span>
-    <span class='doccomment'>/// Dimensions can alternatively be set after building by using the</span>
-    <span class='doccomment'>/// `ProQue::set_dims` method.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dims</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>SpatialDims</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dims</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ProQueBuilder</span> {
-        <span class='self'>self</span>.<span class='ident'>dims</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>dims</span>.<span class='ident'>into</span>());
-        <span class='self'>self</span>
+        <span class="prelude-val">Ok</span>(<span class="ident">ProQue</span>::<span class="ident">new</span>(<span class="ident">context</span>, <span class="ident">queue</span>, <span class="ident">program</span>, <span class="self">self</span>.<span class="ident">dims</span>))
     }
 }
 
-
-
-<span class='doccomment'>/// An all-in-one chimera of the `Program`, `Queue`, `Context` and</span>
-<span class='doccomment'>/// (optionally) `SpatialDims` types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Handy when you only need a single context, program, and queue for your</span>
-<span class='doccomment'>/// project or when using a unique context and program on each device.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// All `ProQue` functionality is also provided separately by the `Context`, `Queue`,</span>
-<span class='doccomment'>/// `Program`, and `SpatialDims` types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Creation</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// There are two ways to create a `ProQue`:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// 1. [Recommended] Use `ProQue::builder` or `ProQueBuilder::new()`.</span>
-<span class='doccomment'>/// 2. Call `::new` and pass pre-created components.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Destruction</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Now handled automatically. Freely use, store, clone, discard, share among</span>
-<span class='doccomment'>/// threads... put some on your toast... whatever.</span>
-<span class='doccomment'>///</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ProQue</span> {
-    <span class='ident'>context</span>: <span class='ident'>Context</span>,
-    <span class='ident'>queue</span>: <span class='ident'>Queue</span>,
-    <span class='ident'>program</span>: <span class='ident'>Program</span>,
-    <span class='ident'>dims</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>SpatialDims</span><span class='op'>&gt;</span>,
-}
-
-<span class='kw'>impl</span> <span class='ident'>ProQue</span> {
-    <span class='doccomment'>/// Returns a new `ProQueBuilder`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is the recommended way to create a new `ProQue`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Calling `ProQueBuilder::build()` will return a new `ProQue`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>builder</span>() <span class='op'>-&gt;</span> <span class='ident'>ProQueBuilder</span> {
-        <span class='ident'>ProQueBuilder</span>::<span class='ident'>new</span>()
-    }
-
-    <span class='doccomment'>/// Creates a new ProQue from individual parts.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `::builder` instead unless you know what you&#39;re doing. Creating</span>
-    <span class='doccomment'>/// from components associated with different devices or contexts will</span>
-    <span class='doccomment'>/// cause errors later on.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>SpatialDims</span><span class='op'>&gt;&gt;</span>(<span class='ident'>context</span>: <span class='ident'>Context</span>, <span class='ident'>queue</span>: <span class='ident'>Queue</span>, <span class='ident'>program</span>: <span class='ident'>Program</span>,
-                    <span class='ident'>dims</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>ProQue</span>
-    {
-        <span class='ident'>ProQue</span> {
-            <span class='ident'>context</span>: <span class='ident'>context</span>,
-            <span class='ident'>queue</span>: <span class='ident'>queue</span>,
-            <span class='ident'>program</span>: <span class='ident'>program</span>,
-            <span class='ident'>dims</span>: <span class='ident'>dims</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>d</span>.<span class='ident'>into</span>()),
-        }
-    }
-
-    <span class='doccomment'>/// Creates a kernel with pre-assigned dimensions.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>create_kernel</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Kernel</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>kernel</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Kernel</span>::<span class='ident'>new</span>(<span class='ident'>name</span>.<span class='ident'>to_string</span>(), <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>program</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>queue</span>));
-
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>dims</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>d</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>kernel</span>.<span class='ident'>gws</span>(<span class='ident'>d</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>kernel</span>),
-        }
-    }
-
-    <span class='doccomment'>/// Returns a new buffer</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default dimensions for this `ProQue` will be used when creating.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This `ProQue` must have been pre-configured with default dimensions to</span>
-    <span class='doccomment'>/// use this method. If not, set them with `::set_dims`, or just create a</span>
-    <span class='doccomment'>/// buffer using `Buffer::new()`.</span>
-    <span class='doccomment'>///</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>create_buffer</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>OclPrm</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>Buffer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>dims</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>dims_result</span>());
-        <span class='ident'>Buffer</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>queue</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>, <span class='ident'>dims</span>, <span class='prelude-val'>None</span>)
-    }
-
-    <span class='doccomment'>/// Sets the default dimensions used when creating buffers and kernels.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_dims</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>SpatialDims</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dims</span>: <span class='ident'>S</span>) {
-        <span class='self'>self</span>.<span class='ident'>dims</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>dims</span>.<span class='ident'>into</span>());
-    }
-
-    <span class='doccomment'>/// Returns the maximum workgroup size supported by the device associated</span>
-    <span class='doccomment'>/// with this `ProQue`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [UNSTABLE]: Evaluate usefulness.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>max_wg_size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>queue</span>.<span class='ident'>device</span>().<span class='ident'>max_wg_size</span>()
-    }
-
-    <span class='doccomment'>/// Returns a reference to the queue associated with this ProQue.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>queue</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Queue</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>queue</span>
-    }
-
-    <span class='doccomment'>/// Returns the contained context.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>context</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Context</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>context</span>
-    }
-
-    <span class='doccomment'>/// Returns the current program build.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>program</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Program</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>program</span>
-    }
-
-    <span class='doccomment'>/// Returns the current `dims` or panics.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [UNSTABLE]: Evaluate which &#39;dims&#39; method to keep. Leaning towards this</span>
-    <span class='doccomment'>/// version at the moment.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dims</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>SpatialDims</span> {
-        <span class='self'>self</span>.<span class='ident'>dims_result</span>().<span class='ident'>expect</span>(<span class='ident'>DIMS_ERR_MSG</span>)
-    }
-
-    <span class='doccomment'>/// Returns the current `dims` or an error.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [UNSTABLE]: Evaluate which &#39;dims&#39; method to keep. Leaning towards the</span>
-    <span class='doccomment'>/// above, panicing version at the moment.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dims_result</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>OclResult</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>SpatialDims</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>dims</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>dims</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>dims</span>),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>OclError</span>::<span class='ident'>err</span>(<span class='ident'>DIMS_ERR_MSG</span>),
-        }
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>MemLen</span> <span class='kw'>for</span> <span class='ident'>ProQue</span> {
-    <span class='kw'>fn</span> <span class='ident'>to_len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>dims</span>().<span class='ident'>to_len</span>()
-    }
-    <span class='kw'>fn</span> <span class='ident'>to_len_padded</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>incr</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>dims</span>().<span class='ident'>to_len_padded</span>(<span class='ident'>incr</span>)
-    }
-    <span class='kw'>fn</span> <span class='ident'>to_lens</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> [<span class='ident'>usize</span>; <span class='number'>3</span>] {
-        <span class='self'>self</span>.<span class='ident'>dims_result</span>().<span class='ident'>expect</span>(<span class='string'>&quot;ocl::ProQue::to_lens()&quot;</span>)
-            .<span class='ident'>to_lens</span>().<span class='ident'>expect</span>(<span class='string'>&quot;ocl::ProQue::to_lens()&quot;</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>WorkDims</span> <span class='kw'>for</span> <span class='ident'>ProQue</span> {
-    <span class='kw'>fn</span> <span class='ident'>dim_count</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>dims_result</span>().<span class='ident'>expect</span>(<span class='string'>&quot;ProQue::dim_count&quot;</span>).<span class='ident'>dim_count</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>to_work_size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>dims_result</span>().<span class='ident'>expect</span>(<span class='string'>&quot;ProQue::to_work_size&quot;</span>).<span class='ident'>to_work_size</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>to_work_offset</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>3</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>dims_result</span>().<span class='ident'>expect</span>(<span class='string'>&quot;ProQue::to_work_offset&quot;</span>).<span class='ident'>to_work_offset</span>()
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>ProQue</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>Queue</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Queue</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>queue</span>
-    }
-}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -904,11 +957,9 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "ocl";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    <script src="../../../extra.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>
