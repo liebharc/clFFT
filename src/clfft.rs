@@ -6,6 +6,8 @@
 //! README for further details.
 
 extern crate ocl;
+extern crate ocl_core;
+extern crate cl_sys;
 
 #[macro_use]
 extern crate lazy_static;
@@ -16,13 +18,14 @@ extern crate lazy_static;
 pub mod ffi;
 use std::mem;
 use std::sync::Mutex;
+use ocl_core::ClWaitListPtr;
 
 macro_rules! clfft_try {
     ( $result_expr: expr) => {
         let result = $result_expr;
         if result != ffi::clfftStatus::CLFFT_SUCCESS {
             let error_code: i32 = unsafe { mem::transmute(result) };
-            return ocl::Error::err(format!("FOREIGN_CLFFT_ERROR {}\nSee http://clmathlibraries.github.io/clFFT/clFFT_8h.html#a74e303bed132064cfa22c1cce96d2bce for further information", error_code));
+            return Err(format!("FOREIGN_CLFFT_ERROR {}\nSee http://clmathlibraries.github.io/clFFT/clFFT_8h.html#a74e303bed132064cfa22c1cce96d2bce for further information", error_code).into());
         }
     }
 }
@@ -37,7 +40,7 @@ macro_rules! clfft_panic {
 }
 
 /// A trait for all paremeters supported by `clFFT`.
-pub trait ClFftPrm : ocl::traits::OclPrm { 
+pub trait ClFftPrm : ocl_core::OclPrm { 
     /// Is the type a double precision type.
     fn is_dbl_precision() -> bool;
 }
@@ -61,9 +64,9 @@ lazy_static! {
 
 /// Initialize the internal FFT resources such as FFT implementation caches kernels, programs, and buffers.
 fn init_lib() -> SetupDataBox {
-    let mut major: ocl::ffi::cl_uint = 0;
-    let mut minor: ocl::ffi::cl_uint = 0;
-    let mut patch: ocl::ffi::cl_uint = 0;
+    let mut major: cl_sys::cl_uint = 0;
+    let mut minor: cl_sys::cl_uint = 0;
+    let mut patch: cl_sys::cl_uint = 0;
     clfft_panic!( unsafe { ffi::clfftGetVersion(&mut major, &mut minor, &mut patch) } );
     let data = ffi::clfftSetupData {
         major: major,
@@ -309,7 +312,7 @@ impl<T: ClFftPrm> FftPlanBuilder<T> {
 }
 
 fn bake_plan<T: ClFftPrm>(builder: &mut FftPlanBuilder<T>, pro_que: &ocl::ProQue, location: Location) -> ocl::Result<ffi::clfftPlanHandle> {
-    let context = unsafe { pro_que.context().core_as_ref().as_ptr() };
+    let context = pro_que.context().core().as_ptr();
     let dims = match builder.dims {
         Some(d) => d,
         None => pro_que.dims().clone()
@@ -344,7 +347,7 @@ fn bake_plan<T: ClFftPrm>(builder: &mut FftPlanBuilder<T>, pro_que: &ocl::ProQue
         }
     }
     
-    let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
+    let mut queue = pro_que.queue().core().as_ptr();
     clfft_try!(unsafe {ffi::clfftBakePlan(plan, 1, &mut queue, None, 0 as *mut ::std::os::raw::c_void)});
     Ok(plan)
 }
@@ -355,8 +358,8 @@ pub struct FftInplacePlan<'a, T: ClFftPrm> {
     handle: ffi::clfftPlanHandle,
     pro_que: &'a ocl::ProQue,
     data_type: std::marker::PhantomData<T>,
-    wait_list: Option<&'a ocl::core::ClWaitList>,
-    dest_list: Option<&'a mut ocl::core::ClEventPtrNew>,
+    wait_list: Option<&'a ocl::EventList>,
+    dest_list: Option<&'a mut ocl::EventList>,
 }
 
 /// A plan is a repository of state for calculating FFT's.  Allows the runtime to pre-calculate kernels, programs
@@ -365,34 +368,21 @@ pub struct FftOutOfPlacePlan<'a, T: ClFftPrm> {
     handle: ffi::clfftPlanHandle,
     pro_que: &'a ocl::ProQue,
     data_type: std::marker::PhantomData<T>,
-    wait_list: Option<&'a ocl::core::ClWaitList>,
-    dest_list: Option<&'a mut ocl::core::ClEventPtrNew>,
+    wait_list: Option<&'a ocl::EventList>,
+    dest_list: Option<&'a mut ocl::EventList>,
 }
 
 impl<'a, T: ClFftPrm> FftInplacePlan<'a, T> {
     /// Specifies the list of events to wait on before the command will run.
-    pub fn ewait(mut self, wait_list: &'a ocl::core::ClWaitList) -> Self {
+    pub fn ewait(mut self, wait_list: &'a ocl::EventList) -> Self {
         self.wait_list = Some(wait_list);
-        self
-    }
-    
-    /// Specifies a list of events to wait on before the command will run.
-    pub fn ewait_opt(mut self, wait_list: Option<&'a ocl::core::ClWaitList>) -> Self {
-        self.wait_list = wait_list;
         self
     }
     
     /// Specifies the destination list or empty event for a new, optionally
     /// created event associated with this command.
-    pub fn enew(mut self, new_event_dest: &'a mut ocl::core::ClEventPtrNew) -> Self {
+    pub fn enew(mut self, new_event_dest: &'a mut ocl::EventList) -> Self {
         self.dest_list = Some(new_event_dest);
-        self
-    }
-    
-    /// Specifies a destination list for a new, optionally created event
-    /// associated with this command.
-    pub fn enew_opt(mut self, new_event_list: Option<&'a mut ocl::core::ClEventPtrNew>) -> Self {
-        self.dest_list = new_event_list;
         self
     }
 
@@ -403,7 +393,7 @@ impl<'a, T: ClFftPrm> FftInplacePlan<'a, T> {
         buffer: &mut ocl::Buffer<T>) -> ocl::Result<()> {
         let input_len = self.dims().to_len() * if self.input_layout() == Layout::Real { 1 } else { 2 };
         if input_len != buffer.dims().to_len() {
-            return ocl::Error::err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len));
+            return Err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len).into());
         }
         
         enqueue::<T>(self.handle, direction, self.pro_que, buffer, None, &self.wait_list, &mut self.dest_list)
@@ -412,28 +402,15 @@ impl<'a, T: ClFftPrm> FftInplacePlan<'a, T> {
 
 impl<'a, T: ClFftPrm> FftOutOfPlacePlan<'a, T> {  
     /// Specifies the list of events to wait on before the command will run.
-    pub fn ewait(mut self, wait_list: &'a ocl::core::ClWaitList) -> Self {
+    pub fn ewait(mut self, wait_list: &'a ocl::EventList) -> Self {
         self.wait_list = Some(wait_list);
-        self
-    }
-    
-    /// Specifies a list of events to wait on before the command will run.
-    pub fn ewait_opt(mut self, wait_list: Option<&'a ocl::core::ClWaitList>) -> Self {
-        self.wait_list = wait_list;
         self
     }
     
     /// Specifies the destination list or empty event for a new, optionally
     /// created event associated with this command.
-    pub fn enew(mut self, new_event_dest: &'a mut ocl::core::ClEventPtrNew) -> Self {
+    pub fn enew(mut self, new_event_dest: &'a mut ocl::EventList) -> Self {
         self.dest_list = Some(new_event_dest);
-        self
-    }
-    
-    /// Specifies a destination list for a new, optionally created event
-    /// associated with this command.
-    pub fn enew_opt(mut self, new_event_list: Option<&'a mut ocl::core::ClEventPtrNew>) -> Self {
-        self.dest_list = new_event_list;
         self
     }
 
@@ -445,12 +422,12 @@ impl<'a, T: ClFftPrm> FftOutOfPlacePlan<'a, T> {
         result: &mut ocl::Buffer<T>) -> ocl::Result<()> {
         let input_len = self.dims().to_len() * if self.input_layout() == Layout::Real { 1 } else { 2 };
         if input_len != buffer.dims().to_len() {
-            return ocl::Error::err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len));
+            return Err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len).into());
         }
         
         let output_len = self.dims().to_len() * if self.output_layout() == Layout::Real { 1 } else { 2 };
         if output_len != buffer.dims().to_len() {
-            return ocl::Error::err(format!("FFT plan requires that output buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", output_len));
+            return Err(format!("FFT plan requires that output buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", output_len).into());
         }
         
         enqueue::<T>(self.handle, direction, self.pro_que, buffer, Some(result), &self.wait_list, &mut self.dest_list)
@@ -463,23 +440,25 @@ fn enqueue<T: ClFftPrm>(
         pro_que: &ocl::ProQue,
         buffer: &ocl::Buffer<T>,
         result: Option<&mut ocl::Buffer<T>>,
-        wait_list: &Option<&ocl::core::ClWaitList>,
-        dest_list: &mut Option<&mut ocl::core::ClEventPtrNew>) -> ocl::Result<()> {   
-    let mut queue = unsafe { pro_que.queue().core_as_ref().as_ptr() };
-    let mut buffer = unsafe { buffer.core_as_ref().as_ptr() };
+        wait_list: &Option<&ocl::EventList>,
+        dest_list: &mut Option<&mut ocl::EventList>) -> ocl::Result<()> {   
+    let mut queue = pro_que.queue().core().as_ptr();
+    let mut buffer = buffer.core().as_ptr();
     let (wait_list_cnt, wait_list_pnt) = 
         match *wait_list {
             None => (0, 0 as *const ocl::ffi::cl_event),
-            Some(l) => (l.count(), unsafe { l.as_ptr_ptr() })
+            Some(ref l) if l.len() == 0 => (0, 0 as *const ocl::ffi::cl_event),
+            Some(ref l) => (l.len(), unsafe { l.as_ptr_ptr() })
         };
     let dest_list_pnt = 
         match *dest_list {
             None => 0 as *mut ocl::ffi::cl_event,
-            Some(ref mut l) => try!(l.ptr_mut_ptr_new())
+            Some(ref mut l) if l.len() == 0 => 0 as *mut ocl::ffi::cl_event,
+            Some(ref mut l) => unsafe { l.first_mut().unwrap().as_ptr_mut() }
         };
     let mut result = match result {
         None => 0 as ocl::ffi::cl_mem,
-        Some(res) => unsafe { res.core_as_ref().as_ptr() }
+        Some(res) => res.core().as_ptr()
     };
     let direction = translate_direction(direction);
     clfft_try!(
@@ -489,7 +468,7 @@ fn enqueue<T: ClFftPrm>(
                 direction,
                 1,
                 &mut queue,
-                wait_list_cnt,
+                wait_list_cnt as u32,
                 wait_list_pnt,
                 dest_list_pnt,
                 &mut buffer,
@@ -640,9 +619,8 @@ mod tests {
     extern crate num;
 
     use super::*;
-    use ocl::{ProQue, Buffer};
+    use ocl::{MemFlags, ProQue, Buffer};
     use ocl::builders::ProgramBuilder;
-    use ocl::flags;
     use std;
     
     fn to_complex(source: &[f64]) -> Vec<num::Complex<f64>> {
@@ -728,22 +706,18 @@ mod tests {
             .build()
             .expect("Building ProQue");
             
-        let mut in_buffer =
-            Buffer::new(
-                ocl_pq.queue().clone(),
-                Some(flags::MEM_READ_WRITE |
-                     flags::MEM_COPY_HOST_PTR),
-                ocl_pq.dims().clone(),
-                Some(&source))
-                .expect("Failed to create GPU input buffer");
+        let mut in_buffer = Buffer::builder()
+                .queue(ocl_pq.queue().clone())
+                .flags(MemFlags::new().read_write().copy_host_ptr())
+                .dims(ocl_pq.dims().clone())
+                .host_data(&source)
+                .build().expect("Failed to create GPU input buffer");
                 
-        let mut res_buffer =
-            Buffer::<f64>::new(
-                ocl_pq.queue().clone(),
-                Some(flags::MEM_WRITE_ONLY),
-                ocl_pq.dims().clone(),
-                None)
-                .expect("Failed to create GPU result buffer");
+        let mut res_buffer = Buffer::<f64>::builder()
+                .queue(ocl_pq.queue().clone())
+                .flags(MemFlags::new().write_only())
+                .dims(ocl_pq.dims().clone())
+                .build().expect("Failed to create GPU result buffer");
         
         let mut plan = 
             builder::<f64>()
@@ -753,7 +727,7 @@ mod tests {
             .output_layout(Layout::ComplexInterleaved)
             .bake_out_of_place_plan(&ocl_pq).unwrap();
         plan.enq(Direction::Forward, &mut in_buffer, &mut res_buffer).unwrap();
-        ocl_pq.queue().finish();
+        ocl_pq.queue().finish().unwrap();
         
         res_buffer.cmd()
             .read(&mut source)

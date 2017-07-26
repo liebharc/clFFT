@@ -2,9 +2,8 @@ extern crate clfft;
 extern crate ocl;
 
 use clfft::*;
-use ocl::{ProQue, Buffer};
+use ocl::{MemFlags, ProQue, Buffer};
 use ocl::builders::ProgramBuilder;
-use ocl::flags;
 
 fn main() {
     // Prepare some data
@@ -25,21 +24,19 @@ fn main() {
         
     // Create buffers
     let mut in_buffer =
-        Buffer::new(
-            ocl_pq.queue().clone(),
-            Some(flags::MEM_READ_WRITE |
-                 flags::MEM_COPY_HOST_PTR),
-            ocl_pq.dims().clone(),
-            Some(&source))
-            .expect("Failed to create GPU input buffer");
+        Buffer::builder()
+                .queue(ocl_pq.queue().clone())
+                .flags(MemFlags::new().read_write().copy_host_ptr())
+                .dims(ocl_pq.dims().clone())
+                .host_data(&source)
+                .build().expect("Failed to create GPU input buffer");
             
     let mut res_buffer =
-        Buffer::<f64>::new(
-            ocl_pq.queue().clone(),
-            Some(flags::MEM_WRITE_ONLY),
-            ocl_pq.dims().clone(),
-            None)
-            .expect("Failed to create GPU result buffer");
+        Buffer::<f64>::builder()
+                .queue(ocl_pq.queue().clone())
+                .flags(MemFlags::new().write_only())
+                .dims(ocl_pq.dims().clone())
+                .build().expect("Failed to create GPU result buffer");
     
     // Make a plan
     let mut plan = 
@@ -60,6 +57,6 @@ fn main() {
         .expect("Transferring result vector from the GPU back to memory failed");
         
         
-    ocl_pq.queue().finish();
+    ocl_pq.queue().finish().unwrap();
     println!("{:?}", source);
 }

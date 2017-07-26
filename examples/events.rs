@@ -2,8 +2,7 @@ extern crate clfft;
 extern crate ocl;
 
 use clfft::*;
-use ocl::{ProQue, Buffer, EventList};
-use ocl::flags;
+use ocl::{MemFlags, ProQue, Buffer, EventList};
 
 
 // Our kernel source code:
@@ -50,23 +49,19 @@ fn main() {
         .expect("Building ProQue");
         
     // Create buffers
-    let mut in_buffer =
-        Buffer::new(
-            ocl_pq.queue().clone(),
-            Some(flags::MEM_READ_WRITE |
-                 flags::MEM_COPY_HOST_PTR),
-            ocl_pq.dims().clone(),
-            Some(&source))
-            .expect("Failed to create GPU input buffer");
-            
-    let coef_buffer =
-        Buffer::new(
-            ocl_pq.queue().clone(),
-            Some(flags::MEM_READ_ONLY |
-                 flags::MEM_COPY_HOST_PTR),
-            ocl_pq.dims().clone(),
-            Some(&triang))
-            .expect("Failed to create GPU input buffer");
+    let mut in_buffer = Buffer::builder()
+                .queue(ocl_pq.queue().clone())
+                .flags(MemFlags::new().read_write().copy_host_ptr())
+                .dims(ocl_pq.dims().clone())
+                .host_data(&source)
+                .build().expect("Failed to create GPU input buffer");
+                
+    let coef_buffer = Buffer::builder()
+                .queue(ocl_pq.queue().clone())
+                .flags(MemFlags::new().read_only().copy_host_ptr())
+                .dims(ocl_pq.dims().clone())
+                .host_data(&triang)
+                .build().expect("Failed to create GPU input buffer");
     
     // Use events to schedule our kernels.
     // When `fft_finish_event` is signaled 
@@ -105,8 +100,9 @@ fn main() {
         .enq()
         .expect("Enq Mul");
     
+    let mut no_events = EventList::new();
     plan
-        .enew_opt(None) // Remove the `enew` event by setting it to `None`
+        .enew(&mut no_events) // Remove the `enew` event by passing an empty list
         .ewait(&start_ifft_event)
         .enq(Direction::Backward, &mut in_buffer)
         .expect("Enq IFFT");
@@ -118,7 +114,7 @@ fn main() {
         .expect("Transferring result vector from the GPU back to memory failed");
         
         
-    ocl_pq.queue().finish();
+    ocl_pq.queue().finish().unwrap();
     println!("Input data (time): {:?}", orig);
     println!("Output data (time): {:?}", source);
 }

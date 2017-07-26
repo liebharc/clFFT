@@ -1,6 +1,6 @@
 //! Bindings to `clFFT`. See http://clmathlibraries.github.io/clFFT/ for more information.
 
-use ocl::ffi::*;
+use ocl_core::ffi::*;
 
 #[repr(i32)]
 /*   @brief clfft error codes definition(incorporating OpenCL error definitions)
