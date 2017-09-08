@@ -8,7 +8,7 @@ homepage = "https://github.com/liebharc/clfft"
 repository = "https://github.com/liebharc/clfft"
 documentation = "https://liebharc.github.io/clFFT/bindings/clfft/"
 keywords = ["fft", "opencl", "ffi"]
-categories = ["External FFI bindings"]
+categories = ["api-bindings"]
 description = "Bindings for clFFT, a FFT library for OpenCL."
 
 [lib]
