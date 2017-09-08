@@ -1,6 +1,6 @@
 [package]
 name = "clfft"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Christian Liebhardt"]
 build = "build.rs"
 license = "Apache-2.0"
@@ -16,8 +16,8 @@ crate-type = ["rlib"]
 
 [dependencies]
 cl-sys = "^0.3.0"
-ocl-core = "^0.5.1"
-ocl = "^0.14.1"
+ocl-core = "^0.6.0"
+ocl = "^0.15.0"
 lazy_static = "^0.2.0"
 
 [features]
