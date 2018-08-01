@@ -23,19 +23,20 @@ fn main() {
         .expect("Building ProQue");
         
     // Create buffers
-    let mut in_buffer =
+    let mut in_buffer = unsafe {
         Buffer::builder()
                 .queue(ocl_pq.queue().clone())
                 .flags(MemFlags::new().read_write().copy_host_ptr())
-                .dims(ocl_pq.dims().clone())
-                .host_data(&source)
-                .build().expect("Failed to create GPU input buffer");
+                .len(ocl_pq.dims().clone())
+                .use_host_slice(&source)
+                .build().expect("Failed to create GPU input buffer")
+				};
             
     let mut res_buffer =
         Buffer::<f64>::builder()
                 .queue(ocl_pq.queue().clone())
                 .flags(MemFlags::new().write_only())
-                .dims(ocl_pq.dims().clone())
+                .len(ocl_pq.dims().clone())
                 .build().expect("Failed to create GPU result buffer");
     
     // Make a plan

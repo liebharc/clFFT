@@ -67,7 +67,7 @@ pub enum clfftStatus {
     CLFFT_INVALID_PLAN = 4102,
     CLFFT_DEVICE_NO_DOUBLE = 4103,
     CLFFT_DEVICE_MISMATCH = 4104,
-    CLFFT_ENDSTATUS = 4105,
+    CLFFT_ENDSTATUS = 4105
 }
 #[repr(i32)]
 /*   @brief The dimension of the input and output buffers that is fed into all FFT transforms */

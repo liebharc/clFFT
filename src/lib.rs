@@ -312,13 +312,18 @@ impl<T: ClFftPrm> FftPlanBuilder<T> {
 }
 
 fn bake_plan<T: ClFftPrm>(builder: &mut FftPlanBuilder<T>, pro_que: &ocl::ProQue, location: Location) -> ocl::Result<ffi::clfftPlanHandle> {
-    let context = pro_que.context().core().as_ptr();
+    let context = pro_que.context().as_core().as_ptr();
     let dims = match builder.dims {
         Some(d) => d,
         None => pro_que.dims().clone()
     };
     let dim = translate_to_fft_dim(dims);
-    let lengths = try!(dims.to_lens());
+	let to_lens_result = dims.to_lens();
+	if to_lens_result.is_err() {
+		return Err(format!("Unspecified dimensions").into())
+	}
+	
+    let lengths = to_lens_result.unwrap();
     let mut plan: ffi::clfftPlanHandle = 0;
     clfft_try!( unsafe { ffi::clfftCreateDefaultPlan(&mut plan, context, dim, &lengths as *const usize) } );
     let precision = translate_precision::<T>(builder.precision);
@@ -347,7 +352,7 @@ fn bake_plan<T: ClFftPrm>(builder: &mut FftPlanBuilder<T>, pro_que: &ocl::ProQue
         }
     }
     
-    let mut queue = pro_que.queue().core().as_ptr();
+    let mut queue = pro_que.queue().as_core().as_ptr();
     clfft_try!(unsafe {ffi::clfftBakePlan(plan, 1, &mut queue, None, 0 as *mut ::std::os::raw::c_void)});
     Ok(plan)
 }
@@ -392,7 +397,7 @@ impl<'a, T: ClFftPrm> FftInplacePlan<'a, T> {
         direction: Direction, 
         buffer: &mut ocl::Buffer<T>) -> ocl::Result<()> {
         let input_len = self.dims().to_len() * if self.input_layout() == Layout::Real { 1 } else { 2 };
-        if input_len != buffer.dims().to_len() {
+        if input_len != buffer.len() {
             return Err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len).into());
         }
         
@@ -421,12 +426,12 @@ impl<'a, T: ClFftPrm> FftOutOfPlacePlan<'a, T> {
         buffer: &ocl::Buffer<T>,
         result: &mut ocl::Buffer<T>) -> ocl::Result<()> {
         let input_len = self.dims().to_len() * if self.input_layout() == Layout::Real { 1 } else { 2 };
-        if input_len != buffer.dims().to_len() {
+        if input_len != buffer.len() {
             return Err(format!("FFT plan requires that input buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", input_len).into());
         }
         
         let output_len = self.dims().to_len() * if self.output_layout() == Layout::Real { 1 } else { 2 };
-        if output_len != buffer.dims().to_len() {
+        if output_len != buffer.len() {
             return Err(format!("FFT plan requires that output buffer must have a size of {}. Is there a dimension mismatch between real and complex numbers?", output_len).into());
         }
         
@@ -442,8 +447,8 @@ fn enqueue<T: ClFftPrm>(
         result: Option<&mut ocl::Buffer<T>>,
         wait_list: &Option<&ocl::EventList>,
         dest_list: &mut Option<&mut ocl::EventList>) -> ocl::Result<()> {   
-    let mut queue = pro_que.queue().core().as_ptr();
-    let mut buffer = buffer.core().as_ptr();
+    let mut queue = pro_que.queue().as_core().as_ptr();
+    let mut buffer = buffer.as_core().as_ptr();
     let (wait_list_cnt, wait_list_pnt) = 
         match *wait_list {
             None => (0, 0 as *const ocl::ffi::cl_event),
@@ -458,7 +463,7 @@ fn enqueue<T: ClFftPrm>(
         };
     let mut result = match result {
         None => 0 as ocl::ffi::cl_mem,
-        Some(res) => res.core().as_ptr()
+        Some(res) => res.as_core().as_ptr()
     };
     let direction = translate_direction(direction);
     clfft_try!(
@@ -697,7 +702,7 @@ mod tests {
         let mut fft = rustfft::FFT::new(source.len() / 2, false);
         let signal = to_complex(&source);
         let mut spectrum = signal.clone();
-        fft.process(&signal, &mut spectrum);
+        fft.process(&signal[..], &mut spectrum[..]);
         
         let prog_bldr = ProgramBuilder::new();
         let ocl_pq = ProQue::builder()
@@ -709,14 +714,14 @@ mod tests {
         let mut in_buffer = Buffer::builder()
                 .queue(ocl_pq.queue().clone())
                 .flags(MemFlags::new().read_write().copy_host_ptr())
-                .dims(ocl_pq.dims().clone())
-                .host_data(&source)
+                .len(ocl_pq.dims().clone())
+                .use_host_slice(&source)
                 .build().expect("Failed to create GPU input buffer");
                 
         let mut res_buffer = Buffer::<f64>::builder()
                 .queue(ocl_pq.queue().clone())
                 .flags(MemFlags::new().write_only())
-                .dims(ocl_pq.dims().clone())
+                .len(ocl_pq.dims().clone())
                 .build().expect("Failed to create GPU result buffer");
         
         let mut plan = 

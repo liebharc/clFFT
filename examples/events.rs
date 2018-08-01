@@ -49,19 +49,19 @@ fn main() {
         .expect("Building ProQue");
         
     // Create buffers
-    let mut in_buffer = Buffer::builder()
+    let mut in_buffer = unsafe { Buffer::builder()
                 .queue(ocl_pq.queue().clone())
                 .flags(MemFlags::new().read_write().copy_host_ptr())
-                .dims(ocl_pq.dims().clone())
-                .host_data(&source)
-                .build().expect("Failed to create GPU input buffer");
+                .len(ocl_pq.dims().clone())
+                .use_host_slice(&source)
+                .build().expect("Failed to create GPU input buffer") };
                 
-    let coef_buffer = Buffer::builder()
+    let coef_buffer = unsafe { Buffer::builder()
                 .queue(ocl_pq.queue().clone())
                 .flags(MemFlags::new().read_only().copy_host_ptr())
-                .dims(ocl_pq.dims().clone())
-                .host_data(&triang)
-                .build().expect("Failed to create GPU input buffer");
+                .len(ocl_pq.dims().clone())
+                .use_host_slice(&triang)
+                .build().expect("Failed to create GPU input buffer") };
     
     // Use events to schedule our kernels.
     // When `fft_finish_event` is signaled 
@@ -90,15 +90,19 @@ fn main() {
         .enq(Direction::Forward, &mut in_buffer)
         .expect("Enq FFT");
         
-    let mul = ocl_pq.create_kernel("multiply_vector").unwrap()
-        .arg_buf_named("coef", Some(&coef_buffer))
-        .arg_buf_named("srcres", Some(&in_buffer));
-    mul.cmd()
-        .ewait(&start_mul_event)
-        .enew(&mut mul_finish_event)
-        .gws([source.len() / 2])
-        .enq()
-        .expect("Enq Mul");
+    let mul = ocl_pq.kernel_builder("multiply_vector")
+        .arg_named("coef", Some(&coef_buffer))
+        .arg_named("srcres", Some(&in_buffer))
+		.build()
+		.unwrap();
+	unsafe {
+		mul.cmd()
+			.ewait(&start_mul_event)
+			.enew(&mut mul_finish_event)
+			.global_work_size([source.len() / 2])
+			.enq()
+			.expect("Enq Mul")
+	};
     
     let mut no_events = EventList::new();
     plan
