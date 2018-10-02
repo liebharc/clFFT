@@ -18,7 +18,6 @@ extern crate lazy_static;
 pub mod ffi;
 use std::mem;
 use std::sync::Mutex;
-use ocl_core::ClWaitListPtr;
 
 macro_rules! clfft_try {
     ( $result_expr: expr) => {
@@ -40,7 +39,7 @@ macro_rules! clfft_panic {
 }
 
 /// A trait for all paremeters supported by `clFFT`.
-pub trait ClFftPrm : ocl_core::OclPrm { 
+pub trait ClFftPrm : ocl::OclPrm { 
     /// Is the type a double precision type.
     fn is_dbl_precision() -> bool;
 }
@@ -453,7 +452,7 @@ fn enqueue<T: ClFftPrm>(
         match *wait_list {
             None => (0, 0 as *const ocl::ffi::cl_event),
             Some(ref l) if l.len() == 0 => (0, 0 as *const ocl::ffi::cl_event),
-            Some(ref l) => (l.len(), unsafe { l.as_ptr_ptr() })
+            Some(ref l) => (l.len(), l.as_ptr() as *const ocl::ffi::cl_event)
         };
     let dest_list_pnt = 
         match *dest_list {
