@@ -14,13 +14,7 @@
 # limitations under the License.
 # ########################################################################
 
-if( WIN32 )
-	# We require 2.8.3 for windows because of a bug in cmake that prevented vs2010 from generating
-	# executables properly with multiple periods
-	cmake_minimum_required( VERSION 2.8.3 )
-else( )
-	cmake_minimum_required( VERSION 2.6 )
-endif( )
+cmake_minimum_required( VERSION 3.1 )
 
 if( CMAKE_GENERATOR MATCHES "NMake" )
 	option( NMAKE_COMPILE_VERBOSE "Print compile and link strings to the console" OFF )
@@ -40,11 +34,11 @@ if( NOT DEFINED CLFFT_VERSION_MAJOR )
 endif( )
 
 if( NOT DEFINED CLFFT_VERSION_MINOR )
-	set( CLFFT_VERSION_MINOR 12 )
+	set( CLFFT_VERSION_MINOR 14 )
 endif( )
 
 if( NOT DEFINED CLFFT_VERSION_PATCH )
-	set( CLFFT_VERSION_PATCH 2 )
+	set( CLFFT_VERSION_PATCH 0 )
 endif( )
 
 set( CLFFT_VERSION "${CLFFT_VERSION_MAJOR}.${CLFFT_VERSION_MINOR}.${CLFFT_VERSION_PATCH}")
@@ -88,6 +82,7 @@ if( WIN32 )
 		message( STATUS "UNICODE build" )
 	endif( )
 else( )
+	set( CMAKE_SKIP_BUILD_RPATH ON )
 	set( UNICODE OFF )
 	message( STATUS "UNICODE feature disabled on linux" )
 endif()
@@ -236,6 +231,11 @@ endif( )
 # If UNICODE is defined for microsoft compilers, pass extra definitions
 if( MSVC AND UNICODE )
 	add_definitions( "/DUNICODE /D_UNICODE" )
+endif( )
+
+# If UNICODE is defined for MinGW compilers, pass extra definitions
+if( MINGW AND UNICODE )
+	add_definitions( "-DUNICODE -D_UNICODE" )
 endif( )
 
 # Print out compiler flags for viewing/debug
